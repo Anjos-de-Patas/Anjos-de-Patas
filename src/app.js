@@ -5,6 +5,7 @@ import helmet from 'helmet';
 // Controladores
 import { listarAnimais, cadastrarAnimal, atualizarAnimal, buscaInteligente } from './controllers/animalController.js';
 import { login } from './controllers/authController.js';
+import { conversarComAgente } from './controllers/agentController.js';
 import { cadastrarAdotante, listarAdotantes, atualizarStatusAdotante } from './controllers/adotanteController.js';
 import { obterDashboard } from './controllers/dashboardController.js';
 import {
@@ -61,6 +62,7 @@ app.post('/api/login', limiteLogin, validarRequest(loginSchema), login);
 // --- ROTAS PÚBLICAS ---
 app.get('/api/animais', listarAnimais);
 app.post('/api/busca-inteligente', limiteBuscaInteligente, validarRequest(buscaSchema), buscaInteligente);
+app.post('/api/agente', limiteBuscaInteligente, conversarComAgente);
 app.post('/api/adotantes', validarRequest(adotanteSchema), cadastrarAdotante); 
 
 // --- ROTAS PROTEGIDAS ---

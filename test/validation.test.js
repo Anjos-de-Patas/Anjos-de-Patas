@@ -6,6 +6,7 @@ import {
   adocaoSchema,
   buscaSchema
 } from '../src/schemas/validationSchemas.js';
+import { agenteMensagemSchema, buscarAnimaisArgsSchema } from '../src/schemas/agentSchemas.js';
 
 const animalValido = {
   nome: 'Mel',
@@ -41,4 +42,14 @@ test('buscaSchema limita texto vazio e texto muito grande', () => {
 test('adocaoSchema exige animal, adotante e data', () => {
   assert.equal(adocaoSchema.safeParse({ animal_id: 1, adotante_id: 2, data_adocao: '2026-09-25' }).success, true);
   assert.equal(adocaoSchema.safeParse({ animal_id: 1 }).success, false);
+});
+
+test('agenteMensagemSchema limita mensagens e aceita conversa opcional', () => {
+  assert.equal(agenteMensagemSchema.safeParse({ mensagem: 'Quero adotar um cao', conversa_id: 'abc' }).success, true);
+  assert.equal(agenteMensagemSchema.safeParse({ mensagem: 'a'.repeat(1001) }).success, false);
+});
+
+test('buscarAnimaisArgsSchema rejeita parametros desconhecidos', () => {
+  assert.equal(buscarAnimaisArgsSchema.safeParse({ especie: 'cao' }).success, true);
+  assert.equal(buscarAnimaisArgsSchema.safeParse({ cidade: 'Balsas' }).success, false);
 });

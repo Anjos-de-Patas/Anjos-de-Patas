@@ -134,6 +134,32 @@ O backend impede a adocao duplicada e altera a situacao do animal para `adotado`
 
 A resposta inclui a mensagem humanizada, os criterios identificados e os animais encontrados. A rota possui limite de requisicoes para controlar o consumo da API de IA.
 
+## Agente de adocao
+
+`POST /api/agente`
+
+O agente interpreta a mensagem e pode consultar animais disponiveis, obter detalhes publicos, explicar requisitos gerais ou encaminhar o atendimento para um voluntario.
+
+```json
+{
+  "mensagem": "Quero um cachorro pequeno que conviva com criancas",
+  "conversa_id": "opcional"
+}
+```
+
+Resposta:
+
+```json
+{
+  "sucesso": true,
+  "conversa_id": null,
+  "mensagem": "Encontrei animais que podem combinar com o que voce procura.",
+  "ferramentas_usadas": ["buscar_animais"]
+}
+```
+
+O `conversa_id` funciona como identificador de correlacao nesta primeira versao; o historico da conversa ainda nao e persistido.
+
 ## Respostas de erro
 
 As respostas seguem o formato:
