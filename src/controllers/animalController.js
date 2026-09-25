@@ -4,10 +4,22 @@ import { extrairCriteriosComGemini, gerarRespostaAmigavel } from '../services/ai
 // Lista todos os animais (Catálogo Público)
 export async function listarAnimais(req, res) {
   try {
-    const { data, error } = await supabase
+    const { nome, especie, sexo, porte, faixa_etaria, situacao } = req.query;
+    const cliente = req.supabase || supabase;
+    let query = cliente
       .from('animais')
       .select('*')
       .order('criado_em', { ascending: false });
+
+    if (nome) query = query.ilike('nome', `%${nome}%`);
+    if (especie) query = query.eq('especie', especie);
+    if (sexo) query = query.eq('sexo', sexo);
+    if (porte) query = query.eq('porte', porte);
+    if (faixa_etaria) query = query.eq('faixa_etaria', faixa_etaria);
+    if (situacao) query = query.eq('situacao', situacao);
+    if (!req.user && !situacao) query = query.eq('situacao', 'disponivel');
+
+    const { data, error } = await query;
 
     if (error) throw error;
     res.status(200).json({ sucesso: true, animais: data });
@@ -20,8 +32,9 @@ export async function listarAnimais(req, res) {
 export async function cadastrarAnimal(req, res) {
   try {
     const novoAnimal = req.body;
+    const cliente = req.supabase;
     
-    const { data, error } = await supabase
+    const { data, error } = await cliente
       .from('animais')
       .insert([{
         nome: novoAnimal.nome,
@@ -48,8 +61,9 @@ export async function atualizarAnimal(req, res) {
   try {
     const { id } = req.params;
     const dadosAtualizados = req.body;
+    const cliente = req.supabase;
 
-    const { data, error } = await supabase
+    const { data, error } = await cliente
       .from('animais')
       .update(dadosAtualizados)
       .eq('id', id)
