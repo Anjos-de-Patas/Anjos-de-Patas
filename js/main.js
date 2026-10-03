@@ -1,52 +1,439 @@
-// Seleciona os botões de filtro
-const botoesFiltro = document.querySelectorAll(".filtro");
+// Filtros dos animais
 
-// Seleciona todos os cards de animais
+const botoesFiltro = document.querySelectorAll(".filtro");
 const cardsAnimais = document.querySelectorAll(".card-animal");
 
+const textoFiltrosAtivos = document.getElementById("filtros-ativos");
+const botaoLimparFiltros = document.getElementById("limpar-filtros");
+const mensagemSemResultados = document.getElementById("sem-resultados");
 
-// Percorre todos os botões de filtro
+let filtroEspecie = "todos";
+let filtroSexo = "todos";
+
+const nomesEspecies = {
+    cao: "Cachorros",
+    gato: "Gatos"
+};
+
+const nomesSexos = {
+    femea: "Fêmeas",
+    macho: "Machos"
+};
+
+
+function atualizarResumoFiltros() {
+    const filtrosSelecionados = [];
+
+    if (filtroEspecie !== "todos") {
+        filtrosSelecionados.push(nomesEspecies[filtroEspecie]);
+    }
+
+    if (filtroSexo !== "todos") {
+        filtrosSelecionados.push(nomesSexos[filtroSexo]);
+    }
+
+    if (filtrosSelecionados.length === 0) {
+        textoFiltrosAtivos.textContent = "Exibindo todos os animais";
+        botaoLimparFiltros.hidden = true;
+        return;
+    }
+
+    textoFiltrosAtivos.textContent =
+        `Filtros ativos: ${filtrosSelecionados.join(" • ")}`;
+
+    botaoLimparFiltros.hidden = false;
+}
+
+
+function aplicarFiltros() {
+    let quantidadeVisivel = 0;
+
+    cardsAnimais.forEach((card) => {
+        const especie = card.dataset.especie;
+        const sexo = card.dataset.sexo;
+
+        const correspondeEspecie =
+            filtroEspecie === "todos" ||
+            especie === filtroEspecie;
+
+        const correspondeSexo =
+            filtroSexo === "todos" ||
+            sexo === filtroSexo;
+
+        const deveMostrar =
+            correspondeEspecie && correspondeSexo;
+
+        card.hidden = !deveMostrar;
+
+        if (deveMostrar) {
+            quantidadeVisivel++;
+        }
+    });
+
+    mensagemSemResultados.hidden = quantidadeVisivel > 0;
+
+    atualizarResumoFiltros();
+}
+
+
 botoesFiltro.forEach((botao) => {
-
     botao.addEventListener("click", () => {
+        const tipo = botao.dataset.tipo;
+        const valor = botao.dataset.valor;
 
-        // Identifica o filtro selecionado
-        const filtroSelecionado = botao.dataset.filtro;
-
-
-        // Remove o estado ativo de todos os botões
         botoesFiltro.forEach((item) => {
-
-            item.classList.remove("ativo");
-            item.setAttribute("aria-pressed", "false");
-
+            if (item.dataset.tipo === tipo) {
+                item.classList.remove("ativo");
+                item.setAttribute("aria-pressed", "false");
+            }
         });
 
-
-        // Define o botão clicado como ativo
         botao.classList.add("ativo");
         botao.setAttribute("aria-pressed", "true");
 
+        if (tipo === "especie") {
+            filtroEspecie = valor;
+        }
 
-        // Percorre todos os cards de animais
-        cardsAnimais.forEach((card) => {
+        if (tipo === "sexo") {
+            filtroSexo = valor;
+        }
 
-            const especie = card.dataset.especie;
-            const sexo = card.dataset.sexo;
-
-
-            // Verifica se o animal corresponde ao filtro selecionado
-            const deveMostrar =
-                filtroSelecionado === "todos" ||
-                filtroSelecionado === especie ||
-                filtroSelecionado === sexo;
+        aplicarFiltros();
+    });
+});
 
 
-            // Exibe ou oculta o card
-            card.hidden = !deveMostrar;
+botaoLimparFiltros.addEventListener("click", () => {
+    filtroEspecie = "todos";
+    filtroSexo = "todos";
 
-        });
+    botoesFiltro.forEach((botao) => {
+        const deveAtivar = botao.dataset.valor === "todos";
 
+        botao.classList.toggle("ativo", deveAtivar);
+
+        botao.setAttribute(
+            "aria-pressed",
+            String(deveAtivar)
+        );
     });
 
+    aplicarFiltros();
 });
+
+
+// Detalhes dos animais
+
+const botoesDetalhes =
+    document.querySelectorAll(".botao-detalhes");
+
+botoesDetalhes.forEach((botao) => {
+    botao.addEventListener("click", () => {
+        const idDetalhes =
+            botao.getAttribute("aria-controls");
+
+        const detalhes =
+            document.getElementById(idDetalhes);
+
+        if (!detalhes) {
+            return;
+        }
+
+        const estaAberto =
+            botao.getAttribute("aria-expanded") === "true";
+
+        detalhes.hidden = estaAberto;
+
+        botao.setAttribute(
+            "aria-expanded",
+            String(!estaAberto)
+        );
+
+        botao.textContent =
+            estaAberto
+                ? "Ver detalhes"
+                : "Ver menos";
+    });
+});
+
+
+// Destaque do menu
+
+const linksMenu =
+    document.querySelectorAll('.menu a[href^="#"]');
+
+const secoesMenu = [];
+
+linksMenu.forEach((link) => {
+    const id = link.getAttribute("href");
+    const secao = document.querySelector(id);
+
+    if (secao) {
+        secoesMenu.push({
+            link,
+            secao
+        });
+    }
+});
+
+
+function atualizarMenuAtivo() {
+    const referencia = window.scrollY + 180;
+    let linkAtivo = null;
+
+    secoesMenu.forEach((item) => {
+        if (item.secao.offsetTop <= referencia) {
+            linkAtivo = item.link;
+        }
+    });
+
+    linksMenu.forEach((link) => {
+        link.classList.remove("ativo");
+    });
+
+    if (linkAtivo) {
+        linkAtivo.classList.add("ativo");
+    }
+}
+
+
+window.addEventListener(
+    "scroll",
+    atualizarMenuAtivo,
+    { passive: true }
+);
+
+window.addEventListener(
+    "resize",
+    atualizarMenuAtivo
+);
+
+atualizarMenuAtivo();
+
+
+// Assistente
+
+const botaoChatFlutuante =
+    document.getElementById("botao-chat-flutuante");
+
+const botoesAbrirChat =
+    document.querySelectorAll("[data-abrir-chat]");
+
+const janelaChat =
+    document.getElementById("janela-chat");
+
+const botaoFecharChat =
+    document.getElementById("fechar-chat");
+
+const formularioChat =
+    document.getElementById("formulario-chat");
+
+const campoMensagem =
+    document.getElementById("mensagem-chat");
+
+const areaMensagens =
+    document.getElementById("mensagens-chat");
+
+const sugestoesChat =
+    document.querySelectorAll(".sugestao-chat");
+
+let ultimoElementoFocado = null;
+let chatEmAnimacao = false;
+
+
+// Pequeno movimento para chamar atenção sem abrir o chat
+
+const usuarioPrefereMenosMovimento =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+if (!usuarioPrefereMenosMovimento) {
+    setTimeout(() => {
+        if (janelaChat.hidden) {
+            botaoChatFlutuante.classList.add("chamar-atencao");
+
+            setTimeout(() => {
+                botaoChatFlutuante.classList.remove("chamar-atencao");
+            }, 1200);
+        }
+    }, 2200);
+}
+
+
+function abrirChat(origem) {
+    if (chatEmAnimacao || !janelaChat.hidden) {
+        return;
+    }
+
+    ultimoElementoFocado =
+        origem || document.activeElement;
+
+    chatEmAnimacao = true;
+
+    janelaChat.hidden = false;
+
+    janelaChat.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    botaoChatFlutuante.setAttribute(
+        "aria-expanded",
+        "true"
+    );
+
+    botoesAbrirChat.forEach((botao) => {
+        botao.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+    });
+
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+            janelaChat.classList.add("chat-visivel");
+        });
+    });
+
+    setTimeout(() => {
+        chatEmAnimacao = false;
+        campoMensagem.focus();
+    }, 230);
+}
+
+
+function fecharChat() {
+    if (chatEmAnimacao || janelaChat.hidden) {
+        return;
+    }
+
+    chatEmAnimacao = true;
+
+    janelaChat.classList.remove("chat-visivel");
+    janelaChat.classList.add("chat-fechando");
+
+    botaoChatFlutuante.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    botoesAbrirChat.forEach((botao) => {
+        botao.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    });
+
+    setTimeout(() => {
+        janelaChat.hidden = true;
+
+        janelaChat.classList.remove("chat-fechando");
+
+        janelaChat.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        chatEmAnimacao = false;
+
+        if (
+            ultimoElementoFocado &&
+            typeof ultimoElementoFocado.focus === "function"
+        ) {
+            ultimoElementoFocado.focus();
+        }
+    }, 220);
+}
+
+
+botaoChatFlutuante.addEventListener("click", () => {
+    if (janelaChat.hidden) {
+        abrirChat(botaoChatFlutuante);
+    } else {
+        fecharChat();
+    }
+});
+
+
+botoesAbrirChat.forEach((botao) => {
+    botao.addEventListener("click", () => {
+        abrirChat(botao);
+    });
+});
+
+
+botaoFecharChat.addEventListener(
+    "click",
+    fecharChat
+);
+
+
+document.addEventListener("keydown", (evento) => {
+    if (
+        evento.key === "Escape" &&
+        !janelaChat.hidden
+    ) {
+        fecharChat();
+    }
+});
+
+
+function adicionarMensagem(texto, tipo) {
+    const mensagem = document.createElement("div");
+
+    mensagem.classList.add(
+        "mensagem",
+        tipo
+    );
+
+    const paragrafo = document.createElement("p");
+    paragrafo.textContent = texto;
+
+    mensagem.appendChild(paragrafo);
+    areaMensagens.appendChild(mensagem);
+
+    areaMensagens.scrollTop =
+        areaMensagens.scrollHeight;
+}
+
+
+function enviarMensagem(texto) {
+    const mensagem = texto.trim();
+
+    if (!mensagem) {
+        return;
+    }
+
+    adicionarMensagem(
+        mensagem,
+        "mensagem-usuario"
+    );
+
+    campoMensagem.value = "";
+
+    setTimeout(() => {
+        adicionarMensagem(
+            "Entendi! Nesta versão demonstrativa, a conversa já pode ser testada. A recomendação inteligente será conectada ao serviço do projeto na etapa de integração.",
+            "mensagem-assistente"
+        );
+    }, 450);
+}
+
+
+formularioChat.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+
+    enviarMensagem(campoMensagem.value);
+
+    campoMensagem.focus();
+});
+
+
+sugestoesChat.forEach((botao) => {
+    botao.addEventListener("click", () => {
+        enviarMensagem(botao.dataset.mensagem);
+    });
+});
+
+
+aplicarFiltros();

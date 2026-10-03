@@ -3,11 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta
         name="description"
@@ -21,88 +17,37 @@
 
 <body>
 
-    <!-- =========================
-         CABEÇALHO
-    ========================== -->
     <header class="cabecalho">
+        <nav class="navegacao" aria-label="Navegação principal">
 
-        <nav
-            class="navegacao"
-            aria-label="Navegação principal"
-        >
-
-            <a
-                href="index.html"
-                class="logo"
-                aria-label="Anjos de Patas - Página inicial"
-            >
+            <a href="#inicio" class="logo" aria-label="Anjos de Patas - Página inicial">
                 <img
                     src="assets/images/logo_anjos_de_patas.png"
                     alt=""
                     class="logo-imagem"
                 >
-
                 <span>Anjos de Patas</span>
             </a>
 
-
             <ul class="menu">
-
-                <li>
-                    <a href="#adote">
-                        Adote
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#como-funciona">
-                        Como funciona
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#sobre">
-                        Sobre
-                    </a>
-                </li>
-
-                <li>
-                    <a href="#contato">
-                        Contato
-                    </a>
-                </li>
-
+                <li><a href="#adote">Adote</a></li>
+                <li><a href="#como-funciona">Como funciona</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#contato">Contato</a></li>
             </ul>
 
-
-            <a
-                href="pages/login.html"
-                class="botao-entrar"
-            >
+            <a href="pages/login.html" class="botao-entrar">
                 Entrar
             </a>
 
         </nav>
-
     </header>
 
-
-    <!-- =========================
-         CONTEÚDO PRINCIPAL
-    ========================== -->
     <main>
 
-
-        <!-- =========================
-             APRESENTAÇÃO
-        ========================== -->
-        <section
-            class="hero"
-            id="inicio"
-        >
+        <section class="hero" id="inicio">
 
             <div class="hero-conteudo">
-
 
                 <div class="hero-texto">
 
@@ -111,332 +56,489 @@
                     </h1>
 
                     <p>
-                        Resgatamos, cuidamos e encontramos famílias
-                        para cães e gatos em situação de abandono.
-                        Conheça quem está esperando por você.
+                        Resgatamos, cuidamos e encontramos famílias para cães e gatos
+                        em situação de abandono. Conheça quem está esperando por você.
                     </p>
 
-                    <a
-                        href="#adote"
-                        class="botao-principal"
-                    >
+                    <a href="#adote" class="botao-principal">
                         Conheça nossos animais
                     </a>
 
                 </div>
 
+                <div class="jornada-adocao">
 
-                <div class="hero-adocao">
+                    <div class="jornada-topo">
 
-                    <h2>
-                        Ficha rápida de adoção
-                    </h2>
+                        <div>
+                            <span class="jornada-subtitulo">
+                                Comece por aqui
+                            </span>
 
-                    <ol>
+                            <h2>
+                                Pronto para adotar?
+                            </h2>
+                        </div>
 
-                        <li>
-                            Escolha um bichinho na lista de animais.
-                        </li>
+                    </div>
 
-                        <li>
-                            Entre em contato com a equipe da ONG.
-                        </li>
+                    <p class="jornada-introducao">
+                        Adotar é uma decisão importante. Veja como começar esse
+                        processo com a Anjos de Patas.
+                    </p>
 
-                        <li>
-                            Combine a visita e conheça seu novo amigo.
-                        </li>
+                    <div class="jornada-etapas">
 
-                    </ol>
+                        <div class="jornada-item">
+
+                            <span class="numero-etapa">1</span>
+
+                            <div>
+                                <strong>Encontre um novo amigo</strong>
+                                <p>Conheça os animais disponíveis para adoção.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="jornada-item">
+
+                            <span class="numero-etapa">2</span>
+
+                            <div>
+                                <strong>Demonstre interesse</strong>
+                                <p>Escolha um animal e converse com a equipe da ONG.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="jornada-item">
+
+                            <span class="numero-etapa">3</span>
+
+                            <div>
+                                <strong>Conheça seu novo amigo</strong>
+                                <p>
+                                    Combine uma visita e siga as orientações para a adoção.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
-
 
             </div>
 
         </section>
 
-
-        <!-- =========================
-             ANIMAIS PARA ADOÇÃO
-        ========================== -->
-        <section
-            class="secao-animais"
-            id="adote"
-        >
+        <section class="secao-animais" id="adote">
 
             <div class="titulo-secao">
 
-                <h2>
-                    Olhe quem está esperando por você
-                </h2>
+                <h2>Encontre seu novo companheiro</h2>
 
                 <p>
-                    Conheça alguns dos animais disponíveis para adoção.
+                    Conheça os animais disponíveis e utilize os filtros para encontrar
+                    aqueles que combinam com o que você procura.
                 </p>
 
             </div>
 
+            <div class="area-filtros" aria-label="Filtros de animais">
 
-            <!-- Filtros -->
-            <div
-                class="filtros"
-                aria-label="Filtros de animais"
-            >
+                <div class="grupo-filtro">
 
-                <button
-                    type="button"
-                    class="filtro ativo"
-                    data-filtro="todos"
-                    aria-pressed="true"
-                >
-                    Todos
-                </button>
+                    <span class="titulo-filtro">
+                        Espécie
+                    </span>
 
-                <button
-                    type="button"
-                    class="filtro"
-                    data-filtro="cao"
-                    aria-pressed="false"
-                >
-                    Cães
-                </button>
+                    <div class="opcoes-filtro">
 
-                <button
-                    type="button"
-                    class="filtro"
-                    data-filtro="gato"
-                    aria-pressed="false"
-                >
-                    Gatos
-                </button>
-
-                <button
-                    type="button"
-                    class="filtro"
-                    data-filtro="femea"
-                    aria-pressed="false"
-                >
-                    Fêmeas
-                </button>
-
-                <button
-                    type="button"
-                    class="filtro"
-                    data-filtro="macho"
-                    aria-pressed="false"
-                >
-                    Machos
-                </button>
-
-            </div>
-
-
-            <!-- Lista de animais -->
-            <div class="lista-animais">
-
-
-                <!-- Animal: Nina -->
-                <article
-                    class="card-animal"
-                    data-especie="cao"
-                    data-sexo="femea"
-                >
-
-                    <div class="card-imagem">
-
-                        <img
-                            src="assets/images/animal-exemplo.jpg"
-                            alt="Nina, animal disponível para adoção"
+                        <button
+                            type="button"
+                            class="filtro ativo"
+                            data-tipo="especie"
+                            data-valor="todos"
+                            aria-pressed="true"
                         >
+                            Todos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-tipo="especie"
+                            data-valor="cao"
+                            aria-pressed="false"
+                        >
+                            Cachorros
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-tipo="especie"
+                            data-valor="gato"
+                            aria-pressed="false"
+                        >
+                            Gatos
+                        </button>
 
                     </div>
 
+                </div>
+
+                <div class="grupo-filtro">
+
+                    <span class="titulo-filtro">
+                        Sexo
+                    </span>
+
+                    <div class="opcoes-filtro">
+
+                        <button
+                            type="button"
+                            class="filtro ativo"
+                            data-tipo="sexo"
+                            data-valor="todos"
+                            aria-pressed="true"
+                        >
+                            Todos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-tipo="sexo"
+                            data-valor="femea"
+                            aria-pressed="false"
+                        >
+                            Fêmeas
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-tipo="sexo"
+                            data-valor="macho"
+                            aria-pressed="false"
+                        >
+                            Machos
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="resumo-filtros" aria-live="polite">
+
+                    <span id="filtros-ativos">
+                        Exibindo todos os animais
+                    </span>
+
+                    <button
+                        type="button"
+                        id="limpar-filtros"
+                        class="limpar-filtros"
+                        hidden
+                    >
+                        Limpar filtros
+                    </button>
+
+                </div>
+
+            </div>
+
+            <p id="sem-resultados" class="sem-resultados" hidden>
+                Nenhum animal foi encontrado com esses filtros.
+            </p>
+
+            <div class="lista-animais">
+
+                <article class="card-animal" data-especie="cao" data-sexo="femea">
+
+                    <div class="card-imagem">
+
+                        <span class="tipo-animal">
+                            Cachorro
+                        </span>
+
+                        <div class="imagem-placeholder">
+                            <p>Foto da Nina</p>
+                        </div>
+
+                    </div>
 
                     <div class="card-conteudo">
+
+                        <span class="status-adocao">
+                            Disponível para adoção
+                        </span>
 
                         <h3>Nina</h3>
 
                         <p>
-                            Dócil e brincalhona, adora companhia
-                            e está esperando por uma família.
+                            Dócil e brincalhona, adora companhia e está esperando
+                            por uma família.
                         </p>
 
-
                         <ul class="caracteristicas">
-
                             <li>2 anos</li>
-
                             <li>Fêmea</li>
-
                             <li>Médio porte</li>
-
                         </ul>
 
-
-                        <a
-                            href="pages/animal.html"
-                            aria-label="Ver detalhes de Nina"
+                        <button
+                            type="button"
+                            class="botao-detalhes"
+                            aria-expanded="false"
+                            aria-controls="detalhes-nina"
                         >
                             Ver detalhes
-                        </a>
+                        </button>
+
+                        <div
+                            class="detalhes-expandidos"
+                            id="detalhes-nina"
+                            hidden
+                        >
+
+                            <dl class="lista-detalhes">
+
+                                <div>
+                                    <dt>Temperamento</dt>
+                                    <dd>Dócil e brincalhona</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Vacinação</dt>
+                                    <dd>Em dia</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Castração</dt>
+                                    <dd>Castrada</dd>
+                                </div>
+
+                            </dl>
+
+                            <a href="#contato" class="botao-interesse">
+                                Tenho interesse em adotar
+                            </a>
+
+                        </div>
 
                     </div>
 
                 </article>
 
-
-                <!-- Animal: Mel -->
-                <article
-                    class="card-animal"
-                    data-especie="gato"
-                    data-sexo="femea"
-                >
+                <article class="card-animal" data-especie="gato" data-sexo="femea">
 
                     <div class="card-imagem">
 
-                        <img
-                            src="assets/images/animal-exemplo.jpg"
-                            alt="Mel, animal disponível para adoção"
-                        >
+                        <span class="tipo-animal">
+                            Gato
+                        </span>
+
+                        <div class="imagem-placeholder">
+                            <p>Foto da Mel</p>
+                        </div>
 
                     </div>
 
-
                     <div class="card-conteudo">
+
+                        <span class="status-adocao">
+                            Disponível para adoção
+                        </span>
 
                         <h3>Mel</h3>
 
                         <p>
-                            Carinhosa e tranquila, procura uma família
-                            para compartilhar muitos momentos.
+                            Carinhosa e tranquila, procura uma família para
+                            compartilhar muitos momentos.
                         </p>
 
-
                         <ul class="caracteristicas">
-
                             <li>1 ano</li>
-
                             <li>Fêmea</li>
-
                             <li>Pequeno porte</li>
-
                         </ul>
 
-
-                        <a
-                            href="pages/animal.html"
-                            aria-label="Ver detalhes de Mel"
+                        <button
+                            type="button"
+                            class="botao-detalhes"
+                            aria-expanded="false"
+                            aria-controls="detalhes-mel"
                         >
                             Ver detalhes
-                        </a>
+                        </button>
+
+                        <div
+                            class="detalhes-expandidos"
+                            id="detalhes-mel"
+                            hidden
+                        >
+
+                            <dl class="lista-detalhes">
+
+                                <div>
+                                    <dt>Temperamento</dt>
+                                    <dd>Carinhosa e tranquila</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Vacinação</dt>
+                                    <dd>Em dia</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Castração</dt>
+                                    <dd>Castrada</dd>
+                                </div>
+
+                            </dl>
+
+                            <a href="#contato" class="botao-interesse">
+                                Tenho interesse em adotar
+                            </a>
+
+                        </div>
 
                     </div>
 
                 </article>
 
-
-                <!-- Animal: Thor -->
-                <article
-                    class="card-animal"
-                    data-especie="cao"
-                    data-sexo="macho"
-                >
+                <article class="card-animal" data-especie="cao" data-sexo="macho">
 
                     <div class="card-imagem">
 
-                        <img
-                            src="assets/images/animal-exemplo.jpg"
-                            alt="Thor, animal disponível para adoção"
-                        >
+                        <span class="tipo-animal">
+                            Cachorro
+                        </span>
+
+                        <div class="imagem-placeholder">
+                            <p>Foto do Thor</p>
+                        </div>
 
                     </div>
 
-
                     <div class="card-conteudo">
+
+                        <span class="status-adocao">
+                            Disponível para adoção
+                        </span>
 
                         <h3>Thor</h3>
 
                         <p>
-                            Companheiro e brincalhão, está pronto
-                            para conhecer seu novo lar.
+                            Companheiro e brincalhão, está pronto para conhecer
+                            seu novo lar.
                         </p>
 
-
                         <ul class="caracteristicas">
-
                             <li>3 anos</li>
-
                             <li>Macho</li>
-
                             <li>Grande porte</li>
-
                         </ul>
 
-
-                        <a
-                            href="pages/animal.html"
-                            aria-label="Ver detalhes de Thor"
+                        <button
+                            type="button"
+                            class="botao-detalhes"
+                            aria-expanded="false"
+                            aria-controls="detalhes-thor"
                         >
                             Ver detalhes
-                        </a>
+                        </button>
+
+                        <div
+                            class="detalhes-expandidos"
+                            id="detalhes-thor"
+                            hidden
+                        >
+
+                            <dl class="lista-detalhes">
+
+                                <div>
+                                    <dt>Temperamento</dt>
+                                    <dd>Companheiro e brincalhão</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Vacinação</dt>
+                                    <dd>Em dia</dd>
+                                </div>
+
+                                <div>
+                                    <dt>Castração</dt>
+                                    <dd>Castrado</dd>
+                                </div>
+
+                            </dl>
+
+                            <a href="#contato" class="botao-interesse">
+                                Tenho interesse em adotar
+                            </a>
+
+                        </div>
 
                     </div>
 
                 </article>
 
-
             </div>
 
         </section>
 
-
-        =========================
-             ASSISTENTE DE ADOÇÃO
-        ==========================
         <section class="secao-assistente">
 
             <div class="assistente-conteudo">
 
-
-                <div>
-
-                    <span class="assistente-destaque">
-                        Assistente de adoção
-                    </span>
+                <div class="assistente-texto">
 
                     <h2>
-                        Não sabe qual animal combina com você?
+                        Quer ajuda para encontrar seu novo companheiro?
                     </h2>
 
                     <p>
-                        Conte ao nosso assistente o que você procura
-                        e encontre animais com características
-                        compatíveis com suas preferências.
+                        Conte ao assistente o que você procura. Ele pode ajudar
+                        a encontrar animais com características compatíveis com
+                        as suas preferências.
                     </p>
 
                 </div>
 
-
-                <a
-                    href="pages/assistente.html"
+                <button
+                    type="button"
                     class="botao-assistente"
+                    data-abrir-chat
+                    aria-expanded="false"
+                    aria-controls="janela-chat"
                 >
-                    Conversar com o assistente
-                </a>
 
+                    <svg
+                        class="icone-balao"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                    </svg>
+
+                    Conversar com o assistente
+
+                </button>
 
             </div>
 
         </section>
 
-
-        <!-- =========================
-             COMO FUNCIONA
-        ========================== -->
-        <section
-            class="secao-como-funciona"
-            id="como-funciona"
-        >
+        <section class="secao-como-funciona" id="como-funciona">
 
             <div class="titulo-secao">
 
@@ -445,88 +547,126 @@
                 </h2>
 
                 <p>
-                    Conheça as principais etapas para iniciar
-                    o processo de adoção.
+                    Conheça as principais etapas para iniciar o processo de adoção.
                 </p>
 
             </div>
 
-
             <div class="etapas-adocao">
 
-
                 <article class="etapa">
 
-                    <span aria-hidden="true">
-                        1
+                    <div class="icone-etapa" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+                        </svg>
+
+                    </div>
+
+                    <span class="numero-pequeno">
+                        Passo 1
                     </span>
 
-                    <h3>
-                        Encontre
-                    </h3>
+                    <h3>Encontre</h3>
 
                     <p>
-                        Conheça os animais disponíveis e encontre
-                        aquele que pode fazer parte da sua família.
+                        Conheça os animais disponíveis e encontre aquele que
+                        pode fazer parte da sua família.
                     </p>
 
                 </article>
 
-
                 <article class="etapa">
 
-                    <span aria-hidden="true">
-                        2
+                    <div class="icone-etapa" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                            <path d="M8 9h8"/>
+                            <path d="M8 13h5"/>
+                        </svg>
+
+                    </div>
+
+                    <span class="numero-pequeno">
+                        Passo 2
                     </span>
 
-                    <h3>
-                        Entre em contato
-                    </h3>
+                    <h3>Entre em contato</h3>
 
                     <p>
-                        Converse com a equipe da ONG para obter
-                        mais informações sobre o animal.
+                        Converse com a equipe da ONG para obter mais
+                        informações sobre o animal.
                     </p>
 
                 </article>
 
-
                 <article class="etapa">
 
-                    <span aria-hidden="true">
-                        3
+                    <div class="icone-etapa" aria-hidden="true">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M8.5 12.5 11 15l5-6"/>
+                            <circle cx="12" cy="12" r="9"/>
+                        </svg>
+
+                    </div>
+
+                    <span class="numero-pequeno">
+                        Passo 3
                     </span>
 
-                    <h3>
-                        Conheça e adote
-                    </h3>
+                    <h3>Conheça e adote</h3>
 
                     <p>
-                        Combine uma visita com a ONG e siga
-                        as orientações para o processo de adoção.
+                        Combine uma visita com a ONG e siga as orientações
+                        para o processo de adoção.
                     </p>
 
                 </article>
-
 
             </div>
 
         </section>
 
-
-        <!-- =========================
-             SOBRE
-        ========================== -->
-        <section
-            class="secao-sobre"
-            id="sobre"
-        >
+        <section class="secao-sobre" id="sobre">
 
             <div class="sobre-conteudo">
 
-                <div>
+                <div class="sobre-logo">
 
-                    <span class="subtitulo">
+                    <img
+                        src="assets/images/logo_anjos_de_patas.png"
+                        alt="Logo da Anjos de Patas"
+                    >
+
+                </div>
+
+                <div class="sobre-texto">
+
+                    <span class="rotulo-secao">
                         Sobre nós
                     </span>
 
@@ -535,10 +675,22 @@
                     </h2>
 
                     <p>
-                        A Anjos de Patas atua no resgate, acolhimento,
-                        tratamento e proteção de animais, além de
-                        desenvolver ações de conscientização sobre
-                        a causa animal e ambiental.
+                        A Anjos de Patas é uma organização sem fins lucrativos
+                        que atua em Balsas, no Maranhão, no cuidado e na proteção
+                        de animais em situação de vulnerabilidade.
+                    </p>
+
+                    <p>
+                        O trabalho da ONG envolve o resgate e atendimento de animais
+                        em situação de rua, abandono ou maus-tratos, além de cuidados
+                        contínuos, vacinação e ações de conscientização voltadas à
+                        proteção animal e ambiental.
+                    </p>
+
+                    <p>
+                        Por meio dessas ações, a organização busca proporcionar
+                        melhores condições aos animais acolhidos e aproximá-los de
+                        pessoas interessadas em oferecer um novo lar.
                     </p>
 
                 </div>
@@ -547,14 +699,7 @@
 
         </section>
 
-
-        <!-- =========================
-             CONTATO
-        ========================== -->
-        <section
-            class="secao-contato"
-            id="contato"
-        >
+        <section class="secao-contato" id="contato">
 
             <div class="titulo-secao">
 
@@ -563,80 +708,97 @@
                 </h2>
 
                 <p>
-                    Quer saber mais sobre adoção ou sobre o trabalho
-                    da ONG? Entre em contato com a equipe.
+                    Quer saber mais sobre adoção ou sobre o trabalho da ONG?
+                    Entre em contato com a equipe.
                 </p>
 
             </div>
 
-
             <div class="contatos">
 
-
                 <div class="contato-item">
 
-                    <h3>
-                        WhatsApp
-                    </h3>
+                    <div class="contato-icone" aria-hidden="true">
 
-                    <p>
-                        Informação a ser cadastrada
-                    </p>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12.04 2a9.84 9.84 0 0 0-8.42 14.93L2.05 22l5.2-1.53A9.93 9.93 0 1 0 12.04 2zm0 17.99a8 8 0 0 1-4.08-1.12l-.29-.17-3.09.91.92-3-.19-.31a8 8 0 1 1 6.73 3.69zm4.39-5.98c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.19-1.42-1.33-1.66-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.39 1.37.5.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/>
+                        </svg>
+
+                    </div>
+
+                    <h3>WhatsApp</h3>
+                    <p>Informação a ser cadastrada</p>
 
                 </div>
 
-
                 <div class="contato-item">
 
-                    <h3>
-                        Instagram
-                    </h3>
+                    <div class="contato-icone" aria-hidden="true">
 
-                    <p>
-                        Informação a ser cadastrada
-                    </p>
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <rect x="3" y="3" width="18" height="18" rx="5"/>
+                            <circle cx="12" cy="12" r="4"/>
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                        </svg>
+
+                    </div>
+
+                    <h3>Instagram</h3>
+                    <p>Informação a ser cadastrada</p>
 
                 </div>
 
-
                 <div class="contato-item">
 
-                    <h3>
-                        Localização
-                    </h3>
+                    <div class="contato-icone" aria-hidden="true">
 
-                    <p>
-                        Balsas - MA
-                    </p>
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.8"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+                            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/>
+                            <circle cx="12" cy="10" r="2.5"/>
+                        </svg>
+
+                    </div>
+
+                    <h3>Localização</h3>
+                    <p>Balsas - MA</p>
 
                 </div>
-
 
             </div>
 
         </section>
 
-
     </main>
 
-
-    <!-- =========================
-         RODAPÉ
-    ========================== -->
     <footer class="rodape">
 
-        <div>
+        <div class="rodape-identidade">
 
-            <strong>
-                Anjos de Patas
-            </strong>
+            <img
+                src="assets/images/logo_anjos_de_patas.png"
+                alt=""
+            >
 
-            <p>
-                Cada focinho merece um lar.
-            </p>
+            <div>
+                <strong>Anjos de Patas</strong>
+                <p>Cada focinho merece um lar.</p>
+            </div>
 
         </div>
-
 
         <p>
             Projeto acadêmico — UNIBALSAS
@@ -644,8 +806,175 @@
 
     </footer>
 
+    <div class="area-chat-flutuante">
 
-    <!-- JavaScript -->
+        <div
+            id="dica-assistente"
+            class="dica-assistente"
+            role="tooltip"
+        >
+            Encontre um animal que combine com você
+        </div>
+
+        <button
+            type="button"
+            id="botao-chat-flutuante"
+            class="botao-chat-flutuante"
+            aria-label="Abrir assistente para encontrar um animal"
+            aria-describedby="dica-assistente"
+            aria-expanded="false"
+            aria-controls="janela-chat"
+        >
+
+            <svg
+                class="icone-balao-flutuante"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+            </svg>
+
+            <span class="texto-botao-chat">
+                Assistente
+            </span>
+
+        </button>
+
+    </div>
+
+    <section
+        id="janela-chat"
+        class="janela-chat"
+        role="dialog"
+        aria-labelledby="titulo-chat"
+        aria-hidden="true"
+        hidden
+    >
+
+        <div class="cabecalho-chat">
+
+            <div class="identificacao-chat">
+
+                <svg
+                    class="icone-balao-cabecalho"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                >
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                </svg>
+
+                <div>
+
+                    <h2 id="titulo-chat">
+                        Assistente Anjos de Patas
+                    </h2>
+
+                    <p>
+                        Ajuda para encontrar seu novo amigo
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                id="fechar-chat"
+                class="fechar-chat"
+                aria-label="Fechar assistente"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div
+            id="mensagens-chat"
+            class="mensagens-chat"
+            aria-live="polite"
+        >
+
+            <div class="mensagem mensagem-assistente">
+
+                <div>
+
+                    <p>
+                        Olá! Sou o assistente da Anjos de Patas.
+                    </p>
+
+                    <p>
+                        Conte um pouco sobre o animal que você procura.
+                        Você pode falar sobre espécie, porte, idade,
+                        sexo ou temperamento.
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="sugestoes-chat">
+
+                <button
+                    type="button"
+                    class="sugestao-chat"
+                    data-mensagem="Procuro um cachorro"
+                >
+                    Procuro um cachorro
+                </button>
+
+                <button
+                    type="button"
+                    class="sugestao-chat"
+                    data-mensagem="Procuro um gato"
+                >
+                    Procuro um gato
+                </button>
+
+            </div>
+
+        </div>
+
+        <form
+            id="formulario-chat"
+            class="formulario-chat"
+        >
+
+            <label
+                for="mensagem-chat"
+                class="sr-only"
+            >
+                Digite sua mensagem
+            </label>
+
+            <input
+                type="text"
+                id="mensagem-chat"
+                placeholder="Digite sua mensagem..."
+                maxlength="300"
+                autocomplete="off"
+            >
+
+            <button
+                type="submit"
+                class="enviar-chat"
+            >
+                Enviar
+            </button>
+
+        </form>
+
+    </section>
+
     <script src="js/main.js"></script>
 
 </body>
