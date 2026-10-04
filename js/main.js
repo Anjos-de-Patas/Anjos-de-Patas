@@ -1,5 +1,3 @@
-// Filtros dos animais
-
 const botoesFiltro = document.querySelectorAll(".filtro");
 const cardsAnimais = document.querySelectorAll(".card-animal");
 
@@ -123,6 +121,7 @@ botaoLimparFiltros.addEventListener("click", () => {
 });
 
 
+
 // Detalhes dos animais
 
 const botoesDetalhes =
@@ -214,6 +213,9 @@ atualizarMenuAtivo();
 
 // Assistente
 
+const API_AGENTE =
+    "http://localhost:3000/api/agente";
+
 const botaoChatFlutuante =
     document.getElementById("botao-chat-flutuante");
 
@@ -238,8 +240,13 @@ const areaMensagens =
 const sugestoesChat =
     document.querySelectorAll(".sugestao-chat");
 
+const botaoEnviarChat =
+    formularioChat.querySelector('button[type="submit"]');
+
 let ultimoElementoFocado = null;
 let chatEmAnimacao = false;
+let mensagemEmEnvio = false;
+let conversaId = null;
 
 
 // Pequeno movimento para chamar atenção sem abrir o chat
@@ -394,13 +401,71 @@ function adicionarMensagem(texto, tipo) {
 
     areaMensagens.scrollTop =
         areaMensagens.scrollHeight;
+
+    return mensagem;
 }
 
 
-function enviarMensagem(texto) {
+function definirEstadoEnvio(enviando) {
+    mensagemEmEnvio = enviando;
+
+    campoMensagem.disabled = enviando;
+
+    if (botaoEnviarChat) {
+        botaoEnviarChat.disabled = enviando;
+    }
+
+    sugestoesChat.forEach((botao) => {
+        botao.disabled = enviando;
+    });
+}
+
+
+async function consultarAgente(mensagem) {
+    const corpo = {
+        mensagem
+    };
+
+    if (conversaId) {
+        corpo.conversa_id = conversaId;
+    }
+
+    const resposta = await fetch(
+        API_AGENTE,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(corpo)
+        }
+    );
+
+    let dados;
+
+    try {
+        dados = await resposta.json();
+    } catch {
+        throw new Error(
+            "O servidor retornou uma resposta inválida."
+        );
+    }
+
+    if (!resposta.ok || !dados.sucesso) {
+        throw new Error(
+            dados.erro ||
+            "Não foi possível consultar o assistente."
+        );
+    }
+
+    return dados;
+}
+
+
+async function enviarMensagem(texto) {
     const mensagem = texto.trim();
 
-    if (!mensagem) {
+    if (!mensagem || mensagemEmEnvio) {
         return;
     }
 
@@ -411,12 +476,44 @@ function enviarMensagem(texto) {
 
     campoMensagem.value = "";
 
-    setTimeout(() => {
+    definirEstadoEnvio(true);
+
+    const mensagemCarregando =
         adicionarMensagem(
-            "Entendi! Nesta versão demonstrativa, a conversa já pode ser testada. A recomendação inteligente será conectada ao serviço do projeto na etapa de integração.",
+            "Estou procurando uma opção para você...",
             "mensagem-assistente"
         );
-    }, 450);
+
+    try {
+        const resposta =
+            await consultarAgente(mensagem);
+
+        mensagemCarregando.remove();
+
+        if (resposta.conversa_id) {
+            conversaId = resposta.conversa_id;
+        }
+
+        adicionarMensagem(
+            resposta.mensagem,
+            "mensagem-assistente"
+        );
+    } catch (erro) {
+        console.error(
+            "Erro ao consultar o assistente:",
+            erro
+        );
+
+        mensagemCarregando.remove();
+
+        adicionarMensagem(
+            "Não consegui acessar o assistente agora. Tente novamente em alguns instantes.",
+            "mensagem-assistente"
+        );
+    } finally {
+        definirEstadoEnvio(false);
+        campoMensagem.focus();
+    }
 }
 
 
@@ -424,8 +521,6 @@ formularioChat.addEventListener("submit", (evento) => {
     evento.preventDefault();
 
     enviarMensagem(campoMensagem.value);
-
-    campoMensagem.focus();
 });
 
 
