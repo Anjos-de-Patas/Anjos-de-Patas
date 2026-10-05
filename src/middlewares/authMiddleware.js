@@ -1,44 +1,139 @@
-import { createClient } from '@supabase/supabase-js';
+import {
+    createClient
+} from "@supabase/supabase-js";
 
-export const verificarToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !/^Bearer\s+\S+$/i.test(authHeader)) {
-    return res.status(401).json({ erro: 'Acesso negado. Use o formato Bearer <token>.' });
-  }
+import {
+    supabase
+} from "../config/database.js";
 
-  const token = authHeader.replace(/^Bearer\s+/i, '');
+export const verificarToken =
+    async (req, res, next) => {
 
-  // Cria um cliente isolado garantindo que a requisição X não usa a sessão da requisição Y
-  const supabaseScoped = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_KEY,
-    {
-      global: { headers: { Authorization: `Bearer ${token}` } },
-      auth: { persistSession: false, autoRefreshToken: false }
-    }
-  );
+        const authHeader =
+            req.headers.authorization;
 
-  const { data: { user }, error } = await supabaseScoped.auth.getUser();
+        if (
+            !authHeader ||
+            !/^Bearer\s+\S+$/i.test(
+                authHeader
+            )
+        ) {
+            return res.status(401).json({
+                erro:
+                    "Acesso negado. Use o formato Bearer <token>."
+            });
+        }
 
-  if (error || !user) {
-    return res.status(401).json({ erro: 'Token inválido ou expirado.' });
-  }
+        const token =
+            authHeader.replace(
+                /^Bearer\s+/i,
+                ""
+            );
 
-  // Injeta o cliente autenticado na requisição para ser usado pelos controladores
-  req.supabase = supabaseScoped;
-  req.user = user;
+        const supabaseScoped =
+            createClient(
+                process.env.SUPABASE_URL,
+                process.env.SUPABASE_KEY,
+                {
+                    global: {
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`
+                        }
+                    },
 
-  next();
-};
+                    auth: {
+                        persistSession: false,
+                        autoRefreshToken: false
+                    }
+                }
+            );
 
-export const exigirPermissao = (...perfisPermitidos) => {
-  return (req, res, next) => {
-    const perfil = req.user?.app_metadata?.role || req.user?.user_metadata?.role;
+        const {
+            data: {
+                user
+            },
+            error
+        } =
+            await supabaseScoped.auth.getUser();
 
-    if (perfisPermitidos.length > 0 && !perfisPermitidos.includes(perfil)) {
-      return res.status(403).json({ erro: 'Usuário sem permissão para esta operação.' });
-    }
+        if (
+            error ||
+            !user
+        ) {
+            return res.status(401).json({
+                erro:
+                    "Token inválido ou expirado."
+            });
+        }
 
-    next();
-  };
-};
+        const {
+            data: perfil,
+            error: erroPerfil
+        } = await supabase
+            .from("perfis")
+            .select(
+                "id, nome, perfil, ativo"
+            )
+            .eq(
+                "id",
+                user.id
+            )
+            .single();
+
+        if (
+            erroPerfil ||
+            !perfil
+        ) {
+            return res.status(403).json({
+                erro:
+                    "Usuário sem perfil cadastrado no sistema."
+            });
+        }
+
+        if (!perfil.ativo) {
+            return res.status(403).json({
+                erro:
+                    "Usuário desativado."
+            });
+        }
+
+        req.supabase =
+            supabaseScoped;
+
+        req.user =
+            user;
+
+        req.perfil =
+            perfil;
+
+        next();
+    };
+
+export const exigirPermissao =
+    (...perfisPermitidos) => {
+
+        return (
+            req,
+            res,
+            next
+        ) => {
+
+            const perfil =
+                req.perfil?.perfil;
+
+            if (
+                perfisPermitidos.length > 0 &&
+                !perfisPermitidos.includes(
+                    perfil
+                )
+            ) {
+                return res.status(403).json({
+                    erro:
+                        "Usuário sem permissão para esta operação."
+                });
+            }
+
+            next();
+        };
+    };

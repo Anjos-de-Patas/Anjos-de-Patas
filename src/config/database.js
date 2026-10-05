@@ -1,21 +1,37 @@
-import { createClient } from '@supabase/supabase-js';
-import dotenv from 'dotenv';
+import {
+    createClient
+} from "@supabase/supabase-js";
+
+import dotenv from "dotenv";
 
 dotenv.config();
 
-if (!process.env.SUPABASE_URL || !process.env.SUPABASE_KEY) {
-  throw new Error('SUPABASE_URL e SUPABASE_KEY precisam estar configuradas.');
+if (
+    !process.env.SUPABASE_URL ||
+    !process.env.SUPABASE_KEY ||
+    !process.env.SUPABASE_SERVICE_ROLE_KEY
+) {
+    throw new Error(
+        "As variáveis do Supabase precisam estar configuradas."
+    );
 }
 
-// O segredo está em desativar o persistSession e autoRefreshToken
-export const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY,
-  {
+const configuracaoAuth = {
     auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
     }
-  }
+};
+
+export const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY,
+    configuracaoAuth
+);
+
+export const supabaseAdmin = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    configuracaoAuth
 );

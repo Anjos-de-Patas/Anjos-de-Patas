@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Acesso administrativo ao portal da ONG Anjos de Patas."
+    >
+
+    <title>Entrar | Anjos de Patas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="../css/login.css">
+</head>
+
+<body>
+
+    <main class="pagina-login">
+
+        <section
+            class="login"
+            aria-labelledby="titulo-login"
+        >
+
+            <a
+                href="../index.html"
+                class="identidade"
+                aria-label="Anjos de Patas - Voltar para a página inicial"
+            >
+                <img
+                    src="../assets/images/logo_anjos_de_patas.png"
+                    alt=""
+                    class="logo"
+                >
+
+                <span>Anjos de Patas</span>
+            </a>
+
+            <div class="cartao-login">
+
+                <header class="cabecalho-login">
+
+                    <span class="rotulo">
+                        Área administrativa
+                    </span>
+
+                    <h1 id="titulo-login">
+                        Acesse sua conta
+                    </h1>
+
+                </header>
+
+                <form
+                    id="formulario-login"
+                    class="formulario-login"
+                    novalidate
+                >
+
+                    <div class="campo">
+
+                        <label for="email">
+                            E-mail
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Digite seu e-mail"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="campo">
+
+                        <label for="senha">
+                            Senha
+                        </label>
+
+                        <div class="campo-senha">
+
+                            <input
+                                type="password"
+                                id="senha"
+                                name="senha"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                id="alternar-senha"
+                                class="alternar-senha"
+                                aria-label="Mostrar senha"
+                                aria-pressed="false"
+                            >
+                                Mostrar
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="mensagem-login"
+                        class="mensagem-login"
+                        role="alert"
+                        aria-live="assertive"
+                        hidden
+                    ></div>
+
+                    <button
+                        type="submit"
+                        id="botao-login"
+                        class="botao-login"
+                    >
+                        Entrar
+                    </button>
+
+                </form>
+
+                <a
+                    href="../index.html"
+                    class="voltar"
+                >
+                    ← Voltar para o site
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="../js/login.js"></script>
+
+</body>
+
+</html>

@@ -1,52 +1,142 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { exigirPermissao } from '../src/middlewares/authMiddleware.js';
-import { errorHandler } from '../src/middlewares/errorHandler.js';
+import test from "node:test";
+import assert from "node:assert/strict";
+
+import {
+    exigirPermissao
+} from "../src/middlewares/authMiddleware.js";
+
+import {
+    errorHandler
+} from "../src/middlewares/errorHandler.js";
 
 function respostaFalsa() {
-  return {
-    statusCode: null,
-    body: null,
-    status(codigo) {
-      this.statusCode = codigo;
-      return this;
-    },
-    json(valor) {
-      this.body = valor;
-      return this;
-    }
-  };
+    return {
+        statusCode: null,
+        body: null,
+
+        status(codigo) {
+            this.statusCode = codigo;
+            return this;
+        },
+
+        json(valor) {
+            this.body = valor;
+            return this;
+        }
+    };
 }
 
-test('exigirPermissao permite perfil autorizado', () => {
-  const req = { user: { app_metadata: { role: 'voluntario' } } };
-  const res = respostaFalsa();
-  let chamado = false;
+test(
+    "exigirPermissao permite perfil autorizado",
+    () => {
+        const req = {
+            perfil: {
+                perfil: "voluntario",
+                ativo: true
+            }
+        };
 
-  exigirPermissao('admin', 'voluntario')(req, res, () => {
-    chamado = true;
-  });
+        const res =
+            respostaFalsa();
 
-  assert.equal(chamado, true);
-  assert.equal(res.statusCode, null);
-});
+        let chamado = false;
 
-test('exigirPermissao bloqueia perfil sem acesso', () => {
-  const req = { user: { app_metadata: { role: 'cliente' } } };
-  const res = respostaFalsa();
+        exigirPermissao(
+            "admin",
+            "voluntario"
+        )(
+            req,
+            res,
+            () => {
+                chamado = true;
+            }
+        );
 
-  exigirPermissao('admin')(req, res, () => {});
+        assert.equal(
+            chamado,
+            true
+        );
 
-  assert.equal(res.statusCode, 403);
-  assert.equal(res.body.sucesso, undefined);
-});
+        assert.equal(
+            res.statusCode,
+            null
+        );
+    }
+);
 
-test('errorHandler oculta detalhes de erros internos', () => {
-  const req = { method: 'GET', originalUrl: '/health' };
-  const res = respostaFalsa();
+test(
+    "exigirPermissao bloqueia perfil sem acesso",
+    () => {
+        const req = {
+            perfil: {
+                perfil: "veterinario",
+                ativo: true
+            }
+        };
 
-  errorHandler(new Error('segredo do banco'), req, res, () => {});
+        const res =
+            respostaFalsa();
 
-  assert.equal(res.statusCode, 500);
-  assert.equal(res.body.erro, 'Erro interno do servidor.');
-});
+        let chamado = false;
+
+        exigirPermissao(
+            "admin"
+        )(
+            req,
+            res,
+            () => {
+                chamado = true;
+            }
+        );
+
+        assert.equal(
+            chamado,
+            false
+        );
+
+        assert.equal(
+            res.statusCode,
+            403
+        );
+
+        assert.deepEqual(
+            res.body,
+            {
+                erro:
+                    "Usuário sem permissão para esta operação."
+            }
+        );
+    }
+);
+
+test(
+    "errorHandler oculta detalhes de erros internos",
+    () => {
+        const req = {
+            method: "GET",
+            originalUrl: "/health"
+        };
+
+        const res =
+            respostaFalsa();
+
+        errorHandler(
+            new Error(
+                "segredo do banco"
+            ),
+            req,
+            res,
+            () => {}
+        );
+
+        assert.equal(
+            res.statusCode,
+            500
+        );
+
+        assert.equal(
+            res.body.erro,
+            "Erro interno do servidor."
+        );
+    }
+);

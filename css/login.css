@@ -1,0 +1,254 @@
+:root {
+    --marrom: #6f4939;
+    --marrom-escuro: #54372b;
+    --rosa: #c98686;
+    --fundo: #fbf7f2;
+    --branco: #ffffff;
+    --texto: #342b27;
+    --texto-secundario: #756862;
+    --borda: #ded5cf;
+    --erro: #a73c3c;
+    --erro-fundo: #fff0f0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--texto);
+    background: var(--fundo);
+}
+
+button,
+input {
+    font: inherit;
+}
+
+a {
+    color: inherit;
+}
+
+.pagina-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 32px 20px;
+}
+
+.login {
+    width: min(100%, 500px);
+}
+
+.identidade {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: 0 auto 6px;
+    color: var(--marrom);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.logo {
+    width: 120px;
+    height: 100px;
+    margin-right: 2px;
+    object-fit: contain;
+}
+
+.cartao-login {
+    width: 100%;
+    padding: 40px;
+    background: var(--branco);
+    border: 1px solid rgba(111, 73, 57, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(74, 53, 43, 0.1);
+}
+
+.cabecalho-login {
+    margin-bottom: 30px;
+}
+
+.rotulo {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--rosa);
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+}
+
+.cabecalho-login h1 {
+    margin: 0;
+    color: var(--marrom);
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.formulario-login {
+    display: grid;
+    gap: 20px;
+}
+
+.campo {
+    display: grid;
+    gap: 8px;
+}
+
+.campo label {
+    font-size: 0.86rem;
+    font-weight: 600;
+}
+
+.campo input {
+    width: 100%;
+    height: 52px;
+    padding: 0 15px;
+    color: var(--texto);
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: 12px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.campo input::placeholder {
+    color: #aaa09b;
+}
+
+.campo input:focus {
+    border-color: var(--marrom);
+    box-shadow: 0 0 0 3px rgba(111, 73, 57, 0.1);
+}
+
+.campo-senha {
+    position: relative;
+}
+
+.campo-senha input {
+    padding-right: 90px;
+}
+
+.alternar-senha {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    padding: 6px;
+    color: var(--marrom);
+    background: transparent;
+    border: 0;
+    border-radius: 6px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transform: translateY(-50%);
+}
+
+.alternar-senha:hover {
+    background: rgba(111, 73, 57, 0.07);
+}
+
+.mensagem-login {
+    padding: 12px 14px;
+    color: var(--erro);
+    background: var(--erro-fundo);
+    border: 1px solid rgba(167, 60, 60, 0.18);
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+.botao-login {
+    width: 100%;
+    height: 52px;
+    color: #ffffff;
+    background: var(--marrom);
+    border: 0;
+    border-radius: 999px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.botao-login:hover:not(:disabled) {
+    background: var(--marrom-escuro);
+    transform: translateY(-1px);
+}
+
+.botao-login:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.voltar {
+    display: block;
+    width: fit-content;
+    margin: 24px auto 0;
+    color: var(--texto-secundario);
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.voltar:hover {
+    color: var(--marrom);
+    text-decoration: underline;
+}
+
+.identidade:focus-visible,
+.alternar-senha:focus-visible,
+.botao-login:focus-visible,
+.voltar:focus-visible {
+    outline: 3px solid rgba(111, 73, 57, 0.25);
+    outline-offset: 3px;
+}
+
+@media (max-width: 520px) {
+    .pagina-login {
+        padding: 20px 16px;
+    }
+
+    .identidade {
+        margin-bottom: 2px;
+        font-size: 1rem;
+    }
+
+    .logo {
+        width: 100px;
+        height: 84px;
+    }
+
+    .cartao-login {
+        padding: 30px 22px;
+        border-radius: 20px;
+    }
+
+    .cabecalho-login {
+        margin-bottom: 26px;
+    }
+
+    .cabecalho-login h1 {
+        font-size: 1.7rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
