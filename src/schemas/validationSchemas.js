@@ -22,6 +22,7 @@ export const animalSchema = z.object({
   porte: z.enum(['pequeno', 'medio', 'grande']),
   faixa_etaria: z.enum(['filhote', 'adulto', 'idoso']),
   temperamento: z.string().optional(),
+  imagem_url: z.string().trim().max(2048).refine((valor) => !valor || /^https?:\/\//i.test(valor) && z.string().url().safeParse(valor).success, 'Informe um link de imagem válido com http ou https.').nullable().optional(),
   convivencia_criancas: z.boolean(),
   convivencia_outros_animais: z.boolean(),
   situacao: situacaoAnimalSchema.optional()

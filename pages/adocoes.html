@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -11,10 +11,10 @@
 
     <meta
         name="description"
-        content="Painel administrativo do sistema Anjos de Patas."
+        content="Acompanhe interessados e registre adoções."
     >
 
-    <title>Dashboard | Anjos de Patas</title>
+    <title>Adoções | Anjos de Patas</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,8 +136,7 @@
 
                     <a
                         href="dashboard.html"
-                        class="nav-item ativo"
-                        aria-current="page"
+                        class="nav-item"
                     >
                         <span
                             class="nav-icone"
@@ -204,8 +203,7 @@
                     </a>
 
                     <a
-                        href="adocoes.html"
-                        class="nav-item"
+                        href="adocoes.html" class="nav-item ativo" aria-current="page"
                     >
                         <span
                             class="nav-icone"
@@ -297,237 +295,36 @@
             <header class="cabecalho">
 
                 <h1>
-                    Visão geral
+                    Adoções
                 </h1>
 
                 <p class="cabecalho-texto">
-                    Acompanhe as principais informações do sistema.
+                    Acompanhe interessados e registre adoções.
                 </p>
 
             </header>
 
-            <section
-                class="resumo"
-                aria-label="Indicadores gerais"
-            >
 
-                <div class="cards-resumo">
-
-                    <article class="card-resumo card-animais">
-
-                        <div
-                            class="card-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/animais.svg"
-                                alt=""
-                            >
-                        </div>
-
-                        <strong
-                            id="total-animais"
-                            class="card-numero"
-                        >
-                            —
-                        </strong>
-
-                        <span class="card-titulo">
-                            Animais acolhidos
-                        </span>
-
-                    </article>
-
-                    <article class="card-resumo card-adocoes">
-
-                        <div
-                            class="card-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/registrar_adocao.svg"
-                                alt=""
-                            >
-                        </div>
-
-                        <strong
-                            id="total-adocoes"
-                            class="card-numero"
-                        >
-                            —
-                        </strong>
-
-                        <span class="card-titulo">
-                            Adoções concluídas
-                        </span>
-
-                    </article>
-
-                    <article class="card-resumo card-cuidados">
-
-                        <div
-                            class="card-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/cuidados_medicos.svg"
-                                alt=""
-                            >
-                        </div>
-
-                        <strong
-                            id="total-cuidados"
-                            class="card-numero"
-                        >
-                            —
-                        </strong>
-
-                        <span class="card-titulo">
-                            Sob cuidados médicos
-                        </span>
-
-                    </article>
-
-                    <article class="card-resumo card-pedidos">
-
-                        <div
-                            class="card-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/pedidos_pendentes.svg"
-                                alt=""
-                            >
-                        </div>
-
-                        <strong
-                            id="total-pedidos"
-                            class="card-numero"
-                        >
-                            —
-                        </strong>
-
-                        <span class="card-titulo">
-                            Pedidos pendentes
-                        </span>
-
-                    </article>
-
-                </div>
-
-                <p
-                    id="mensagem-dashboard"
-                    class="mensagem-dashboard"
-                    role="status"
-                    aria-live="polite"
-                    hidden
-                ></p>
-
-            </section>
-
-            <section
-                class="atalhos"
-                aria-labelledby="titulo-atalhos"
-            >
-
-                <h2 id="titulo-atalhos">
-                    Atalhos rápidos
-                </h2>
-
-                <div class="atalhos-grid">
-
-                    <a
-                        href="animais.html#cadastro"
-                        class="atalho"
-                    >
-                        <span
-                            class="atalho-icone"
-                            aria-hidden="true"
-                        >
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                            >
-                                <path d="M12 5v14"></path>
-                                <path d="M5 12h14"></path>
-                            </svg>
-                        </span>
-
-                        <div>
-                            <strong>
-                                Cadastrar animal
-                            </strong>
-
-                            <span>
-                                Registrar um novo animal
-                            </span>
-                        </div>
-                    </a>
-
-                    <a
-                        href="animais.html#historico"
-                        class="atalho"
-                    >
-                        <span
-                            class="atalho-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/resgates.svg"
-                                alt=""
-                            >
-                        </span>
-
-                        <div>
-                            <strong>
-                                Registrar resgate
-                            </strong>
-
-                            <span>
-                                Adicionar um novo resgate
-                            </span>
-                        </div>
-                    </a>
-
-                    <a
-                        href="adocoes.html"
-                        class="atalho"
-                    >
-                        <span
-                            class="atalho-icone"
-                            aria-hidden="true"
-                        >
-                            <img
-                                src="../assets/icons/registrar_adocao.svg"
-                                alt=""
-                            >
-                        </span>
-
-                        <div>
-                            <strong>
-                                Acompanhar adoções
-                            </strong>
-
-                            <span>
-                                Consultar processos de adoção
-                            </span>
-                        </div>
-                    </a>
-
-                </div>
-
-            </section>
-
-        </main>
-
-    </div>
-
-    <script src="../js/api.js"></script>
-    <script src="../js/dashboard.js"></script>
-
-</body>
-
-</html>
+<p id="mensagem-admin" class="mensagem-admin" role="status" aria-live="polite" hidden></p>
+<section class="painel" id="orientacoes"><h2>Processo de adoção</h2>
+<p>A equipe consulta os interessados, realiza a triagem e registra a adoção após sua avaliação. O registro atualiza a situação do animal para adotado e mantém o histórico.</p>
+</section>
+<section class="painel"><h2>Registrar adoção</h2>
+<form id="form-adocao" class="form-admin">
+<div class="campo-admin"><label for="animal_id">Animal disponível</label><select id="animal_id" name="animal_id" required><option value="">Selecione um animal</option></select></div>
+<div class="campo-admin"><label for="adotante_id">Adotante aprovado</label><select id="adotante_id" name="adotante_id" required><option value="">Selecione um adotante</option></select></div>
+<div class="campo-admin"><label for="data_adocao">Data da adoção</label><input id="data_adocao" name="data_adocao" type="date" required></div>
+<div class="campo-admin"><label for="observacoes">Observações</label><textarea id="observacoes" name="observacoes" maxlength="2000"></textarea></div>
+<p class="nota-admin campo-amplo">Registre somente após a avaliação da equipe. A confirmação retira o animal do catálogo público.</p>
+<div class="barra-acoes"><button class="botao-admin" type="submit">Registrar adoção</button><button class="botao-admin secundario" type="button" id="recarregar-adocoes">Atualizar dados</button></div>
+</form></section>
+<section class="painel"><h2>Adotantes e triagem</h2><div id="lista-adotantes"></div></section>
+<section class="painel"><h2>Cadastrar interessado</h2><form id="form-adotante" class="form-admin">
+<div class="campo-admin"><label for="nome-adotante">Nome</label><input id="nome-adotante" name="nome" required minlength="3" maxlength="100"></div>
+<div class="campo-admin"><label for="email-adotante">E-mail</label><input id="email-adotante" name="email" type="email" required autocomplete="email"></div>
+<div class="campo-admin"><label for="telefone-adotante">Telefone com DDD</label><input id="telefone-adotante" name="telefone" type="tel" required pattern="[0-9]{10,11}" inputmode="numeric" title="Informe 10 ou 11 números com DDD"></div>
+<div class="campo-admin"><label for="endereco-adotante">Endereço</label><input id="endereco-adotante" name="endereco" autocomplete="street-address"></div>
+<div class="barra-acoes"><button class="botao-admin" type="submit">Cadastrar interessado</button></div>
+</form></section>
+<section class="painel"><h2>Adoções registradas</h2><div id="lista-adocoes"></div></section>
+</main></div><script src="../js/api.js"></script><script src="../js/admin-session.js"></script><script src="../js/adocoes.js"></script></body></html>

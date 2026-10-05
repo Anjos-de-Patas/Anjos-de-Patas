@@ -59,6 +59,18 @@ button {
     display: none !important;
 }
 
+.pular-conteudo {
+    position: fixed;
+    top: -100px;
+    left: 12px;
+    z-index: 100;
+    padding: 12px;
+    color: var(--texto);
+    background: white;
+}
+
+.pular-conteudo:focus { top: 12px; }
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible {

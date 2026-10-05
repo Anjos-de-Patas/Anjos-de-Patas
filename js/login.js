@@ -1,4 +1,4 @@
-const API_LOGIN = "http://localhost:3000/api/login";
+const API_LOGIN = `${window.AnjosAPI.base}/api/login`;
 
 const formularioLogin = document.querySelector("#formulario-login");
 const campoEmail = document.querySelector("#email");

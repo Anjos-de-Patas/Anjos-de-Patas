@@ -24,6 +24,16 @@ test('animalSchema aceita um animal valido', () => {
   assert.equal(resultado.success, true);
 });
 
+test('imagem aceita links HTTP, remoção e rejeita protocolos inseguros', () => {
+  for (const imagem_url of ['https://exemplo.com/foto.jpg', 'http://exemplo.com/foto.png', '', null]) {
+    assert.equal(animalSchema.safeParse({ ...animalValido, imagem_url }).success, true);
+    assert.equal(animalUpdateSchema.safeParse({ imagem_url }).success, true);
+  }
+  for (const imagem_url of ['javascript:alert(1)', 'data:image/png;base64,abc', 'foto.jpg']) {
+    assert.equal(animalSchema.safeParse({ ...animalValido, imagem_url }).success, false);
+  }
+});
+
 test('animalSchema rejeita situacao desconhecida', () => {
   const resultado = animalSchema.safeParse({ ...animalValido, situacao: 'reservado' });
   assert.equal(resultado.success, false);

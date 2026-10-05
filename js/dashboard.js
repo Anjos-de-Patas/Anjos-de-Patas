@@ -1,4 +1,4 @@
-const API_DASHBOARD = "http://localhost:3000/api/dashboard";
+const API_DASHBOARD = `${window.AnjosAPI.base}/api/dashboard`;
 
 const totalAnimais = document.querySelector("#total-animais");
 const totalAdocoes = document.querySelector("#total-adocoes");

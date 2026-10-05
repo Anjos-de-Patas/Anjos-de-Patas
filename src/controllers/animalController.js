@@ -43,6 +43,7 @@ export async function cadastrarAnimal(req, res) {
         porte: novoAnimal.porte,
         faixa_etaria: novoAnimal.faixa_etaria,
         temperamento: novoAnimal.temperamento,
+        ...(novoAnimal.imagem_url !== undefined ? { imagem_url: novoAnimal.imagem_url || null } : {}),
         convivencia_criancas: novoAnimal.convivencia_criancas,
         convivencia_outros_animais: novoAnimal.convivencia_outros_animais,
         situacao: novoAnimal.situacao || 'em tratamento'

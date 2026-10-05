@@ -1,5 +1,5 @@
 const botoesFiltro = document.querySelectorAll(".filtro");
-const cardsAnimais = document.querySelectorAll(".card-animal");
+let cardsAnimais = document.querySelectorAll(".card-animal");
 
 const textoFiltrosAtivos = document.getElementById("filtros-ativos");
 const botaoLimparFiltros = document.getElementById("limpar-filtros");
@@ -124,11 +124,9 @@ botaoLimparFiltros.addEventListener("click", () => {
 
 // Detalhes dos animais
 
-const botoesDetalhes =
-    document.querySelectorAll(".botao-detalhes");
-
-botoesDetalhes.forEach((botao) => {
-    botao.addEventListener("click", () => {
+document.querySelector('.lista-animais').addEventListener('click', (evento) => {
+        const botao = evento.target.closest('.botao-detalhes');
+        if (!botao) return;
         const idDetalhes =
             botao.getAttribute("aria-controls");
 
@@ -153,8 +151,92 @@ botoesDetalhes.forEach((botao) => {
             estaAberto
                 ? "Ver detalhes"
                 : "Ver menos";
-    });
 });
+
+const listaPublica = document.querySelector('.lista-animais');
+const modeloCard = document.querySelector('#modelo-card-animal').content.querySelector('.card-animal');
+const mensagemCatalogo = document.querySelector('#mensagem-catalogo');
+const botaoRecarregarCatalogo = document.querySelector('#recarregar-catalogo');
+const rotulosCatalogo = {
+    cao: 'Cachorro', gato: 'Gato', femea: 'Fêmea', macho: 'Macho',
+    pequeno: 'Pequeno porte', medio: 'Médio porte', grande: 'Grande porte',
+    filhote: 'Filhote', adulto: 'Adulto', idoso: 'Idoso'
+};
+
+function criarCardPublico(animal, indice) {
+    const card = modeloCard.cloneNode(true);
+    card.dataset.especie = animal.especie;
+    card.dataset.sexo = animal.sexo;
+    card.querySelector('h3').textContent = animal.nome;
+    card.querySelector('.tipo-animal').textContent = rotulosCatalogo[animal.especie] || 'Animal';
+    card.querySelector('.imagem-placeholder p').textContent = `Foto de ${animal.nome} ainda não disponível`;
+    if (/^https?:\/\//i.test(animal.imagem_url || '')) {
+        const foto = document.createElement('img');
+        foto.src = animal.imagem_url;
+        foto.alt = `Foto de ${animal.nome}`;
+        foto.loading = 'lazy';
+        foto.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        const placeholder = card.querySelector('.imagem-placeholder');
+        placeholder.hidden = true;
+        foto.addEventListener('error', () => { foto.remove(); placeholder.hidden = false; });
+        card.querySelector('.card-imagem').append(foto);
+    }
+    card.querySelector('.card-conteudo > p').textContent = animal.temperamento || 'Consulte a equipe para saber mais sobre este animal.';
+    card.querySelectorAll('.caracteristicas li').forEach((li, i) => {
+        li.textContent = rotulosCatalogo[[animal.faixa_etaria, animal.sexo, animal.porte][i]] || 'Não informado';
+    });
+    const detalhes = card.querySelector('.detalhes-expandidos');
+    detalhes.id = `detalhes-animal-${indice}`;
+    detalhes.hidden = true;
+    const botao = card.querySelector('.botao-detalhes');
+    botao.setAttribute('aria-controls', detalhes.id);
+    botao.setAttribute('aria-expanded', 'false');
+    botao.setAttribute('aria-label', `Ver detalhes de ${animal.nome}`);
+    const lista = detalhes.querySelector('dl');
+    lista.replaceChildren();
+    for (const [rotulo, valor] of [
+        ['Temperamento', animal.temperamento || 'Não informado'],
+        ['Convive com crianças', typeof animal.convivencia_criancas === 'boolean' ? (animal.convivencia_criancas ? 'Sim' : 'Não') : 'Não informado'],
+        ['Convive com outros animais', typeof animal.convivencia_outros_animais === 'boolean' ? (animal.convivencia_outros_animais ? 'Sim' : 'Não') : 'Não informado']
+    ]) {
+        const div = document.createElement('div');
+        const dt = document.createElement('dt');
+        const dd = document.createElement('dd');
+        dt.textContent = rotulo;
+        dd.textContent = valor;
+        div.append(dt, dd);
+        lista.append(div);
+    }
+    return card;
+}
+
+async function carregarCatalogo() {
+    listaPublica.replaceChildren();
+    cardsAnimais = [];
+    mensagemCatalogo.hidden = false;
+    mensagemCatalogo.textContent = 'Carregando animais disponíveis...';
+    mensagemSemResultados.hidden = true;
+    botaoRecarregarCatalogo.hidden = true;
+    listaPublica.setAttribute('aria-busy', 'true');
+    try {
+        const dados = await window.AnjosAPI.solicitar('/api/animais');
+        const animais = (dados.animais || []).filter((animal) => animal.situacao === 'disponivel');
+        listaPublica.replaceChildren(...animais.map(criarCardPublico));
+        cardsAnimais = listaPublica.querySelectorAll('.card-animal');
+        mensagemCatalogo.hidden = animais.length > 0;
+        mensagemCatalogo.textContent = 'Nenhum animal disponível para adoção no momento.';
+        aplicarFiltros();
+        if (!animais.length) mensagemSemResultados.hidden = true;
+    } catch {
+        mensagemCatalogo.textContent = 'Não foi possível carregar os animais. Verifique a conexão e tente novamente.';
+        botaoRecarregarCatalogo.hidden = false;
+    } finally {
+        listaPublica.setAttribute('aria-busy', 'false');
+    }
+}
+
+botaoRecarregarCatalogo.addEventListener('click', carregarCatalogo);
+carregarCatalogo();
 
 
 // Destaque do menu
@@ -214,7 +296,7 @@ atualizarMenuAtivo();
 // Assistente
 
 const API_AGENTE =
-    "http://localhost:3000/api/agente";
+    `${window.AnjosAPI.base}/api/agente`;
 
 const botaoChatFlutuante =
     document.getElementById("botao-chat-flutuante");

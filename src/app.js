@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
+import { enviarImagemAnimal } from './controllers/imagemController.js';
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 // Controladores
 import {
@@ -79,6 +82,7 @@ import {
 const app = express();
 
 app.disable("x-powered-by");
+if (process.env.RENDER === 'true') app.set('trust proxy', 1);
 
 const protegerONG = [
     verificarToken,
@@ -96,7 +100,11 @@ const origensPermitidas = (
     .split(",")
     .map((origem) => origem.trim());
 
-app.use(helmet());
+if (process.env.RENDER_EXTERNAL_URL) {
+    origensPermitidas.push(new URL(process.env.RENDER_EXTERNAL_URL).origin);
+}
+
+app.use(helmet({ contentSecurityPolicy: { directives: { imgSrc: ["'self'", 'data:', 'blob:', 'https:', 'http:'] } } }));
 
 app.use(
     cors({
@@ -122,6 +130,13 @@ app.use(
         limit: "1mb"
     })
 );
+
+// Publica somente os arquivos da interface. A raiz contém .env e código interno.
+const raizProjeto = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+app.get(['/', '/index.html'], (req, res) => res.sendFile(path.join(raizProjeto, 'index.html')));
+for (const pasta of ['pages', 'css', 'js', 'assets']) {
+    app.use(`/${pasta}`, express.static(path.join(raizProjeto, pasta), { dotfiles: 'deny' }));
+}
 
 // --- SAÚDE DA API ---
 
@@ -185,6 +200,10 @@ app.put(
 );
 
 // --- ANIMAIS ---
+
+app.post('/api/animais/imagem', ...protegerONG,
+    express.raw({ type: ['image/jpeg', 'image/png', 'image/webp'], limit: '5mb' }),
+    enviarImagemAnimal);
 
 app.post(
     "/api/animais",
