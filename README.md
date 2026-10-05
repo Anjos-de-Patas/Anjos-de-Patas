@@ -15,48 +15,92 @@ Desenvolver uma aplicação web para apoiar a organização das informações do
 | Júlio César Lima dos Reis | Banco de Dados / Back-end |
 | Rogério Mota de Melo | Desenvolvedor Back-end |
 
-## Situação atual do repositório
+## Situação atual do projeto
 
-O projeto está atualmente dividido em dois ramos:
+O front-end e o back-end estão atualmente integrados na branch `main`.
 
-- **main**: implementação da interface web com HTML, CSS e JavaScript.
-- **dev**: implementação do back-end, API, integração com Supabase, autenticação, validações, testes e recursos de IA.
+A aplicação possui uma área pública voltada à consulta de animais e ao apoio ao processo de adoção, além de uma área administrativa protegida por autenticação para usuários autorizados da ONG.
 
-> A consolidação do front-end e do back-end em uma única linha de desenvolvimento ainda faz parte da evolução do projeto.
+O projeto continua em desenvolvimento. Os módulos administrativos de gerenciamento de animais, resgates, cuidados de saúde, adotantes e adoções estão sendo integrados progressivamente à interface.
 
 ## Funcionalidades implementadas
 
-### Interface - branch `main`
+### Área pública
 
 - página inicial da aplicação;
 - apresentação institucional da ONG;
 - seção de animais disponíveis para adoção;
-- filtros por espécie e sexo;
+- filtros combináveis por espécie e sexo;
+- visualização de informações dos animais;
 - explicação do processo de adoção;
 - seção de contato;
-- seção de acesso ao assistente de adoção;
+- assistente de adoção integrado ao back-end;
+- integração do assistente com IA generativa;
 - layout responsivo para computadores, tablets e smartphones;
-- uso inicial de recursos de acessibilidade, como `aria-label` e `aria-pressed`.
+- recursos de acessibilidade em componentes interativos.
 
-### Back-end - branch `dev`
+### Área administrativa
 
 - autenticação de usuários;
-- listagem e cadastro de animais;
-- atualização de dados dos animais;
+- controle de acesso às rotas administrativas;
+- Dashboard administrativo responsivo;
+- menu lateral adaptado para desktop e dispositivos móveis;
+- exibição dos indicadores gerais do sistema;
+- perfil do usuário autenticado;
+- consulta de nome, e-mail e função;
+- edição do nome do usuário;
+- controle de usuários ativos e inativos por perfil;
+- encerramento da sessão.
+
+### Back-end e API
+
+O back-end já possui suporte para:
+
+- autenticação;
+- listagem, cadastro e atualização de animais;
 - cadastro e acompanhamento de adotantes;
 - registro de resgates;
-- registro de informações de saúde;
-- registro de vacinas e tratamentos;
+- registros de saúde;
+- registro de vacinas;
+- registro de tratamentos;
 - histórico individual dos animais;
 - registro e consulta de adoções;
-- dashboard;
+- dados do Dashboard;
 - busca inteligente;
-- agente de adoção com integração ao Gemini;
-- validação de dados com Zod;
-- controle de acesso por perfil;
+- agente de apoio à adoção;
+- validação de dados;
+- controle de acesso;
 - proteção de rotas;
 - tratamento centralizado de erros;
 - testes automatizados.
+
+> Algumas funcionalidades disponíveis na API ainda estão em processo de integração com a interface administrativa.
+
+## Autenticação e perfis
+
+A autenticação utiliza o **Supabase Auth**.
+
+Os dados internos dos usuários autorizados da ONG são associados à tabela `public.perfis`.
+
+A responsabilidade dos dados está organizada da seguinte forma:
+
+| Informação | Responsável |
+| --- | --- |
+| Identificação da conta | Supabase Auth |
+| E-mail | Supabase Auth |
+| Senha | Supabase Auth |
+| Sessão e token | Supabase Auth |
+| Nome | `public.perfis` |
+| Perfil de acesso | `public.perfis` |
+| Situação ativo/inativo | `public.perfis` |
+
+Atualmente estão previstos os seguintes perfis:
+
+- `admin`;
+- `voluntario`;
+- `veterinario`.
+
+A área administrativa não possui cadastro público de usuários.
 
 ## Tecnologias utilizadas
 
@@ -66,47 +110,57 @@ O projeto está atualmente dividido em dois ramos:
 - CSS3
 - JavaScript
 
-### Back-end
+### Back-end e API
 
 - Node.js
 - Express
+
+### Banco de dados e autenticação
+
 - Supabase
 - PostgreSQL
-- Google Generative AI / Gemini
-- Zod
-- Helmet
-- CORS
-- express-rate-limit
-- dotenv
-- Nodemon
+- Supabase Auth
 
-### Ferramentas de projeto
+### Inteligência Artificial
+
+- Google Gemini
+
+### Bibliotecas e recursos de apoio
+
+- Zod — validação de dados;
+- Helmet — configuração de cabeçalhos de segurança;
+- CORS — controle de acesso entre front-end e API;
+- express-rate-limit — limitação de requisições;
+- dotenv — gerenciamento de variáveis de ambiente;
+- Nodemon — apoio à execução do servidor durante o desenvolvimento.
+
+### Ferramentas de desenvolvimento
 
 - Git
 - GitHub
 - Figma
+- Visual Studio Code
 
-## Estrutura atual
-
-### Branch `main`
+## Estrutura do projeto
 
 ```text
 .
-├── index.html
+├── assets/
+│   └── icons/
 ├── css/
+│   ├── dashboard.css
+│   ├── login.css
+│   ├── perfil.css
 │   └── style.css
 ├── js/
-│   └── main.js
-└── README.md
-```
-
-### Branch `dev`
-
-```text
-.
-├── API.md
-├── package.json
-├── package-lock.json
+│   ├── dashboard.js
+│   ├── login.js
+│   ├── main.js
+│   └── perfil.js
+├── pages/
+│   ├── dashboard.html
+│   ├── login.html
+│   └── perfil.html
 ├── src/
 │   ├── app.js
 │   ├── server.js
@@ -115,19 +169,27 @@ O projeto está atualmente dividido em dois ramos:
 │   ├── middlewares/
 │   ├── schemas/
 │   └── services/
-└── test/
-    ├── middleware.test.js
-    └── validation.test.js
+├── test/
+├── API.md
+├── index.html
+├── package.json
+├── package-lock.json
+└── README.md
 ```
+
+A estrutura será ampliada conforme as demais telas administrativas forem implementadas.
 
 ## Pré-requisitos
 
-Para executar o back-end é necessário ter instalado:
+Para executar o projeto é necessário ter instalado:
 
 - Node.js;
 - npm;
-- uma instância/projeto Supabase configurado;
-- uma chave de API do Gemini para os recursos de IA.
+- Visual Studio Code ou outro editor compatível;
+- um projeto Supabase configurado;
+- uma chave da API Gemini para os recursos de IA.
+
+Para executar a interface durante o desenvolvimento, recomenda-se utilizar um servidor local, como a extensão **Live Server** do Visual Studio Code.
 
 ## Instalação
 
@@ -138,109 +200,233 @@ git clone https://github.com/Anjos-de-Patas/Anjos-de-Patas.git
 cd Anjos-de-Patas
 ```
 
-### Executar a interface
-
-A interface está atualmente na branch `main`.
+Instale as dependências:
 
 ```bash
-git checkout main
-```
-
-Abra o arquivo `index.html` no navegador ou utilize uma extensão/servidor local para arquivos estáticos.
-
-Exemplo com VS Code: utilize a extensão **Live Server** e abra o `index.html`.
-
-### Executar o back-end
-
-Mude para a branch `dev`:
-
-```bash
-git checkout dev
 npm install
 ```
 
-Crie um arquivo `.env` na raiz da aplicação back-end:
+## Configuração das variáveis de ambiente
+
+Crie um arquivo `.env` na raiz do projeto.
+
+Exemplo:
 
 ```env
 SUPABASE_URL=...
 SUPABASE_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
 GEMINI_API_KEY=...
-FRONTEND_URL=http://localhost:5173
+FRONTEND_URL=http://127.0.0.1:5500
 PORT=3000
 ```
 
-Inicie em modo de desenvolvimento:
+As credenciais reais não devem ser adicionadas ao repositório.
+
+O arquivo `.env` está ignorado pelo Git por meio do `.gitignore`.
+
+A `SUPABASE_SERVICE_ROLE_KEY` é utilizada exclusivamente no ambiente de back-end para operações administrativas autorizadas e não deve ser exposta no código do front-end.
+
+## Executando o back-end
+
+Para iniciar o servidor em modo de desenvolvimento:
 
 ```bash
 npm run dev
 ```
 
-Ou execute normalmente:
+Por padrão, o back-end utiliza a porta:
 
-```bash
-npm start
+```text
+3000
 ```
 
-Por padrão, o servidor utiliza a porta `3000`.
+O terminal deverá indicar que o servidor está ativo.
+
+## Executando o front-end
+
+Com o back-end em execução, abra o arquivo `index.html` utilizando um servidor local.
+
+No Visual Studio Code, utilizando o **Live Server**:
+
+1. abra o projeto;
+2. localize `index.html`;
+3. utilize a opção **Open with Live Server**.
+
+No ambiente atual de desenvolvimento, o front-end está configurado para:
+
+```text
+http://127.0.0.1:5500
+```
+
+A origem utilizada pelo front-end deve corresponder ao valor configurado em `FRONTEND_URL`.
+
+## Utilização
+
+### Área pública
+
+O visitante pode:
+
+- acessar a página inicial;
+- conhecer informações sobre a ONG;
+- consultar animais apresentados para adoção;
+- aplicar filtros;
+- visualizar informações dos animais;
+- consultar informações sobre o processo de adoção;
+- utilizar o assistente para procurar animais compatíveis com suas preferências.
+
+### Área administrativa
+
+Usuários autorizados podem acessar a opção **Entrar** na página inicial.
+
+Após a autenticação, o usuário é direcionado ao Dashboard administrativo.
+
+A área administrativa permite, conforme as funcionalidades já implementadas ou em integração:
+
+- consultar indicadores;
+- acessar o próprio perfil;
+- atualizar o nome de exibição;
+- gerenciar informações relacionadas aos animais e ao processo de adoção.
+
+As funcionalidades disponíveis dependem do perfil de acesso do usuário.
+
+## API
+
+A documentação complementar das rotas está disponível em `API.md`.
+
+Entre os endpoints existentes estão:
+
+```text
+GET  /health
+
+POST /api/login
+
+GET  /api/perfil
+PUT  /api/perfil
+
+GET  /api/animais
+GET  /api/admin/animais
+POST /api/animais
+PUT  /api/animais/:id
+
+POST /api/busca-inteligente
+POST /api/agente
+
+GET  /api/animais/:id/historico
+POST /api/animais/:id/resgates
+POST /api/animais/:id/saude
+POST /api/animais/:id/vacinas
+POST /api/animais/:id/tratamentos
+
+POST /api/adotantes
+GET  /api/adotantes
+PUT  /api/adotantes/:id/status
+
+POST /api/adocoes
+GET  /api/adocoes
+
+GET  /api/dashboard
+```
+
+As rotas administrativas exigem autenticação por token e perfil autorizado.
+
+## Banco de dados
+
+O banco de dados utiliza PostgreSQL por meio do Supabase.
+
+Entre as principais estruturas atualmente utilizadas estão:
+
+- `animais`;
+- `adotantes`;
+- `adocoes`;
+- `resgates`;
+- `registros_saude`;
+- `vacinas`;
+- `tratamentos`;
+- `perfis`.
+
+O Supabase Auth é utilizado separadamente para autenticação das contas administrativas.
+
+## Dados de demonstração
+
+Durante o desenvolvimento acadêmico, são utilizados dados fictícios para permitir testes e demonstrações das funcionalidades enquanto não estão disponíveis todos os dados reais necessários da ONG.
+
+Esses registros têm finalidade de desenvolvimento, validação da interface e demonstração do sistema.
+
+## Assistente de adoção
+
+O projeto possui um assistente integrado ao back-end para apoiar a busca de animais de acordo com as preferências informadas pelo usuário.
+
+O assistente utiliza integração com o Google Gemini e ferramentas internas da aplicação para consultar os dados disponíveis.
+
+O recurso funciona como apoio à busca e não realiza aprovação automática de adoções.
 
 ## Testes
 
-Na branch `dev`, instale as dependências e execute:
+Para executar os testes automatizados:
 
 ```bash
 npm test
 ```
 
-Os testes atuais verificam partes das validações e middlewares da aplicação.
+A suíte atual verifica componentes do back-end, incluindo validações, middlewares e regras de segurança implementadas.
 
-## API
-
-A documentação das rotas está disponível no arquivo `API.md` da branch `dev`.
-
-Principais endpoints:
-
-```text
-GET  /health
-POST /api/login
-GET  /api/animais
-POST /api/animais
-PUT  /api/animais/:id
-POST /api/busca-inteligente
-POST /api/agente
-GET  /api/animais/:id/historico
-POST /api/adocoes
-GET  /api/adocoes
-GET  /api/dashboard
-```
-
-Rotas administrativas exigem autenticação por token e perfil autorizado.
-
-## Utilização
-
-O público externo poderá utilizar a aplicação para visualizar animais disponíveis para adoção e, conforme a evolução da interface, interagir com o assistente de adoção.
-
-Usuários autorizados da ONG utilizarão as funcionalidades administrativas para cadastrar, atualizar e acompanhar animais, histórico de saúde, resgates, adotantes e adoções.
+Antes da integração de novas funcionalidades, recomenda-se confirmar que todos os testes continuam passando.
 
 ## Responsividade e acessibilidade
 
-A interface da branch `main` possui regras específicas para desktop, tablet e celular. Também foram incorporados elementos semânticos HTML e atributos ARIA em componentes interativos.
+A aplicação possui adaptações para:
 
-A validação completa de acessibilidade continuará durante os testes e refinamentos da aplicação.
+- computadores;
+- tablets;
+- smartphones.
+
+Também são utilizados elementos semânticos HTML, atributos ARIA, gerenciamento de foco em componentes interativos e adaptações de navegação para telas menores.
+
+A acessibilidade continuará sendo revisada durante o desenvolvimento.
+
+## Segurança
+
+Entre as medidas adotadas atualmente estão:
+
+- autenticação pelo Supabase Auth;
+- validação de token nas rotas protegidas;
+- controle de acesso por perfil;
+- verificação de usuários ativos;
+- validação de dados recebidos pela API;
+- Helmet;
+- configuração de CORS;
+- limitação de requisições em rotas específicas;
+- tratamento centralizado de erros;
+- variáveis sensíveis armazenadas fora do repositório.
+
+As regras de segurança do banco de dados continuarão sendo revisadas durante a evolução do projeto.
 
 ## Documentação acadêmica
 
-O projeto possui o Documento Técnico da TED 1 com diagnóstico da demanda, requisitos e planejamento da solução. A Versão 2.0 acrescenta a documentação da implementação da interface, estrutura da aplicação, decisões arquiteturais, tecnologias efetivamente utilizadas, evidências visuais e histórico de versões.
+O projeto possui o Documento Técnico da TED 1, contendo o diagnóstico da demanda, requisitos e planejamento da solução.
+
+A Versão 2.0 deverá preservar as informações da TED 1 e acrescentar, entre outros elementos:
+
+- estrutura da aplicação;
+- documentação da interface;
+- decisões arquiteturais tomadas durante a implementação;
+- tecnologias efetivamente utilizadas;
+- evidências visuais da aplicação;
+- histórico atualizado de versões.
 
 ## Publicação
 
-No momento, ainda não há um endereço público definitivo da aplicação registrado no repositório.
+No momento, não há um endereço público definitivo da aplicação registrado no repositório.
 
-Quando o ambiente de demonstração estiver disponível, o link deverá ser incluído nesta seção e no Documento Técnico do Projeto.
+Quando um ambiente de demonstração for disponibilizado, o endereço deverá ser incluído nesta seção e na documentação acadêmica correspondente.
 
 ## Repositório
 
-https://github.com/Anjos-de-Patas/Anjos-de-Patas
+O projeto é mantido na organização **Anjos-de-Patas** no GitHub, no repositório **Anjos-de-Patas**.
 
 ## Observação
 
-Este repositório faz parte de um projeto acadêmico em desenvolvimento. A estrutura e as funcionalidades poderão ser atualizadas nas próximas etapas da disciplina.
+Este repositório faz parte de um projeto acadêmico em desenvolvimento.
+
+A estrutura, as funcionalidades e a documentação poderão ser atualizadas conforme o avanço das próximas etapas da disciplina.
