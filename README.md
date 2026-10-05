@@ -10,7 +10,7 @@ Desenvolver uma aplicação web para apoiar a organização das informações do
 
 | Integrante | Função |
 | --- | --- |
-| Carinne da Silva Borges | Desenvolvedor Front-end | / UI/UX |
+| Carinne da Silva Borges | Desenvolvedor Front-end / UI/UX |
 | João Pedro Strasser Santos | Analista de Requisitos / QA |
 | Júlio César Lima dos Reis | Banco de Dados / Back-end |
 | Rogério Mota de Melo | Desenvolvedor Back-end |
