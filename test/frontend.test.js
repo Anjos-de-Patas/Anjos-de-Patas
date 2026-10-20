@@ -241,3 +241,17 @@ test('páginas têm IDs únicos, campos rotulados e links locais existentes', ()
         }
     }
 });
+
+test('recuperação confirma senha antes de enviar e não grava código ou senha na sessão',async()=>{
+    let envios=0,ultimo;
+    const env=ambiente('pages/recuperar-senha.html',async(url,opcoes)=>{envios++;ultimo={url,opcoes};return {mensagem:'Operação concluída'};});
+    env.executar('js/recuperar-senha.js');
+    env.document.querySelector('#email-recuperar').value='pessoa@example.com';
+    env.document.querySelector('#form-recuperar').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(env.document.querySelector('#form-recuperar').hidden,true);assert.equal(env.document.querySelector('#form-redefinir').hidden,false);
+    env.document.querySelector('#codigo-redefinir').value='123456';env.document.querySelector('#senha-redefinir').value='senha-nova';env.document.querySelector('#confirmar-redefinir').value='diferente';
+    env.document.querySelector('#form-redefinir').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();assert.equal(envios,1);
+    env.document.querySelector('#confirmar-redefinir').value='senha-nova';env.document.querySelector('#form-redefinir').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(envios,2);assert.equal(ultimo.url,'/api/redefinir-senha');assert.equal(env.document.querySelector('#form-redefinir').hidden,true);
+    assert.equal(env.context.sessionStorage.getItem('anjos_token'),undefined);
+});
