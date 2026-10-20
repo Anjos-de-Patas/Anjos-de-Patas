@@ -50,10 +50,13 @@ export const agentToolDefinitions = [
             properties: {
                 animal_id: {
                     type: 'STRING',
-                    description: 'Identificador do animal.'
+                    description: 'ID numérico retornado por buscar_animais. Nunca use o nome neste campo.'
+                },
+                nome: {
+                    type: 'STRING',
+                    description: 'Nome do animal quando o ID não for conhecido.'
                 }
             },
-            required: ['animal_id']
         }
     },
     {
@@ -182,29 +185,45 @@ async function obterDetalhesAnimal(
         };
     }
 
-    const { data, error } = await cliente
+    let consulta = cliente
         .from('animais')
         .select(
             'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao'
         )
-        .eq('id', validacao.data.animal_id)
         .eq('situacao', 'disponivel')
-        .maybeSingle();
+        .limit(2);
+
+    if (validacao.data.animal_id !== undefined) {
+        consulta = consulta.eq('id', validacao.data.animal_id);
+    } else {
+        const nome = validacao.data.nome.replace(/[\\%_]/g, '\\$&');
+        consulta = consulta.ilike('nome', nome);
+    }
+
+    const { data, error } = await consulta;
 
     if (error) {
         throw error;
     }
 
-    if (!data) {
+    if (!data?.length) {
         return {
             sucesso: false,
             erro: 'Animal disponível não encontrado.'
         };
     }
 
+    if (data.length > 1) {
+        return {
+            sucesso: false,
+            erro: 'Mais de um animal tem esse nome. Peça ao usuário para identificar qual deseja consultar.',
+            animais: data
+        };
+    }
+
     return {
         sucesso: true,
-        animal: data
+        animal: data[0]
     };
 }
 

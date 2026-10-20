@@ -1,3 +1,5 @@
+import { recuperarSenha, redefinirSenha } from './controllers/recuperacaoController.js';
+import { recuperarSchema, redefinirSchema } from './schemas/recuperacaoSchemas.js';
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -160,6 +162,10 @@ app.post(
 );
 
 // --- ROTAS PÚBLICAS ---
+
+const tratarRecuperacao = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+app.post('/api/recuperar-senha', limiteLogin, validarRequest(recuperarSchema), tratarRecuperacao(recuperarSenha));
+app.post('/api/redefinir-senha', limiteLogin, validarRequest(redefinirSchema), tratarRecuperacao(redefinirSenha));
 
 app.get(
     "/api/animais",
