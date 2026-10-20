@@ -16,5 +16,9 @@ export const buscarAnimaisArgsSchema = z.object({
 }).strict();
 
 export const detalhesAnimalArgsSchema = z.object({
-  animal_id: z.union([z.string().min(1), z.number().int().positive()])
-}).strict();
+  animal_id: z.union([
+    z.string().regex(/^[1-9]\d*$/),
+    z.number().int().positive().safe()
+  ]).optional(),
+  nome: z.string().trim().min(2).max(100).optional()
+}).strict().refine((dados) => dados.animal_id !== undefined || dados.nome !== undefined);
