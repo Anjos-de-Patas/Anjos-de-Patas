@@ -1,3 +1,6 @@
+import { obterAnimalPublico, manifestarInteresse } from './controllers/publicoController.js';
+import { interesseSchema } from './schemas/validationSchemas.js';
+import rateLimit from 'express-rate-limit';
 import { recuperarSenha, redefinirSenha } from './controllers/recuperacaoController.js';
 import { recuperarSchema, redefinirSchema } from './schemas/recuperacaoSchemas.js';
 import express from "express";
@@ -167,6 +170,13 @@ const tratarRecuperacao = (handler) => (req, res, next) => Promise.resolve(handl
 app.post('/api/recuperar-senha', limiteLogin, validarRequest(recuperarSchema), tratarRecuperacao(recuperarSenha));
 app.post('/api/redefinir-senha', limiteLogin, validarRequest(redefinirSchema), tratarRecuperacao(redefinirSenha));
 
+const tratarPublico = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+app.get('/api/animais/:id', tratarPublico(obterAnimalPublico));
+app.post('/api/interesses', rateLimit({
+    windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: 'draft-8', legacyHeaders: false,
+    message: { sucesso: false, erro: 'Limite de envios atingido. Tente novamente mais tarde.' }
+}), validarRequest(interesseSchema), tratarPublico(manifestarInteresse));
+
 app.get(
     "/api/animais",
     listarAnimais
@@ -187,6 +197,7 @@ app.post(
 
 app.post(
     "/api/adotantes",
+    ...protegerONG,
     validarRequest(adotanteSchema),
     cadastrarAdotante
 );

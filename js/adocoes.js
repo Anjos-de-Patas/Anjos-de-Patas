@@ -122,7 +122,7 @@ formAdotante.addEventListener('submit', async (evento) => {
         const dados = Object.fromEntries(new FormData(formAdotante));
         dados.nome = dados.nome.trim();
         if (dados.nome.length < 3) throw new Error('Informe um nome com pelo menos três letras.');
-        await api.solicitar('/api/adotantes', { method: 'POST', body: JSON.stringify(dados) });
+        await api.solicitar('/api/adotantes', { autenticado: true, method: 'POST', body: JSON.stringify(dados) });
         formAdotante.reset();
         const atualizado = await carregarDados();
         informar(atualizado ? 'Interessado cadastrado e aguardando triagem.' : 'Interessado cadastrado. Clique em Atualizar dados para recarregar a lista.');

@@ -185,6 +185,12 @@ function criarCardPublico(animal, indice) {
     card.querySelectorAll('.caracteristicas li').forEach((li, i) => {
         li.textContent = rotulosCatalogo[[animal.faixa_etaria, animal.sexo, animal.porte][i]] || 'Não informado';
     });
+    const perfil = document.createElement('a');
+    perfil.className = 'botao-detalhes';
+    perfil.href = `pages/animal.html?id=${encodeURIComponent(animal.id)}`;
+    perfil.textContent = 'Ver perfil completo';
+    card.querySelector('.card-conteudo').append(perfil);
+    card.querySelector('.botao-interesse').href = `${perfil.href}#interesse`;
     const detalhes = card.querySelector('.detalhes-expandidos');
     detalhes.id = `detalhes-animal-${indice}`;
     detalhes.hidden = true;

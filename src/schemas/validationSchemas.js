@@ -73,3 +73,13 @@ export const adocaoSchema = z.object({
   data_adocao: z.string().min(1),
   observacoes: z.string().optional()
 });
+
+export const interesseSchema = z.object({
+  animal_id: z.string().trim().min(1).max(40),
+  nome: z.string().trim().min(3).max(120),
+  email: z.string().trim().email().max(254).transform((s) => s.toLowerCase()),
+  telefone: z.string().regex(/^\d{10,11}$/, 'Informe DDD e telefone com 10 ou 11 números.'),
+  cidade: z.string().trim().min(2).max(120),
+  mensagem: z.string().trim().max(1500).optional(),
+  consentimento: z.literal(true, { errorMap: () => ({ message: 'Confirme a autorização de contato para continuar.' }) })
+}).strict();
