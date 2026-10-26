@@ -1,0 +1,93 @@
+/* Identidade compartilhada pelas páginas internas. */
+:root {
+    --marrom: #633f24;
+    --marrom-escuro: #4c2f1b;
+    --marrom-claro: #765b43;
+    --verde: #6f8f45;
+    --rosa: #b56868;
+    --fundo: #fffdf8;
+    --bege: #f7f1df;
+    --borda: #dfd4bd;
+    --texto: #302821;
+    --texto-secundario: #6b625a;
+    --sombra: 0 8px 28px rgba(76,47,27,.05);
+}
+body { background: var(--fundo); }
+.menu-lateral { background: var(--marrom-escuro); border-right: 1px solid var(--marrom); }
+.marca { padding-bottom: 25px; border-bottom: 1px solid #ffffff24; }
+.nav-item { border-radius: 6px; }
+.nav-item.ativo { background: #ffffff12; box-shadow: inset 3px 0 var(--rosa); }
+.nav-item:hover { background: #ffffff1c; }
+.menu-rodape { border-top: 1px solid #ffffff24; padding-top: 20px; }
+.conteudo { max-width: 1600px; padding-top: 40px; }
+.cabecalho { position: relative; padding: 32px; margin-bottom: 32px; border: 1px solid var(--borda); border-top: 3px solid var(--rosa); border-radius: 8px; background: var(--bege); }
+.cabecalho h1 { font-size: clamp(1.9rem,3vw,2.6rem); color: var(--marrom); font-weight: 500; letter-spacing: -1px; }
+.cabecalho-texto { max-width: 640px; font-size: .88rem; line-height: 1.8; }
+.pagina-rotulo { display: block; color: var(--rosa); text-transform: uppercase; letter-spacing: 2px; font-size: .65rem; font-weight: 600; margin-bottom: 14px; }
+.portal-link { display: inline-flex; align-items: center; gap: 12px; margin-top: 20px; color: var(--marrom); font-size: .76rem; text-decoration: none; border-bottom: 1px solid var(--rosa); padding-bottom: 5px; }
+.card-resumo { border-radius: 8px; border-top: 3px solid var(--verde); padding: 24px; box-shadow: var(--sombra); }
+.card-adocoes { border-top-color: var(--rosa); }
+.card-cuidados { border-top-color: var(--marrom); }
+.card-pedidos { border-top-color: #b59155; }
+.card-numero { font-weight: 500; color: var(--marrom); }
+.atalhos h2 { font-weight: 500; color: var(--marrom); }
+.atalho,.atalho:nth-child(2),.atalho:nth-child(3) { border-radius: 8px; border: 1px solid var(--borda); background: var(--bege); box-shadow: none; }
+.atalho-icone { border-radius: 8px; }
+.painel { border-radius: 8px; padding: 28px; box-shadow: var(--sombra); }
+.painel h2 { color: var(--marrom); font-weight: 500; font-size: 1.3rem; }
+.barra-acoes { gap: 16px; }
+.botao-admin { border-radius: 6px; font-size: .85rem; background: var(--verde); border-color: var(--verde); }
+.botao-admin.secundario { border-color: var(--borda); color: var(--marrom); background: var(--fundo); }
+.botao-admin:hover:not(:disabled) { filter: brightness(.94); }
+.campo-admin label,.form-admin legend { color: var(--marrom); font-size: .8rem; }
+.campo-admin input,.campo-admin select,.campo-admin textarea { border-color: var(--borda); border-radius: 6px; padding: 12px; min-height: 46px; }
+.animal-admin { border-radius: 8px; background: var(--fundo); padding: 22px; }
+.animal-admin h3 { color: var(--marrom); font-weight: 500; }
+.mensagem-admin,.mensagem-dashboard { background: var(--bege); border-radius: 6px; color: var(--texto); }
+.linha-registro { padding: 18px 0; line-height: 1.8; }
+.pagina-login { min-height: 100svh; padding: 0; display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
+.login-apresentacao { display: flex; flex-direction: column; justify-content: flex-end; position: relative; isolation: isolate; padding: clamp(32px,5vw,80px); min-height: 650px; color: white; background: var(--marrom-escuro); overflow: hidden; }
+.login-apresentacao > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
+.login-apresentacao::before { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg,#302013f5,#30201320); z-index: -1; }
+.login-apresentacao .pagina-rotulo { color: #eac3b7; }
+.login-apresentacao h2 { font-size: clamp(2.5rem,4vw,4.5rem); font-weight: 500; letter-spacing: -2px; line-height: 1.15; margin: 0 0 24px; }
+.login-apresentacao h2 em { font-family: Georgia,serif; color: #eac3b7; font-weight: 400; }
+.login-apresentacao p { font-size: .95rem; line-height: 1.9; max-width: 440px; color: #eee3c8; }
+.login { width: 100%; max-width: 560px; align-self: center; justify-self: center; padding: 48px; }
+.identidade { justify-content: flex-start; margin: 0 0 35px; }
+.cartao-login { padding: 0; background: transparent; border: 0; box-shadow: none; }
+.cabecalho-login h1 { color: var(--marrom); font-weight: 500; font-size: 2.2rem; letter-spacing: -1px; }
+.rotulo { color: var(--rosa); letter-spacing: 2px; font-size: .67rem; }
+.login .campo input { border-radius: 6px; border-color: var(--borda); background: white; }
+.botao-login { background: var(--verde); border-radius: 6px; }
+.botao-login:hover:not(:disabled) { background: #587435; }
+.pagina-perfil { min-height: 100svh; background: linear-gradient(var(--bege) 0 280px,var(--fundo) 280px); padding: 40px 24px 70px; }
+.perfil { width: min(100%,820px); }
+.perfil-identidade { display: flex; align-items: center; gap: 12px; color: var(--marrom); font-size: .9rem; font-weight: 600; margin-bottom: 28px; }
+.perfil-identidade img { width: 52px; height: 52px; object-fit: contain; }
+.cartao-perfil { border-radius: 8px; border-top: 3px solid var(--rosa); box-shadow: var(--sombra); }
+.cabecalho-perfil { background: var(--bege); }
+.cabecalho-perfil h1 { font-weight: 500; color: var(--marrom); letter-spacing: -1px; }
+.perfil-avatar { background: var(--marrom-escuro); border-radius: 12px; }
+.campo input { border-color: var(--borda); border-radius: 6px; }
+.botao-principal { background: var(--verde); border-radius: 6px; }
+.botao-principal:hover:not(:disabled) { background: #587435; }
+.botao-secundario,.modal-conteudo { border-radius: 8px; }
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible { outline: 3px solid var(--verde); outline-offset: 3px; }
+@media(max-width:1050px) { .conteudo { padding: 28px; } .login { padding: 32px; } }
+@media(max-width:720px) {
+ .conteudo { margin-left: 0; padding: 24px 16px 40px; }
+ .cabecalho { padding: 24px; margin-bottom: 24px; }
+ .cabecalho h1 { font-size: 2rem; }
+ .cabecalho-mobile { background: var(--marrom-escuro); }
+ .painel { padding: 20px 16px; }
+ .card-resumo { padding: 18px; }
+ .pagina-login { grid-template-columns: 1fr; }
+ .login-apresentacao { min-height: 310px; padding: 32px 24px; }
+ .login-apresentacao h2 { font-size: 2.6rem; letter-spacing: -1px; max-width: 420px; margin-bottom: 12px; }
+ .login-apresentacao p { font-size: .8rem; margin: 0; }
+ .login { padding: 32px 24px 48px; }
+ .identidade { margin-bottom: 24px; }
+ .cabecalho-login h1 { font-size: 1.9rem; }
+ .pagina-perfil { padding: 24px 16px 48px; }
+}

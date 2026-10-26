@@ -1,0 +1,9 @@
+/* Mesmas bases de layout e identidade usadas no acesso administrativo. */
+.conta-mostrar-senha { justify-self: start; border: 0; background: transparent; color: var(--marrom); padding: 6px 0; min-height: 36px; text-decoration: underline; cursor: pointer; font: inherit; font-size: .82rem; }
+.conta-alternativa { margin: 24px 0 16px; padding-top: 20px; border-top: 1px solid var(--borda); font-size: .9rem; line-height: 1.6; }
+.conta-alternativa a { color: var(--marrom); font-weight: 600; }
+.nota-publica, .campo small { color: var(--texto-secundario); font-size: .8rem; line-height: 1.7; }
+.consentimento-publico { display: flex; align-items: flex-start; gap: 10px; font-size: .8rem; line-height: 1.6; }
+.consentimento-publico input { flex: 0 0 auto; width: 18px; height: 18px; margin: 3px 0 0; accent-color: var(--marrom); }
+.mensagem-conta { padding: 14px; background: #eee9e6; border-left: 3px solid var(--marrom); line-height: 1.6; font-size: .85rem; }
+.mensagem-conta.erro { color: #8b2929; background: #fff0f0; border-color: #8b2929; }

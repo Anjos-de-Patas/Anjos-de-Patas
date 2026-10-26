@@ -5,15 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="description"
-        content="Portal da ONG Anjos de Patas para divulgação de animais disponíveis para adoção."
-    >
+    <meta name="description" content="Portal da ONG Anjos de Patas para divulgação de animais disponíveis para adoção.">
 
     <title>Anjos de Patas</title>
 
     <link rel="stylesheet" href="css/style.css">
-</head>
+<link rel="stylesheet" href="css/home.css"><link rel="preload" as="image" href="assets/images/companheiros-hero.jpg">
+<link rel="stylesheet" href="css/brand.css"><link rel="stylesheet" href="css/design-system.css"><link rel="stylesheet" href="css/home-editorial.css"></head>
 
 <body>
     <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
@@ -22,22 +20,13 @@
         <nav class="navegacao" aria-label="Navegação principal">
 
             <a href="#inicio" class="logo" aria-label="Anjos de Patas - Página inicial">
-                <img
-                    src="assets/images/logo_anjos_de_patas.png"
-                    alt=""
-                    class="logo-imagem"
-                >
+                <img height="60" width="120" decoding="async" src="assets/images/logo_anjos_de_patas.png" alt="" class="logo-imagem">
                 <span>Anjos de Patas</span>
-            </a>
+            </a><button aria-controls="menu-publico" aria-expanded="false" class="menu-publico-botao" id="alternar-menu-publico" type="button">Menu</button>
 
-            <ul class="menu">
-                <li><a href="#adote">Adote</a></li>
-                <li><a href="#como-funciona">Como funciona</a></li>
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#contato">Contato</a></li>
-            </ul>
+            <ul id="menu-publico" class="menu"><li><a href="#adote">Adote</a></li><li><a href="#sobre">A organização</a></li></ul>
 
-            <a href="pages/login.html" class="botao-entrar">
+            <a aria-label="Entrar na ?rea administrativa" href="pages/login.html" class="botao-entrar">
                 Entrar
             </a>
 
@@ -46,56 +35,46 @@
 
     <main id="conteudo-principal" tabindex="-1">
 
-        <section class="hero" id="inicio">
+        <section class="hero" id="inicio"><img decoding="async" class="hero-fotografia" src="assets/images/companheiros-hero.jpg" alt="Cachorro e gato juntos em um momento de companhia" fetchpriority="high"><div class="hero-camada" aria-hidden="true"></div>
 
             <div class="hero-conteudo">
 
-                <div class="hero-texto">
+                <div class="hero-texto"><span class="rotulo-secao">Proteção animal · Balsas, MA</span>
 
-                    <h1>
-                        Cada focinho merece um lar!
-                    </h1>
+                    <h1>Proteção animal.<br>Adoção responsável.</h1>
 
-                    <p>
-                        Resgatamos, cuidamos e encontramos famílias para cães e gatos
-                        em situação de abandono. Conheça quem está esperando por você.
-                    </p>
+                    <p>Atuamos no resgate, no cuidado e no encaminhamento de cães e gatos para adoção em Balsas, Maranhão. Consulte os animais disponíveis e conheça o processo.</p>
 
-                    <a href="#adote" class="botao-principal">
-                        Conheça nossos animais
-                    </a>
+                    <a href="#adote" class="botao-principal">Consultar animais disponíveis</a>
 
-                </div>
+                <a class="hero-link" href="#sobre">Conhecer a organização <span aria-hidden="true">→</span></a><div class="hero-especies"><img height="72" width="144" aria-hidden="true" class="companheiros-marca" alt="" src="assets/icons/companheiros-marca.svg"><span>Cães e gatos para adoção responsável</span></div></div>
 
-                <div class="jornada-adocao">
+
+
+            </div>
+
+        </section><div aria-label="Comece sua jornada de adoção" class="jornada-adocao">
 
                     <div class="jornada-topo">
 
                         <div>
-                            <span class="jornada-subtitulo">
-                                Comece por aqui
-                            </span>
+                            <span class="jornada-subtitulo">Orientações</span>
 
-                            <h2>
-                                Pronto para adotar?
-                            </h2>
+                            <h2>Processo de adoção</h2>
                         </div>
 
                     </div>
 
-                    <p class="jornada-introducao">
-                        Adotar é uma decisão importante. Veja como começar esse
-                        processo com a Anjos de Patas.
-                    </p>
+
 
                     <div class="jornada-etapas">
 
                         <div class="jornada-item">
 
-                            <span class="numero-etapa">1</span>
+                            <span class="numero-etapa"><img src="assets/icons/cachorro-etapa.svg" width="40" height="40" alt="" aria-hidden="true"><span>1</span></span>
 
                             <div>
-                                <strong>Encontre um novo amigo</strong>
+                                <strong>Consulte o catálogo</strong>
                                 <p>Conheça os animais disponíveis para adoção.</p>
                             </div>
 
@@ -103,10 +82,10 @@
 
                         <div class="jornada-item">
 
-                            <span class="numero-etapa">2</span>
+                            <span class="numero-etapa"><img src="assets/icons/gato-etapa.svg" width="40" height="40" alt="" aria-hidden="true"><span>2</span></span>
 
                             <div>
-                                <strong>Demonstre interesse</strong>
+                                <strong>Entre em contato</strong>
                                 <p>Escolha um animal e converse com a equipe da ONG.</p>
                             </div>
 
@@ -114,10 +93,10 @@
 
                         <div class="jornada-item">
 
-                            <span class="numero-etapa">3</span>
+                            <span class="numero-etapa"><img src="assets/icons/pata-marca.svg" width="40" height="40" alt="" aria-hidden="true"><span>3</span></span>
 
                             <div>
-                                <strong>Conheça seu novo amigo</strong>
+                                <strong>Agende uma visita</strong>
                                 <p>
                                     Combine uma visita e siga as orientações para a adoção.
                                 </p>
@@ -127,17 +106,11 @@
 
                     </div>
 
-                </div>
+                </div><section class="secao-animais" id="adote">
 
-            </div>
+            <div class="titulo-secao"><span class="rotulo-secao"><img height="22" width="22" aria-hidden="true" class="detalhe-pata" alt="" src="assets/icons/pata-marca.svg">Animais disponíveis</span>
 
-        </section>
-
-        <section class="secao-animais" id="adote">
-
-            <div class="titulo-secao">
-
-                <h2>Encontre seu novo companheiro</h2>
+                <h2>Catálogo de adoção</h2>
 
                 <p>
                     Conheça os animais disponíveis e utilize os filtros para encontrar
@@ -156,33 +129,15 @@
 
                     <div class="opcoes-filtro">
 
-                        <button
-                            type="button"
-                            class="filtro ativo"
-                            data-tipo="especie"
-                            data-valor="todos"
-                            aria-pressed="true"
-                        >
+                        <button type="button" class="filtro ativo" data-tipo="especie" data-valor="todos" aria-pressed="true">
                             Todos
                         </button>
 
-                        <button
-                            type="button"
-                            class="filtro"
-                            data-tipo="especie"
-                            data-valor="cao"
-                            aria-pressed="false"
-                        >
+                        <button type="button" class="filtro" data-tipo="especie" data-valor="cao" aria-pressed="false">
                             Cachorros
                         </button>
 
-                        <button
-                            type="button"
-                            class="filtro"
-                            data-tipo="especie"
-                            data-valor="gato"
-                            aria-pressed="false"
-                        >
+                        <button type="button" class="filtro" data-tipo="especie" data-valor="gato" aria-pressed="false">
                             Gatos
                         </button>
 
@@ -198,33 +153,15 @@
 
                     <div class="opcoes-filtro">
 
-                        <button
-                            type="button"
-                            class="filtro ativo"
-                            data-tipo="sexo"
-                            data-valor="todos"
-                            aria-pressed="true"
-                        >
+                        <button type="button" class="filtro ativo" data-tipo="sexo" data-valor="todos" aria-pressed="true">
                             Todos
                         </button>
 
-                        <button
-                            type="button"
-                            class="filtro"
-                            data-tipo="sexo"
-                            data-valor="femea"
-                            aria-pressed="false"
-                        >
+                        <button type="button" class="filtro" data-tipo="sexo" data-valor="femea" aria-pressed="false">
                             Fêmeas
                         </button>
 
-                        <button
-                            type="button"
-                            class="filtro"
-                            data-tipo="sexo"
-                            data-valor="macho"
-                            aria-pressed="false"
-                        >
+                        <button type="button" class="filtro" data-tipo="sexo" data-valor="macho" aria-pressed="false">
                             Machos
                         </button>
 
@@ -238,12 +175,7 @@
                         Exibindo todos os animais
                     </span>
 
-                    <button
-                        type="button"
-                        id="limpar-filtros"
-                        class="limpar-filtros"
-                        hidden
-                    >
+                    <button type="button" id="limpar-filtros" class="limpar-filtros" hidden>
                         Limpar filtros
                     </button>
 
@@ -291,20 +223,11 @@
                             <li>Médio porte</li>
                         </ul>
 
-                        <button
-                            type="button"
-                            class="botao-detalhes"
-                            aria-expanded="false"
-                            aria-controls="detalhes-nina"
-                        >
+                        <button type="button" class="botao-detalhes" aria-expanded="false" aria-controls="detalhes-nina">
                             Ver detalhes
                         </button>
 
-                        <div
-                            class="detalhes-expandidos"
-                            id="detalhes-nina"
-                            hidden
-                        >
+                        <div class="detalhes-expandidos" id="detalhes-nina" hidden>
 
                             <dl class="lista-detalhes">
 
@@ -334,10 +257,54 @@
                     </div>
 
                 </article></template>
-            <div class="lista-animais" aria-busy="true"></div>
+            <div id="lista-catalogo" class="lista-animais" aria-busy="true"></div>
+            <nav id="paginacao-catalogo" class="paginacao-catalogo" aria-label="Paginação do catálogo de adoção" hidden>
+                <p id="resumo-paginacao" role="status" aria-live="polite" aria-atomic="true"></p>
+                <div class="paginacao-acoes">
+                    <button id="pagina-anterior" type="button" aria-controls="lista-catalogo">← Anterior</button>
+                    <button id="pagina-proxima" type="button" aria-controls="lista-catalogo">Próxima →</button>
+                </div>
+            </nav>
 
+
+        </section><section aria-labelledby="titulo-por-tras" id="por-tras-da-adocao" class="secao-por-tras"><div class="por-tras-layout">
+  <figure class="por-tras-foto">
+    <img id="foto-por-tras" src="assets/images/adotante-acesso.jpg" alt="Cachorro golden retriever ao ar livre, segurando uma flor" width="1600" height="2565" loading="lazy" decoding="async">
+    <figcaption id="legenda-por-tras">Imagem ilustrativa</figcaption>
+  </figure>
+  <div class="por-tras-texto">
+    <span class="rotulo-secao" id="rotulo-por-tras">Cuidado que aproxima</span>
+    <h2 id="titulo-por-tras">Por trás de<br>cada adoção.</h2>
+    <p class="por-tras-abertura" id="abertura-por-tras">Um encontro pode mudar uma rotina. O cuidado é o que transforma esse encontro em vínculo.</p>
+    <div id="relato-por-tras"><p>Conhecer o animal, entender suas necessidades e preparar a casa são partes de uma decisão que continua muito além do primeiro dia.</p><p>Na Anjos de Patas, você pode dar o primeiro passo: conhecer os animais disponíveis e conversar com a equipe sobre uma adoção responsável.</p></div>
+    <a class="link-editorial" id="link-por-tras" href="#adote">Começar uma nova história <span aria-hidden="true">→</span></a>
+    <div class="assinatura-cuidado"><span class="assinatura-local">Anjos de Patas <span>Balsas, Maranhão</span></span><img src="assets/icons/companheiros-marca.svg" alt="" aria-hidden="true" width="112" height="56" loading="lazy"></div>
+  </div>
+</div></section><section class="secao-sobre" id="sobre">
+
+            <div class="sobre-conteudo">
+
+                <div class="sobre-institucional"><span class="rotulo-secao">A organização</span><h2>Sociedade Protetora dos Animais Anjos de Patas</h2><dl class="dados-institucionais"><div><dt>Local de atuação</dt><dd>Balsas, Maranhão</dd></div><div><dt>Natureza</dt><dd>Organização sem fins lucrativos</dd></div><div><dt>Atuação</dt><dd>Resgate, cuidado e adoção</dd></div></dl></div>
+
+                <div class="sobre-texto">
+
+                    <span class="rotulo-secao">Nosso trabalho</span>
+
+                    <h2>Proteção animal com raízes em Balsas.</h2>
+
+                    <p>A Anjos de Patas é uma organização sem fins lucrativos que atua em Balsas, no Maranhão, no cuidado e na proteção de animais em situação de vulnerabilidade.</p>
+
+                    <p>Resgate, cuidados contínuos e conscientização fazem parte desse trabalho. A adoção responsável aproxima os animais acolhidos de pessoas preparadas para oferecer um novo lar.</p>
+
+
+
+                <a class="link-editorial" href="#como-funciona">Entenda como funciona a adoção <span aria-hidden="true">→</span></a></div>
+
+            </div>
 
         </section>
+
+
 
         <section class="secao-assistente">
 
@@ -345,9 +312,7 @@
 
                 <div class="assistente-texto">
 
-                    <h2>
-                        Quer ajuda para encontrar seu novo companheiro?
-                    </h2>
+                    <h2>Precisa de orientação para adotar?</h2>
 
                     <p>
                         Conte ao assistente o que você procura. Ele pode ajudar
@@ -357,25 +322,10 @@
 
                 </div>
 
-                <button
-                    type="button"
-                    class="botao-assistente"
-                    data-abrir-chat
-                    aria-expanded="false"
-                    aria-controls="janela-chat"
-                >
+                <button type="button" class="botao-assistente" data-abrir-chat="" aria-expanded="false" aria-controls="janela-chat">
 
-                    <svg
-                        class="icone-balao"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        aria-hidden="true"
-                    >
-                        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                    <svg class="icone-balao" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
                     </svg>
 
                     Conversar com o assistente
@@ -386,9 +336,9 @@
 
         </section>
 
-        <section class="secao-como-funciona" id="como-funciona">
+        <section class="secao-como-funciona processo-editorial" id="como-funciona">
 
-            <div class="titulo-secao">
+            <div class="titulo-secao"><span class="rotulo-secao">Adoção responsável</span>
 
                 <h2>
                     Como funciona a adoção?
@@ -406,15 +356,8 @@
 
                     <div class="icone-etapa" aria-hidden="true">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" />
                         </svg>
 
                     </div>
@@ -436,17 +379,10 @@
 
                     <div class="icone-etapa" aria-hidden="true">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
-                            <path d="M8 9h8"/>
-                            <path d="M8 13h5"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                            <path d="M8 9h8" />
+                            <path d="M8 13h5" />
                         </svg>
 
                     </div>
@@ -468,16 +404,9 @@
 
                     <div class="icone-etapa" aria-hidden="true">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M8.5 12.5 11 15l5-6"/>
-                            <circle cx="12" cy="12" r="9"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8.5 12.5 11 15l5-6" />
+                            <circle cx="12" cy="12" r="9" />
                         </svg>
 
                     </div>
@@ -499,57 +428,11 @@
 
         </section>
 
-        <section class="secao-sobre" id="sobre">
 
-            <div class="sobre-conteudo">
-
-                <div class="sobre-logo">
-
-                    <img
-                        src="assets/images/logo_anjos_de_patas.png"
-                        alt="Logo da Anjos de Patas"
-                    >
-
-                </div>
-
-                <div class="sobre-texto">
-
-                    <span class="rotulo-secao">
-                        Sobre nós
-                    </span>
-
-                    <h2>
-                        Sociedade Protetora dos Animais Anjos de Patas
-                    </h2>
-
-                    <p>
-                        A Anjos de Patas é uma organização sem fins lucrativos
-                        que atua em Balsas, no Maranhão, no cuidado e na proteção
-                        de animais em situação de vulnerabilidade.
-                    </p>
-
-                    <p>
-                        O trabalho da ONG envolve o resgate e atendimento de animais
-                        em situação de rua, abandono ou maus-tratos, além de cuidados
-                        contínuos, vacinação e ações de conscientização voltadas à
-                        proteção animal e ambiental.
-                    </p>
-
-                    <p>
-                        Por meio dessas ações, a organização busca proporcionar
-                        melhores condições aos animais acolhidos e aproximá-los de
-                        pessoas interessadas em oferecer um novo lar.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
 
         <section class="secao-contato" id="contato">
 
-            <div class="titulo-secao">
+            <div class="titulo-secao"><span class="rotulo-secao">Atendimento</span>
 
                 <h2>
                     Entre em contato
@@ -569,7 +452,7 @@
                     <div class="contato-icone" aria-hidden="true">
 
                         <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12.04 2a9.84 9.84 0 0 0-8.42 14.93L2.05 22l5.2-1.53A9.93 9.93 0 1 0 12.04 2zm0 17.99a8 8 0 0 1-4.08-1.12l-.29-.17-3.09.91.92-3-.19-.31a8 8 0 1 1 6.73 3.69zm4.39-5.98c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.19-1.42-1.33-1.66-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.39 1.37.5.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z"/>
+                            <path d="M12.04 2a9.84 9.84 0 0 0-8.42 14.93L2.05 22l5.2-1.53A9.93 9.93 0 1 0 12.04 2zm0 17.99a8 8 0 0 1-4.08-1.12l-.29-.17-3.09.91.92-3-.19-.31a8 8 0 1 1 6.73 3.69zm4.39-5.98c-.24-.12-1.42-.7-1.64-.78-.22-.08-.38-.12-.54.12-.16.24-.62.78-.76.94-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.93-1.19-.71-.63-1.19-1.42-1.33-1.66-.14-.24-.01-.37.11-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.54-1.3-.74-1.78-.2-.47-.4-.41-.54-.42h-.46c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2s.86 2.32.98 2.48c.12.16 1.69 2.58 4.1 3.62.57.25 1.02.39 1.37.5.58.18 1.1.16 1.51.1.46-.07 1.42-.58 1.62-1.14.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28z" />
                         </svg>
 
                     </div>
@@ -583,17 +466,10 @@
 
                     <div class="contato-icone" aria-hidden="true">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <rect x="3" y="3" width="18" height="18" rx="5"/>
-                            <circle cx="12" cy="12" r="4"/>
-                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
                         </svg>
 
                     </div>
@@ -607,16 +483,9 @@
 
                     <div class="contato-icone" aria-hidden="true">
 
-                        <svg
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="1.8"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        >
-                            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z"/>
-                            <circle cx="12" cy="10" r="2.5"/>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0z" />
+                            <circle cx="12" cy="10" r="2.5" />
                         </svg>
 
                     </div>
@@ -632,59 +501,18 @@
 
     </main>
 
-    <footer class="rodape">
-
-        <div class="rodape-identidade">
-
-            <img
-                src="assets/images/logo_anjos_de_patas.png"
-                alt=""
-            >
-
-            <div>
-                <strong>Anjos de Patas</strong>
-                <p>Cada focinho merece um lar.</p>
-            </div>
-
-        </div>
-
-        <p>
-            Projeto acadêmico — UNIBALSAS
-        </p>
-
-    </footer>
+    <footer class="rodape"><div class="rodape-conteudo"><div class="rodape-identidade"><img src="assets/images/logo_anjos_de_patas.png" width="120" height="60" alt="" loading="lazy"><div><strong>Anjos de Patas</strong><p>Proteção animal e adoção responsável.</p><p>Balsas, Maranhão</p></div></div><nav class="rodape-links" aria-label="Navegação do rodapé"><a href="#adote">Animais disponíveis</a><a href="#contato">Contato</a><a href="pages/login.html" class="acesso-administrativo">Área administrativa</a></nav></div><div class="rodape-base"><span><img height="22" width="22" aria-hidden="true" class="detalhe-pata" alt="" src="assets/icons/pata-marca.svg">Sociedade Protetora dos Animais Anjos de Patas</span><span>Projeto acadêmico · UNIBALSAS</span></div></footer>
 
     <div class="area-chat-flutuante">
 
-        <div
-            id="dica-assistente"
-            class="dica-assistente"
-            role="tooltip"
-        >
+        <div id="dica-assistente" class="dica-assistente" role="tooltip">
             Encontre um animal que combine com você
         </div>
 
-        <button
-            type="button"
-            id="botao-chat-flutuante"
-            class="botao-chat-flutuante"
-            aria-label="Abrir assistente para encontrar um animal"
-            aria-describedby="dica-assistente"
-            aria-expanded="false"
-            aria-controls="janela-chat"
-        >
+        <button type="button" id="botao-chat-flutuante" class="botao-chat-flutuante" aria-label="Abrir assistente para encontrar um animal" aria-describedby="dica-assistente" aria-expanded="false" aria-controls="janela-chat">
 
-            <svg
-                class="icone-balao-flutuante"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-            >
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+            <svg class="icone-balao-flutuante" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
             </svg>
 
             <span class="texto-botao-chat">
@@ -695,30 +523,14 @@
 
     </div>
 
-    <section
-        id="janela-chat"
-        class="janela-chat"
-        role="dialog"
-        aria-labelledby="titulo-chat"
-        aria-hidden="true"
-        hidden
-    >
+    <section id="janela-chat" class="janela-chat" role="dialog" aria-labelledby="titulo-chat" aria-hidden="true" hidden>
 
         <div class="cabecalho-chat">
 
             <div class="identificacao-chat">
 
-                <svg
-                    class="icone-balao-cabecalho"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    aria-hidden="true"
-                >
-                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z"/>
+                <svg class="icone-balao-cabecalho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
                 </svg>
 
                 <div>
@@ -735,22 +547,13 @@
 
             </div>
 
-            <button
-                type="button"
-                id="fechar-chat"
-                class="fechar-chat"
-                aria-label="Fechar assistente"
-            >
+            <button type="button" id="fechar-chat" class="fechar-chat" aria-label="Fechar assistente">
                 ×
             </button>
 
         </div>
 
-        <div
-            id="mensagens-chat"
-            class="mensagens-chat"
-            aria-live="polite"
-        >
+        <div id="mensagens-chat" class="mensagens-chat" aria-live="polite">
 
             <div class="mensagem mensagem-assistente">
 
@@ -772,19 +575,11 @@
 
             <div class="sugestoes-chat">
 
-                <button
-                    type="button"
-                    class="sugestao-chat"
-                    data-mensagem="Procuro um cachorro"
-                >
+                <button type="button" class="sugestao-chat" data-mensagem="Procuro um cachorro">
                     Procuro um cachorro
                 </button>
 
-                <button
-                    type="button"
-                    class="sugestao-chat"
-                    data-mensagem="Procuro um gato"
-                >
+                <button type="button" class="sugestao-chat" data-mensagem="Procuro um gato">
                     Procuro um gato
                 </button>
 
@@ -792,30 +587,15 @@
 
         </div>
 
-        <form
-            id="formulario-chat"
-            class="formulario-chat"
-        >
+        <form id="formulario-chat" class="formulario-chat">
 
-            <label
-                for="mensagem-chat"
-                class="sr-only"
-            >
+            <label for="mensagem-chat" class="sr-only">
                 Digite sua mensagem
             </label>
 
-            <input
-                type="text"
-                id="mensagem-chat"
-                placeholder="Digite sua mensagem..."
-                maxlength="300"
-                autocomplete="off"
-            >
+            <input type="text" id="mensagem-chat" placeholder="Digite sua mensagem..." maxlength="300" autocomplete="off">
 
-            <button
-                type="submit"
-                class="enviar-chat"
-            >
+            <button type="submit" class="enviar-chat">
                 Enviar
             </button>
 
@@ -826,6 +606,6 @@
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 
-</body>
+<script defer src="js/site.js"></script></body>
 
 </html>

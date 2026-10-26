@@ -1,0 +1,123 @@
+/* Ritmo da página inicial: catálogo, imagem editorial, instituição e leitura. */
+.hero-texto h1 { font-size: clamp(2.3rem,3.6vw,3.3rem); margin-top: 14px; }
+.hero-conteudo { min-height: 42vw; padding-block: 20px; }
+.hero-texto p { margin-top: 18px; line-height: 1.6; }
+.hero-texto .botao-principal { margin-top: 20px; }
+.hero-texto .hero-link { margin-top: 12px; }
+.hero-texto .hero-especies { margin-top: 16px; }
+.jornada-adocao { padding-block: 28px; }
+.jornada-item { align-items: flex-start; }
+.jornada-item .numero-etapa { width: 48px; height: auto; gap: 4px; padding: 6px 4px; border: 0; background: #faf2e2; border-radius: 6px; color: #805a26; line-height: 1.3; }
+.jornada-item .numero-etapa img { display: block; width: 40px; height: 40px; }
+.secao-animais { padding-block: 88px; background: #fff; }
+.secao-animais .titulo-secao { display: grid; grid-template-columns: 1fr 1fr; column-gap: 56px; align-items: end; margin-bottom: 36px; }
+.secao-animais .titulo-secao .rotulo-secao { grid-column: 1/-1; margin-bottom: 12px; }
+.secao-animais .titulo-secao h2 { margin: 0; font-size: clamp(2rem,3vw,2.6rem); }
+.secao-animais .titulo-secao p { margin: 0; max-width: 48ch; font-size: .95rem; }
+.secao-animais .area-filtros { margin-bottom: 32px; }
+.secao-por-tras { background: #faf3e7; padding: 0 24px; }
+.por-tras-layout { max-width: 1104px; margin: auto; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px,6vw,88px); align-items: center; }
+.por-tras-foto { margin: 0; position: relative; }
+.por-tras-foto > img { display: block; width: 100%; height: 340px; object-fit: cover; object-position: center 42%; border-radius: 3px; }
+.por-tras-foto figcaption { margin-top: 10px; font-size: .72rem; color: #716052; letter-spacing: .03em; }
+.por-tras-texto h2 { font-size: clamp(1.8rem,2.5vw,2.4rem); font-weight: 600; line-height: 1.08; letter-spacing: -.045em; margin: 4px 0 6px; }
+.por-tras-texto h2 br { display: none; }
+.por-tras-abertura { font-size: clamp(1rem,1.4vw,1.2rem); line-height: 1.4; color: #584536; max-width: 36ch; margin-block: 0; }
+#relato-por-tras { border-top: 1px solid #e3d1b8; padding-top: 6px; margin-top: 8px; }
+#relato-por-tras p { font-size: .95rem; color: #716052; line-height: 1.45; margin: 0 0 6px; }
+.por-tras-texto .link-editorial { font-size: .875rem; margin-top: 4px; }
+.assinatura-cuidado { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-top: 6px; padding-top: 6px; border-top: 1px solid #e3d1b8; }
+.assinatura-local { font-size: .8rem; color: var(--texto); font-weight: 600; }
+.assinatura-local span { display: block; font-size: .75rem; font-weight: 400; color: var(--texto-secundario); margin-top: 4px; }
+.assinatura-cuidado img { width: 96px; height: 48px; opacity: .85; }
+.secao-sobre { padding-block: 80px; border-bottom: 0; }
+.sobre-conteudo { grid-template-columns: .8fr 1.2fr; gap: 72px; }
+.sobre-institucional { background: #fff; padding: 0 32px 0 0; border: 0; border-right: 1px solid var(--borda); border-radius: 0; }
+.sobre-institucional h2 { font-size: 1.25rem; margin-top: 16px; }
+.sobre-institucional .dados-institucionais div { padding-block: 12px; }
+.sobre-texto h2 { font-size: clamp(1.8rem,2.8vw,2.4rem); }
+.secao-assistente { padding-block: 40px; }
+.assistente-conteudo { border-left: 0; padding-left: 0; }
+.assistente-texto h2 { font-size: 1.55rem; }
+.assistente-texto p { font-size: .9rem; max-width: 66ch; }
+.processo-editorial { background: #faf6ef; padding-block: 80px; }
+.processo-editorial .titulo-secao { margin-bottom: 44px; }
+.processo-editorial .etapas-adocao { gap: 40px; }
+.processo-editorial .etapa { padding: 24px 0 0; background: transparent; border: 0; border-top: 1px solid #d5bea0; border-radius: 0; box-shadow: none; }
+.processo-editorial .icone-etapa { width: 34px; height: 34px; background: transparent; margin-bottom: 20px; }
+.processo-editorial .numero-pequeno { color: #765724; font-size: .75rem; letter-spacing: .08em; }
+.processo-editorial .etapa h3 { margin-block: 10px 12px; }
+.processo-editorial .etapa p { color: var(--texto-secundario); max-width: 34ch; }
+.secao-leituras { padding: 88px 24px; background: #fff; }
+.leituras-layout { max-width: 1104px; margin: auto; display: grid; grid-template-columns: 1fr 1.15fr; align-items: start; gap: 88px; }
+.leituras-introducao h2 { font-size: clamp(2rem,3vw,2.6rem); letter-spacing: -.035em; line-height: 1.2; margin: 18px 0 24px; }
+.leituras-introducao p { color: var(--texto-secundario); font-size: .95rem; line-height: 1.8; }
+.leituras-links { border-top: 1px solid var(--borda); }
+.leituras-links a { display: grid; grid-template-columns: 32px 1fr 24px; gap: 20px; align-items: start; border-bottom: 1px solid var(--borda); padding: 28px 8px; transition: background .16s ease; }
+.leituras-links a:hover { background: #faf6ef; }
+.leitura-numero { color: #765724; font-size: .75rem; padding-top: 4px; font-variant-numeric: tabular-nums; }
+.leituras-links strong { display: block; font-size: 1.15rem; line-height: 1.4; font-weight: 600; }
+.leituras-links strong + span { display: block; font-size: .875rem; color: var(--texto-secundario); margin-top: 8px; }
+.leitura-seta { font-size: 1.25rem; color: #765724; }
+.transparencia-editorial { background: #faf5e9; padding-block: 48px; border-block: 1px solid #e4d7bd; }
+.transparencia-editorial h2 { font-size: 1.8rem; }
+.transparencia-editorial p { font-size: .9rem; margin-top: 12px; }
+.secao-contato { padding-block: 72px; background: #faf6ef; }
+@media(max-width:1000px) {
+    .por-tras-layout, .leituras-layout { gap: 40px; }
+    .sobre-conteudo { gap: 40px; }
+    .processo-editorial .etapas-adocao { gap: 24px; }
+}
+@media(max-width:700px) {
+    .hero-conteudo { min-height: auto; padding-block: 20px; }
+    .hero-texto h1 { font-size: clamp(2rem,7vw,2.6rem); }
+    .secao-animais, .secao-sobre, .processo-editorial, .secao-contato { padding-block: 52px; }
+    .secao-animais .titulo-secao { grid-template-columns: 1fr; gap: 16px; }
+    .secao-animais .titulo-secao .rotulo-secao { margin-bottom: 0; }
+    .secao-por-tras { padding: 0 24px; }
+    .secao-leituras { padding: 52px 24px; }
+    .por-tras-layout, .leituras-layout { grid-template-columns: 1fr; gap: 32px; }
+    .por-tras-layout { gap: 16px; }
+    .por-tras-foto > img { height: 240px; object-position: center 38%; }
+    .por-tras-texto h2 { margin-block: 4px 8px; font-size: 2rem; }
+    .por-tras-texto h2 br { display: none; }
+    .sobre-conteudo { grid-template-columns: 1fr; gap: 32px; }
+    .sobre-institucional { padding: 0 0 24px; border-right: 0; border-bottom: 1px solid var(--borda); }
+    .secao-assistente { padding-block: 36px; }
+    .processo-editorial .etapas-adocao { gap: 28px; }
+    .processo-editorial .etapa { padding: 20px 0 0; }
+    .processo-editorial .etapa p { max-width: none; }
+    .leituras-links a { gap: 12px; padding-block: 24px; }
+    .transparencia-editorial { padding-block: 36px; }
+}
+
+/* Foto de companhia como fundo suave de toda a abertura. */
+.hero { display: block; width: 100%; max-width: none; margin-inline: 0; }
+.hero-fotografia {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 56%;
+    z-index: -2;
+}
+.hero-camada {
+    display: block;
+    background: linear-gradient(90deg, rgba(250,246,239,.88) 0%, rgba(250,246,239,.68) 42%, rgba(250,246,239,.22) 100%);
+    z-index: -1;
+}
+.hero-texto { width: 100%; max-width: 560px; }
+@media (max-width: 700px) {
+    .hero-fotografia { object-position: 62% center; }
+    .hero-camada { background: rgba(250,246,239,.72); }
+}
+
+/* Permite que o texto e os controles encolham na abertura em celulares. */
+.hero-conteudo, .hero-texto { min-width: 0; }
+.hero-texto { overflow-wrap: anywhere; }
+@media (max-width: 700px) {
+ .hero-conteudo { max-width: 100%; }
+ .hero-texto { width: 100%; max-width: 100%; }
+ .hero-texto .botao-principal { max-width: 100%; white-space: normal; text-align: center; }
+}

@@ -7,6 +7,13 @@ const mensagemSemResultados = document.getElementById("sem-resultados");
 
 let filtroEspecie = "todos";
 let filtroSexo = "todos";
+const animaisPorPagina = 6;
+let paginaAtual = 1;
+let totalPaginas = 1;
+const paginacaoCatalogo = document.querySelector('#paginacao-catalogo');
+const resumoPaginacao = document.querySelector('#resumo-paginacao');
+const paginaAnterior = document.querySelector('#pagina-anterior');
+const paginaProxima = document.querySelector('#pagina-proxima');
 
 const nomesEspecies = {
     cao: "Cachorros",
@@ -44,9 +51,7 @@ function atualizarResumoFiltros() {
 
 
 function aplicarFiltros() {
-    let quantidadeVisivel = 0;
-
-    cardsAnimais.forEach((card) => {
+    const correspondentes = [...cardsAnimais].filter((card) => {
         const especie = card.dataset.especie;
         const sexo = card.dataset.sexo;
 
@@ -58,20 +63,33 @@ function aplicarFiltros() {
             filtroSexo === "todos" ||
             sexo === filtroSexo;
 
-        const deveMostrar =
-            correspondeEspecie && correspondeSexo;
-
-        card.hidden = !deveMostrar;
-
-        if (deveMostrar) {
-            quantidadeVisivel++;
-        }
+        return correspondeEspecie && correspondeSexo;
     });
-
-    mensagemSemResultados.hidden = quantidadeVisivel > 0;
-
+    totalPaginas = Math.max(1, Math.ceil(correspondentes.length / animaisPorPagina));
+    paginaAtual = Math.min(paginaAtual, totalPaginas);
+    const inicio = (paginaAtual - 1) * animaisPorPagina;
+    const visiveis = new Set(correspondentes.slice(inicio, inicio + animaisPorPagina));
+    cardsAnimais.forEach(card => { card.hidden = !visiveis.has(card); });
+    mensagemSemResultados.hidden = correspondentes.length > 0;
+    paginacaoCatalogo.hidden = correspondentes.length === 0;
+    paginaAnterior.disabled = paginaAtual === 1;
+    paginaProxima.disabled = paginaAtual === totalPaginas;
+    paginaAnterior.hidden = paginaProxima.hidden = totalPaginas === 1;
+    resumoPaginacao.textContent = correspondentes.length
+        ? `${inicio + 1}–${Math.min(inicio + animaisPorPagina, correspondentes.length)} de ${correspondentes.length} animais · Página ${paginaAtual} de ${totalPaginas}`
+        : '';
     atualizarResumoFiltros();
 }
+
+function mudarPagina(direcao) {
+    const proxima = paginaAtual + direcao;
+    if (proxima < 1 || proxima > totalPaginas) return;
+    paginaAtual = proxima;
+    aplicarFiltros();
+    document.querySelector('#adote').scrollIntoView({ block: 'start' });
+}
+paginaAnterior.addEventListener('click', () => mudarPagina(-1));
+paginaProxima.addEventListener('click', () => mudarPagina(1));
 
 
 botoesFiltro.forEach((botao) => {
@@ -97,12 +115,14 @@ botoesFiltro.forEach((botao) => {
             filtroSexo = valor;
         }
 
+        paginaAtual = 1;
         aplicarFiltros();
     });
 });
 
 
 botaoLimparFiltros.addEventListener("click", () => {
+    paginaAtual = 1;
     filtroEspecie = "todos";
     filtroSexo = "todos";
 
@@ -185,13 +205,13 @@ function criarCardPublico(animal, indice) {
     card.querySelectorAll('.caracteristicas li').forEach((li, i) => {
         li.textContent = rotulosCatalogo[[animal.faixa_etaria, animal.sexo, animal.porte][i]] || 'Não informado';
     });
+    const detalhes = card.querySelector('.detalhes-expandidos');
     const perfil = document.createElement('a');
-    perfil.className = 'botao-detalhes';
+    perfil.className = 'link-editorial';
     perfil.href = `pages/animal.html?id=${encodeURIComponent(animal.id)}`;
     perfil.textContent = 'Ver perfil completo';
     card.querySelector('.card-conteudo').append(perfil);
-    card.querySelector('.botao-interesse').href = `${perfil.href}#interesse`;
-    const detalhes = card.querySelector('.detalhes-expandidos');
+    card.querySelector('.botao-interesse').href = `pages/animal.html?id=${encodeURIComponent(animal.id)}#interesse`;
     detalhes.id = `detalhes-animal-${indice}`;
     detalhes.hidden = true;
     const botao = card.querySelector('.botao-detalhes');
@@ -217,6 +237,8 @@ function criarCardPublico(animal, indice) {
 }
 
 async function carregarCatalogo() {
+    paginaAtual = 1;
+    paginacaoCatalogo.hidden = true;
     listaPublica.replaceChildren();
     cardsAnimais = [];
     mensagemCatalogo.hidden = false;
@@ -226,7 +248,8 @@ async function carregarCatalogo() {
     listaPublica.setAttribute('aria-busy', 'true');
     try {
         const dados = await window.AnjosAPI.solicitar('/api/animais');
-        const animais = (dados.animais || []).filter((animal) => animal.situacao === 'disponivel');
+        const disponiveis = (dados.animais || []).filter((animal) => animal.situacao === 'disponivel');
+        const animais = disponiveis;
         listaPublica.replaceChildren(...animais.map(criarCardPublico));
         cardsAnimais = listaPublica.querySelectorAll('.card-animal');
         mensagemCatalogo.hidden = animais.length > 0;

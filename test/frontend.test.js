@@ -51,6 +51,23 @@ function ambiente(pagina, solicitar) {
 }
 const aguardar = () => new Promise((resolve) => setImmediate(resolve));
 
+test('catálogo pagina todos os animais disponíveis e reinicia ao filtrar', async () => {
+    const animais = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, nome: `Animal ${i + 1}`, especie: i < 7 ? 'cao' : 'gato', sexo: 'macho', porte: 'medio', situacao: 'disponivel' }));
+    const env = ambiente('index.html', async () => ({ sucesso: true, animais }));
+    env.executar('js/main.js');
+    await aguardar();
+    const cards = () => [...env.document.querySelectorAll('.lista-animais .card-animal')].filter(card => !card.hidden);
+    assert.equal(env.document.querySelectorAll('.lista-animais .card-animal').length, 8);
+    assert.equal(cards().length, 6);
+    env.document.querySelector('#pagina-proxima').click();
+    assert.equal(cards().length, 2);
+    assert.equal(cards()[1].querySelector('h3').textContent, 'Animal 8');
+    env.document.querySelector('[data-tipo="especie"][data-valor="gato"]').click();
+    assert.equal(cards().length, 1);
+    assert.equal(cards()[0].querySelector('h3').textContent, 'Animal 8');
+    assert.equal(env.document.querySelector('#pagina-anterior').disabled, true);
+});
+
 test('foto local é enviada antes de salvar e falha de upload mantém formulário aberto', async () => {
     const chamadas = [];
     let falhar = true;
