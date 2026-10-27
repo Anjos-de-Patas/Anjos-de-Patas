@@ -1,0 +1,13 @@
+.conta-acoes .botao-admin { min-height: 44px; padding: 10px 18px; border: 1px solid #501500; border-radius: 4px; background: #fff; color: #501500; font: inherit; cursor: pointer; }
+.conta-acoes .botao-admin:hover:not(:disabled) { background: #fff0d6; }
+.conta-acoes .botao-admin:focus-visible { outline: 3px solid #795a20; outline-offset: 3px; }
+.conta-acoes .botao-admin:disabled { opacity: .6; cursor: wait; }
+.etapas-adocao { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; margin: 24px 0; }
+.etapas-adocao li { padding: 16px; border: 1px solid var(--borda); background: #eee9e6; border-radius: 4px; font-size: .85rem; line-height: 1.6; }
+.etapas-adocao li[aria-current=step] { border: 2px solid #795a20; background: #fff0d6; font-weight: 600; }
+.etapas-adocao span { display: block; color: #51483f; margin-top: 8px; font-size: .8rem; }
+@media(max-width:900px){.etapas-adocao{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:480px){.etapas-adocao{grid-template-columns:1fr;}.previa-artigo{padding:16px;}}
+.conta-acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.historico-etapas { padding-left: 24px; line-height: 1.8; overflow-wrap: anywhere; }
+.pagina-publica { overflow-wrap: anywhere; }

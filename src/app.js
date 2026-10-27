@@ -1,3 +1,5 @@
+import { cadastrarContaAdotante, entrarContaAdotante, verificarContaAdotante, obterContaAdotante } from './controllers/contaAdotanteController.js';
+import { cadastroContaAdotanteSchema } from './schemas/validationSchemas.js';
 import { listarInteressados, historicoInteressado, atualizarAcompanhamento } from './controllers/interessadosController.js';
 import { acompanhamentoSchema } from './schemas/interessadosSchemas.js';
 import { obterAnimalPublico, manifestarInteresse } from './controllers/publicoController.js';
@@ -173,6 +175,11 @@ app.post('/api/recuperar-senha', limiteLogin, validarRequest(recuperarSchema), t
 app.post('/api/redefinir-senha', limiteLogin, validarRequest(redefinirSchema), tratarRecuperacao(redefinirSenha));
 
 const tratarPublico = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+const tratarConta = (req, res, next) => verificarContaAdotante(req, res, next).catch(next);
+app.post('/api/conta-adotante/cadastro', limiteLogin, validarRequest(cadastroContaAdotanteSchema), tratarPublico(cadastrarContaAdotante));
+app.post('/api/conta-adotante/entrar', limiteLogin, validarRequest(loginSchema), tratarPublico(entrarContaAdotante));
+app.get('/api/conta-adotante', tratarConta, tratarPublico(obterContaAdotante));
+
 app.get('/api/admin/interessados', ...protegerONG, tratarPublico(listarInteressados));
 app.get('/api/admin/interessados/:id/historico', ...protegerONG, tratarPublico(historicoInteressado));
 app.post('/api/admin/interessados/:id/acompanhamento', ...protegerONG, validarRequest(acompanhamentoSchema), tratarPublico(atualizarAcompanhamento));

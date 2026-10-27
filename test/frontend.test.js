@@ -54,6 +54,37 @@ function ambiente(pagina, solicitar) {
 }
 const aguardar = () => new Promise((resolve) => setImmediate(resolve));
 
+test('cadastro bloqueia senhas divergentes e login guarda somente o token do adotante', async () => {
+    let envios = 0;
+    const cadastro = ambiente('pages/cadastro-adotante.html', async () => { envios++; return { mensagem: 'Confira seu e-mail' }; });
+    cadastro.executar('js/conta-adotante.js');
+    cadastro.document.querySelector('#nome-conta').value = 'Pessoa Teste';
+    cadastro.document.querySelector('#email-conta').value = 'pessoa@example.com';
+    cadastro.document.querySelector('#senha-conta').value = 'senha-teste';
+    cadastro.document.querySelector('#confirmar-senha-conta').value = 'outra-senha';
+    cadastro.document.querySelector('#consentimento-conta').checked = true;
+    cadastro.document.querySelector('form').dispatchEvent(new cadastro.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(envios, 0);
+    cadastro.document.querySelector('#confirmar-senha-conta').value = 'senha-teste';
+    cadastro.document.querySelector('form').dispatchEvent(new cadastro.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(envios, 1);
+    assert.match(cadastro.document.querySelector('#estado-conta').textContent, /Confira/);
+    const login = ambiente('pages/entrar-adotante.html', async () => ({ token: 'token-adotante-teste' }));
+    const gravacoes = [];
+    let destino;
+    login.context.sessionStorage.setItem = (...args) => gravacoes.push(args);
+    login.context.window.location.replace = valor => { destino = valor; };
+    login.executar('js/conta-adotante.js');
+    login.document.querySelector('#email-conta').value = 'pessoa@example.com';
+    login.document.querySelector('#senha-conta').value = 'senha-teste';
+    login.document.querySelector('form').dispatchEvent(new login.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.deepEqual(gravacoes, [['anjos_adotante_token', 'token-adotante-teste']]);
+    assert.equal(destino, 'area-adotante.html');
+});
+
 test('catálogo pagina todos os animais disponíveis e reinicia ao filtrar', async () => {
     const animais = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, nome: `Animal ${i + 1}`, especie: i < 7 ? 'cao' : 'gato', sexo: 'macho', porte: 'medio', situacao: 'disponivel' }));
     const env = ambiente('index.html', async () => ({ sucesso: true, animais }));
@@ -297,4 +328,15 @@ test('interessados salvam contato autenticado com versão e preservam nota em fa
     assert.equal(env.document.querySelector('details img'),null);assert.match(env.document.querySelector('.historico-etapas').textContent,/<img src=x>/);
     falhar=false;env.document.querySelector('details form').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
     assert.match(env.document.querySelector('#mensagem-admin').textContent,/salvo/);
+});
+
+test('adotante vê etapa atual e histórico real, sem marcar entrevistas ou conclusão fictícias',async()=>{
+    const env=ambiente('pages/area-adotante.html',async()=>({conta:{nome:'Pessoa de teste',email:'pessoa@example.com'},interesse:{animal_nome:'Mel',etapa:'triagem',eventos:[{etapa:'recebido',criado_em:'2026-10-09'}]}}));
+    env.context.sessionStorage.getItem=chave=>chave==='anjos_adotante_token'?'token-adotante':undefined;
+    env.executar('js/conta-adotante.js');await aguardar();
+    assert.equal(env.document.querySelectorAll('#etapas-conta li').length,5);
+    assert.match(env.document.querySelector('[aria-current=step]').textContent,/Em triagem/);
+    assert.match(env.document.querySelector('#etapas-conta li:last-child').textContent,/Sem registro/);
+    assert.equal(env.document.querySelectorAll('#historico-conta li').length,1);
+    assert.equal(env.document.querySelector('#dados-conta').hidden,false);
 });

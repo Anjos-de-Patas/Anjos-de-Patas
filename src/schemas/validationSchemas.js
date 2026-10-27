@@ -83,3 +83,10 @@ export const interesseSchema = z.object({
   mensagem: z.string().trim().max(1500).optional(),
   consentimento: z.literal(true, { errorMap: () => ({ message: 'Confirme a autorização de contato para continuar.' }) })
 }).strict();
+
+export const cadastroContaAdotanteSchema = z.object({
+  nome: z.string().trim().min(3).max(120),
+  email: z.string().trim().email().max(254).transform(s => s.toLowerCase()),
+  password: z.string().min(8, 'Use uma senha com pelo menos 8 caracteres.').max(128),
+  consentimento: z.literal(true)
+}).strict();
