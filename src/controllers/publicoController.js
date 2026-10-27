@@ -27,3 +27,24 @@ export async function manifestarInteresse(req, res) {
     // Não devolve dados pessoais nem identificadores de adotantes pela rota pública.
     res.status(201).json({ sucesso: true });
 }
+
+export async function obterResultadosPublicos(req, res) {
+    try {
+        // Consultas retornam somente contagens, sem registros ou contatos.
+        const consultas = await Promise.all([
+            supabaseAdmin.from('animais').select('id', { count: 'exact', head: true }).neq('situacao', 'adotado'),
+            supabaseAdmin.from('animais').select('id', { count: 'exact', head: true }).eq('situacao', 'disponivel'),
+            supabaseAdmin.from('adocoes').select('id', { count: 'exact', head: true })
+        ]);
+        if (consultas.some(r => r.error || !Number.isSafeInteger(r.count) || r.count < 0)) {
+            throw new Error('Contagens indisponíveis');
+        }
+        res.json({ sucesso: true, atualizado_em: new Date().toISOString(), dados: {
+            animais_acolhidos: consultas[0].count,
+            disponiveis: consultas[1].count,
+            adocoes_registradas: consultas[2].count
+        } });
+    } catch {
+        res.status(503).json({ sucesso: false, erro: 'Os indicadores estão temporariamente indisponíveis.' });
+    }
+}

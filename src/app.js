@@ -2,7 +2,7 @@ import { cadastrarContaAdotante, entrarContaAdotante, verificarContaAdotante, ob
 import { cadastroContaAdotanteSchema } from './schemas/validationSchemas.js';
 import { listarInteressados, historicoInteressado, atualizarAcompanhamento } from './controllers/interessadosController.js';
 import { acompanhamentoSchema } from './schemas/interessadosSchemas.js';
-import { obterAnimalPublico, manifestarInteresse } from './controllers/publicoController.js';
+import { obterAnimalPublico, manifestarInteresse, obterResultadosPublicos } from './controllers/publicoController.js';
 import { interesseSchema } from './schemas/validationSchemas.js';
 import rateLimit from 'express-rate-limit';
 import { recuperarSenha, redefinirSenha } from './controllers/recuperacaoController.js';
@@ -186,6 +186,7 @@ app.get('/api/admin/interessados/:id/historico', ...protegerONG, tratarPublico(h
 app.post('/api/admin/interessados/:id/acompanhamento', ...protegerONG, validarRequest(acompanhamentoSchema), tratarPublico(atualizarAcompanhamento));
 
 app.get('/api/animais/:id', tratarPublico(obterAnimalPublico));
+app.get('/api/resultados', tratarPublico(obterResultadosPublicos));
 app.post('/api/interesses', rateLimit({
     windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: 'draft-8', legacyHeaders: false,
     message: { sucesso: false, erro: 'Limite de envios atingido. Tente novamente mais tarde.' }
