@@ -883,6 +883,7 @@ input:focus-visible {
 
 .area-chat-flutuante {
     position: fixed;
+    transform: translateY(var(--deslocamento-abertura, 0px));
     right: 24px;
     bottom: max(86px, calc(var(--rodape-visivel, 0px) + 16px));
     z-index: 1200;

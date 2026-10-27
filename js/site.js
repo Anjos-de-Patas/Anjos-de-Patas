@@ -37,15 +37,20 @@
     atualizarAltura();
 })();
 
-// Mantem o botao acima do rodape enquanto ele entra na tela.
+// Mantem o botao fora da imagem de abertura e acima do rodape.
 (() => {
     const assistente = document.querySelector('.area-chat-flutuante');
     const rodape = document.querySelector('footer.rodape');
-    if (!assistente || !rodape) return;
+    const abertura = document.querySelector('.hero');
+    if (!assistente) return;
     let pendente = false;
     function atualizar() {
-        const limite = Math.max(0, window.innerHeight - rodape.getBoundingClientRect().top);
+        const limite = rodape ? Math.max(0, window.innerHeight - rodape.getBoundingClientRect().top) : 0;
         assistente.style.setProperty('--rodape-visivel', `${limite}px`);
+        const base = parseFloat(window.getComputedStyle(assistente).bottom) || 0;
+        const topoNormal = window.innerHeight - base - assistente.offsetHeight;
+        const deslocamento = abertura ? Math.max(0, abertura.getBoundingClientRect().bottom + 16 - topoNormal) : 0;
+        assistente.style.setProperty('--deslocamento-abertura', `${deslocamento}px`);
         pendente = false;
     }
     function agendar() {
