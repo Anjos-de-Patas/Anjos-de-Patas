@@ -1,7 +1,3 @@
-import {
-    supabase
-} from "../config/database.js";
-
 export async function obterPerfil(req, res) {
     try {
         const usuarioAuth =
@@ -17,7 +13,7 @@ export async function obterPerfil(req, res) {
         const {
             data: perfil,
             error
-        } = await supabase
+        } = await req.supabase
             .from("perfis")
             .select(
                 "id, nome, perfil, ativo"
@@ -93,7 +89,7 @@ export async function atualizarPerfil(req, res) {
         const {
             data: perfilAtualizado,
             error
-        } = await supabase
+        } = await req.supabase
             .from("perfis")
             .update({
                 nome:

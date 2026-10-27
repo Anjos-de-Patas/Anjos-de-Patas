@@ -20,7 +20,9 @@ async function registrarNaTabela(req, res, tabela) {
 
     const { data, error } = await req.supabase
       .from(tabela)
-      .insert([{ ...req.body, animal_id: animalId }])
+      .insert([{ ...req.body,
+        ...(req.body.proxima_dose === '' ? { proxima_dose: null } : {}),
+        ...(req.body.fim === '' ? { fim: null } : {}), animal_id: animalId }])
       .select()
       .single();
 
@@ -79,53 +81,26 @@ export async function obterHistoricoAnimal(req, res) {
 }
 
 export async function registrarAdocao(req, res) {
-  const { animal_id: animalId, adotante_id: adotanteId } = req.body;
-  let situacaoAnterior;
-
   try {
-    const animal = await animalExiste(req.supabase, animalId);
-    if (!animal) return res.status(404).json({ erro: 'Animal não encontrado.' });
-    if (animal.situacao === 'adotado') {
-      return res.status(409).json({ erro: 'Este animal já foi adotado.' });
+    const { data, error } = await req.supabase.rpc('registrar_adocao', {
+      p_animal_id: String(req.body.animal_id),
+      p_adotante_id: String(req.body.adotante_id),
+      p_data: req.body.data_adocao,
+      p_observacoes: req.body.observacoes || null
+    });
+    if (error) {
+      const erros = {
+        P0002: [404, 'Animal ou adotante não encontrado.'],
+        P0001: [409, 'O animal não está disponível para adoção.'],
+        '23505': [409, 'Este animal já possui adoção registrada.'],
+        '22023': [400, 'Aprove o cadastro do adotante antes de registrar a adoção.'],
+        '42501': [403, 'Usuário sem permissão para registrar adoção.']
+      };
+      const [status, mensagem] = erros[error.code] || [500, 'Não foi possível registrar a adoção.'];
+      return res.status(status).json({ sucesso: false, erro: mensagem });
     }
-    situacaoAnterior = animal.situacao;
-
-    const { data: adotante, error: erroAdotante } = await req.supabase
-      .from('adotantes')
-      .select('id, status')
-      .eq('id', adotanteId)
-      .maybeSingle();
-
-    if (erroAdotante) throw erroAdotante;
-    if (!adotante) return res.status(404).json({ erro: 'Adotante não encontrado.' });
-    if (adotante.status === 'reprovado') {
-      return res.status(400).json({ erro: 'O adotante está reprovado.' });
-    }
-
-    const { data: animalAtualizado, error: erroAtualizacao } = await req.supabase
-      .from('animais')
-      .update({ situacao: 'adotado' })
-      .eq('id', animalId)
-      .neq('situacao', 'adotado')
-      .select()
-      .single();
-
-    if (erroAtualizacao) throw erroAtualizacao;
-    if (!animalAtualizado) return res.status(409).json({ erro: 'O animal não está mais disponível.' });
-
-    const { data: adocao, error: erroAdocao } = await req.supabase
-      .from('adocoes')
-      .insert([{ ...req.body }])
-      .select()
-      .single();
-
-    if (erroAdocao) {
-      await req.supabase.from('animais').update({ situacao: situacaoAnterior }).eq('id', animalId);
-      throw erroAdocao;
-    }
-
-    return res.status(201).json({ sucesso: true, adocao, animal: animalAtualizado });
-  } catch (error) {
+    return res.status(201).json({ sucesso: true, adocao: data.adocao, animal: data.animal });
+  } catch {
     return res.status(500).json({ sucesso: false, erro: 'Não foi possível registrar a adoção.' });
   }
 }

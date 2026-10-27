@@ -1,6 +1,6 @@
 import { adotanteSchema, statusAdotanteSchema } from '../schemas/validationSchemas.js';
 
-// Rota Pública: O adotante preenche o formulário no site
+// Cadastro pela equipe autenticada; o formulário público usa /api/interesses.
 export async function cadastrarAdotante(req, res) {
   try {
     // 1. Validação rigorosa dos dados de entrada com Zod
@@ -12,7 +12,7 @@ export async function cadastrarAdotante(req, res) {
     const novoAdotante = validacao.data;
 
     // 2. Inserção na base de dados
-    const { data, error } = await supabase
+    const { data, error } = await req.supabase
       .from('adotantes')
       .insert([{
         nome: novoAdotante.nome,

@@ -1,5 +1,13 @@
 import { z } from 'zod';
 
+// Valida também dias inexistentes, como 2026-02-30.
+const dataSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use a data no formato AAAA-MM-DD.')
+  .refine(valor => {
+    const data = new Date(`${valor}T00:00:00.000Z`);
+    return !Number.isNaN(data.getTime()) && data.toISOString().slice(0, 10) === valor;
+  }, 'Informe uma data válida.');
+const dataOpcionalSchema = z.union([dataSchema, z.literal('')]).optional();
+
 export const adotanteSchema = z.object({
   nome: z.string().trim().min(3, 'O nome deve ter pelo menos 3 letras.'),
   email: z.string().email('Formato de email inválido.'),
@@ -52,30 +60,30 @@ export const resgateSchema = z.object({
 });
 
 export const saudeSchema = z.object({
-  data_registro: z.string().min(1),
+  data_registro: dataSchema,
   descricao: z.string().trim().min(2),
   observacoes: z.string().optional()
 });
 
 export const vacinaSchema = z.object({
   nome: z.string().trim().min(2),
-  data_aplicacao: z.string().min(1),
-  proxima_dose: z.string().optional(),
+  data_aplicacao: dataSchema,
+  proxima_dose: dataOpcionalSchema,
   observacoes: z.string().optional()
-});
+}).refine(d => !d.proxima_dose || d.proxima_dose >= d.data_aplicacao, 'A próxima dose não pode anteceder a aplicação.');
 
 export const tratamentoSchema = z.object({
   descricao: z.string().trim().min(2),
-  inicio: z.string().min(1),
-  fim: z.string().optional(),
+  inicio: dataSchema,
+  fim: dataOpcionalSchema,
   status: z.enum(['ativo', 'concluido', 'cancelado']).default('ativo'),
   observacoes: z.string().optional()
-});
+}).refine(d => !d.fim || d.fim >= d.inicio, 'O fim não pode anteceder o início do tratamento.');
 
 export const adocaoSchema = z.object({
   animal_id: z.union([z.string().min(1), z.number().int().positive()]),
   adotante_id: z.union([z.string().min(1), z.number().int().positive()]),
-  data_adocao: z.string().min(1),
+  data_adocao: dataSchema,
   observacoes: z.string().optional()
 });
 

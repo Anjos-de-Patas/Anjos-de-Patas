@@ -1,9 +1,10 @@
-import {
-    supabase
-} from "../config/database.js";
+import { criarClienteConta } from './contaAdotanteController.js';
+export const autenticacaoEquipe = { criarCliente: criarClienteConta };
 
 export async function login(req, res) {
     try {
+        // Cada login tem sua própria sessão; o catálogo mantém o cliente anônimo.
+        const supabase = autenticacaoEquipe.criarCliente();
         const {
             email,
             password
