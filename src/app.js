@@ -1,3 +1,5 @@
+import { listarInteressados, historicoInteressado, atualizarAcompanhamento } from './controllers/interessadosController.js';
+import { acompanhamentoSchema } from './schemas/interessadosSchemas.js';
 import { obterAnimalPublico, manifestarInteresse } from './controllers/publicoController.js';
 import { interesseSchema } from './schemas/validationSchemas.js';
 import rateLimit from 'express-rate-limit';
@@ -171,6 +173,10 @@ app.post('/api/recuperar-senha', limiteLogin, validarRequest(recuperarSchema), t
 app.post('/api/redefinir-senha', limiteLogin, validarRequest(redefinirSchema), tratarRecuperacao(redefinirSenha));
 
 const tratarPublico = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+app.get('/api/admin/interessados', ...protegerONG, tratarPublico(listarInteressados));
+app.get('/api/admin/interessados/:id/historico', ...protegerONG, tratarPublico(historicoInteressado));
+app.post('/api/admin/interessados/:id/acompanhamento', ...protegerONG, validarRequest(acompanhamentoSchema), tratarPublico(atualizarAcompanhamento));
+
 app.get('/api/animais/:id', tratarPublico(obterAnimalPublico));
 app.post('/api/interesses', rateLimit({
     windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: 'draft-8', legacyHeaders: false,

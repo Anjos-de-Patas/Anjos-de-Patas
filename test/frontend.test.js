@@ -7,13 +7,16 @@ import { parseHTML } from 'linkedom';
 
 function ambiente(pagina, solicitar) {
     const { document, window } = parseHTML(fs.readFileSync(pagina, 'utf8'));
-    for (const select of document.querySelectorAll('select')) {
+    function configurarSelect(select) {
         Object.defineProperty(select, 'value', {
             configurable: true,
             get() { return this.querySelector('option[selected]')?.value ?? this.querySelector('option')?.value ?? ''; },
             set(valor) { for (const option of this.querySelectorAll('option')) option.selected = option.value === String(valor); }
         });
     }
+    for (const select of document.querySelectorAll('select')) configurarSelect(select);
+    const criar=document.createElement.bind(document);
+    document.createElement=(tag,...args)=>{const e=criar(tag,...args);if(tag==='select')configurarSelect(e);if(tag==='form')e.reportValidity=()=>true;return e;};
     const sessao = new Map([['anjos_token', 'token-de-teste']]);
     const context = vm.createContext({
         window: {
@@ -22,7 +25,7 @@ function ambiente(pagina, solicitar) {
             matchMedia: () => ({ matches: true }),
             addEventListener() {}, scrollY: 0
         },
-        document, console, Headers,
+        document, console, Headers, URLSearchParams,
         URL: { createObjectURL: () => 'blob:foto-teste', revokeObjectURL() {} },
         sessionStorage: { getItem: (chave) => sessao.get(chave), removeItem: (chave) => sessao.delete(chave) },
         requestAnimationFrame: (callback) => callback(),
@@ -271,4 +274,27 @@ test('recuperação confirma senha antes de enviar e não grava código ou senha
     env.document.querySelector('#confirmar-redefinir').value='senha-nova';env.document.querySelector('#form-redefinir').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
     assert.equal(envios,2);assert.equal(ultimo.url,'/api/redefinir-senha');assert.equal(env.document.querySelector('#form-redefinir').hidden,true);
     assert.equal(env.context.sessionStorage.getItem('anjos_token'),undefined);
+});
+
+test('interessados salvam contato autenticado com versão e preservam nota em falha', async () => {
+    let falhar=true,envio;
+    const pessoa={id:7,nome:'Pessoa de teste',email:'pessoa@example.com',telefone:'99912345678',etapa:'triagem',versao:3,criado_em:'2026-10-09'};
+    const env=ambiente('pages/interessados.html',async(url,opcoes={})=>{
+        if(opcoes.method==='POST'){envio={url,opcoes};if(falhar)throw new Error('Falha ao salvar');return {sucesso:true};}
+        if(url.includes('/historico'))return {eventos:[{tipo:'nota',nota:'<img src=x>',criado_em:'2026-10-09'}]};
+        return {interessados:[pessoa],total:1};
+    });
+    env.executar('js/telefone.js');env.executar('js/interessados.js');await aguardar();
+    for(const id of ['tipo-7','etapa-7'])Object.defineProperty(env.document.getElementById(id),'value',{writable:true,configurable:true,value:''});
+    env.document.querySelector('#nota-7').value='Ligação realizada';env.document.querySelector('#tipo-7').value='contato';
+    env.document.querySelector('#etapa-7').value='entrevista';
+    env.document.querySelector('details form').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(envio.opcoes.autenticado,true);assert.equal(envio.url,'/api/admin/interessados/7/acompanhamento');
+    assert.deepEqual(JSON.parse(envio.opcoes.body),{etapa:'entrevista',tipo:'contato',nota:'Ligação realizada',versao:3});
+    assert.equal(env.document.querySelector('#nota-7').value,'Ligação realizada');
+    assert.match(env.document.querySelector('#mensagem-admin').textContent,/Falha/);
+    const historico=[...env.document.querySelectorAll('button')].find(b=>b.textContent==='Consultar histórico');historico.click();await aguardar();
+    assert.equal(env.document.querySelector('details img'),null);assert.match(env.document.querySelector('.historico-etapas').textContent,/<img src=x>/);
+    falhar=false;env.document.querySelector('details form').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.match(env.document.querySelector('#mensagem-admin').textContent,/salvo/);
 });
