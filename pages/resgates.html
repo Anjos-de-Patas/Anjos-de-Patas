@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="Registro e acompanhamento administrativo dos resgates da Anjos de Patas.">
+
+    <title>Resgates | Anjos de Patas</title>
+
+
+
+
+
+
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/admin.css">
+
+    <link rel="stylesheet" href="../css/internal.css">
+
+<link rel="stylesheet" href="../css/brand.css"><link rel="stylesheet" href="../css/design-system.css"></head>
+
+<body>
+    <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
+
+    <header class="cabecalho-mobile">
+
+        <a href="dashboard.html" class="marca-mobile" aria-label="Anjos de Patas - Dashboard">
+            <img height="60" width="120" decoding="async" src="../assets/images/logo_anjos_de_patas.png" alt="">
+
+            <div>
+                <strong>Anjos de Patas</strong>
+                <span>Sistema de Gestão</span>
+            </div>
+        </a>
+
+        <button type="button" id="botao-abrir-menu" class="botao-menu-mobile" aria-label="Abrir menu" aria-controls="menu-lateral" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <path d="M4 7h16" />
+                <path d="M4 12h16" />
+                <path d="M4 17h16" />
+            </svg>
+        </button>
+
+    </header>
+
+    <div id="fundo-menu" class="fundo-menu" aria-hidden="true"></div>
+
+    <div class="dashboard">
+
+        <aside id="menu-lateral" class="menu-lateral" aria-label="Menu administrativo">
+
+            <div class="menu-topo">
+
+                <div class="cabecalho-menu">
+
+                    <a href="dashboard.html" class="marca" aria-label="Anjos de Patas - Dashboard">
+                        <img height="60" width="120" decoding="async" src="../assets/images/logo_anjos_de_patas.png" alt="" class="marca-logo">
+
+                        <div>
+                            <strong>Anjos de Patas</strong>
+                            <span>Sistema de Gestão</span>
+                        </div>
+                    </a>
+
+                    <button type="button" id="botao-fechar-menu" class="botao-fechar-menu" aria-label="Fechar menu">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                            <path d="M6 6l12 12" />
+                            <path d="M18 6 6 18" />
+                        </svg>
+                    </button>
+
+                </div>
+
+                <nav class="navegacao" aria-label="Navegação administrativa">
+<a href="interessados.html" class="nav-item"><span class="nav-icone" aria-hidden="true"><img src="../assets/icons/pedidos_pendentes.svg" alt="" decoding="async"></span><span>Interessados</span></a>
+
+                    <a href="dashboard.html" class="nav-item">
+                        <span class="nav-icone" aria-hidden="true">
+                            <img decoding="async" src="../assets/icons/dashboard.svg" alt="">
+                        </span>
+
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a href="adocoes.html#orientacoes" class="nav-item">
+                        <span class="nav-icone" aria-hidden="true">
+                            <img decoding="async" src="../assets/icons/tipos_adocoes.svg" alt="">
+                        </span>
+
+                        <span>Processo de adoção</span>
+                    </a>
+
+                    <a href="animais.html" class="nav-item">
+                        <span class="nav-icone" aria-hidden="true">
+                            <img decoding="async" src="../assets/icons/animais.svg" alt="">
+                        </span>
+
+                        <span>Animais</span>
+                    </a>
+
+                    <a aria-current="page" href="resgates.html" class="nav-item ativo">
+                        <span class="nav-icone" aria-hidden="true">
+                            <img decoding="async" src="../assets/icons/resgates.svg" alt="">
+                        </span>
+
+                        <span>Resgates</span>
+                    </a>
+
+                    <a href="adocoes.html" class="nav-item">
+                        <span class="nav-icone" aria-hidden="true">
+                            <img decoding="async" src="../assets/icons/registrar_adocao.svg" alt="">
+                        </span>
+
+                        <span>Adoções</span>
+                    </a>
+
+                </nav>
+
+            </div>
+
+            <div class="menu-rodape">
+
+                <a href="perfil.html" class="usuario" aria-label="Abrir meu perfil">
+
+                    <div class="usuario-avatar" aria-hidden="true">
+                        U
+                    </div>
+
+                    <div class="usuario-dados">
+
+                        <strong id="usuario-nome">
+                            Usuário
+                        </strong>
+
+                        <span>
+                            Área administrativa
+                        </span>
+
+                    </div>
+
+                    <svg class="usuario-seta" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+
+                </a>
+
+                <button type="button" id="botao-sair" class="botao-sair">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M10 17l5-5-5-5" />
+                        <path d="M15 12H3" />
+                        <path d="M14 3h4a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3h-4" />
+                    </svg>
+
+                    <span>Sair</span>
+                </button>
+
+            </div>
+
+        </aside>
+
+        <main class="conteudo" id="conteudo-principal" tabindex="-1"><header class="cabecalho"><span class="pagina-rotulo"><img class="detalhe-pata" src="../assets/icons/pata-marca.svg" alt="" aria-hidden="true">Gestão institucional</span><h1>Resgates</h1><p class="cabecalho-texto">Registre as circunstâncias do acolhimento e consulte os resgates vinculados aos animais.</p><a class="portal-link" href="../index.html">Visitar o portal de adoção ↗</a></header>
+<p id="mensagem-admin" class="mensagem-admin" role="status" aria-live="polite" hidden></p>
+<section class="painel" id="cadastro-resgate" aria-labelledby="titulo-resgate"><h2 id="titulo-resgate">Registrar resgate</h2><p class="nota-admin">Selecione um animal já cadastrado. O registro ficará disponível também no histórico dele.</p><p id="aviso-sem-animais" class="mensagem-admin" hidden>Nenhum animal cadastrado. <a href="animais.html#cadastro">Cadastre o animal antes de registrar o resgate.</a></p>
+<form id="form-resgate" class="form-admin"><p class="form-orientacao campo-amplo">Preencha os campos obrigatórios antes de salvar. Campos opcionais estão identificados.</p>
+<div class="campo-admin"><label for="animal-resgate">Animal</label><select id="animal-resgate" name="animal_id" required disabled><option value="">Carregando animais...</option></select><a class="portal-link" href="animais.html#cadastro">Cadastrar novo animal ↗</a></div>
+<div class="campo-admin"><label for="data-resgate">Data do resgate</label><input id="data-resgate" name="data_resgate" type="date" required></div>
+<div class="campo-admin campo-amplo"><label for="local-resgate">Local do resgate</label><input id="local-resgate" name="local_resgate" minlength="2" maxlength="500" required placeholder="Bairro, rua ou ponto de referência"></div>
+<div class="campo-admin campo-amplo"><label for="motivo-resgate">Motivo do resgate</label><textarea id="motivo-resgate" name="motivo" minlength="2" maxlength="2000" rows="3" required></textarea></div>
+<div class="campo-admin campo-amplo"><label for="observacoes-resgate">Observações (opcional)</label><textarea id="observacoes-resgate" name="observacoes" maxlength="2000" rows="3"></textarea></div>
+<div class="barra-acoes"><button id="salvar-resgate" class="botao-admin" type="submit" disabled>Registrar resgate</button><a class="botao-admin secundario" href="animais.html">Consultar animais</a></div></form></section>
+<section class="painel" aria-labelledby="titulo-lista-resgates"><h2 id="titulo-lista-resgates">Resgates registrados</h2><div class="barra-acoes"><div class="campo-admin"><label for="busca-resgate">Pesquisar por animal, local ou motivo</label><input id="busca-resgate" type="search" autocomplete="off"></div><button class="botao-admin secundario" id="atualizar-resgates" type="button">Atualizar dados</button></div><p id="resumo-resgates" class="nota-admin" role="status" aria-live="polite"></p><div id="lista-resgates" aria-busy="true"></div></section></main></div><script src="../js/api.js"></script><script src="../js/admin-session.js"></script><script src="../js/resgates.js"></script></body></html>

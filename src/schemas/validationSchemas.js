@@ -40,7 +40,12 @@ export const buscaSchema = z.object({
 });
 
 export const resgateSchema = z.object({
-  data_resgate: z.string().min(1),
+  data_resgate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Use a data no formato AAAA-MM-DD.')
+    .refine(valor => {
+      const data = new Date(`${valor}T00:00:00.000Z`);
+      return !Number.isNaN(data.getTime()) && data.toISOString().slice(0, 10) === valor;
+    }, 'Informe uma data válida.')
+    .refine(valor => valor <= new Date().toLocaleDateString('en-CA', { timeZone: 'America/Sao_Paulo' }), 'A data do resgate não pode estar no futuro.'),
   local_resgate: z.string().trim().min(2),
   motivo: z.string().trim().min(2),
   observacoes: z.string().optional()

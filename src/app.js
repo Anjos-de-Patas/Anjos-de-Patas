@@ -47,6 +47,7 @@ import {
 
 import {
     registrarResgate,
+    listarResgates,
     registrarSaude,
     registrarVacina,
     registrarTratamento,
@@ -262,6 +263,8 @@ app.get(
     ...protegerONG,
     obterHistoricoAnimal
 );
+
+app.get('/api/resgates', ...protegerONG, listarResgates);
 
 app.post(
     "/api/animais/:id/resgates",

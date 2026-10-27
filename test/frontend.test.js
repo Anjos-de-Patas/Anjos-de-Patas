@@ -340,3 +340,54 @@ test('adotante vê etapa atual e histórico real, sem marcar entrevistas ou conc
     assert.equal(env.document.querySelectorAll('#historico-conta li').length,1);
     assert.equal(env.document.querySelector('#dados-conta').hidden,false);
 });
+
+test('página de resgates registra no animal selecionado, pesquisa e preserva o formulário em caso de falha', async () => {
+    const chamadas = [];
+    let falhar = false;
+    const env = ambiente('pages/resgates.html', async (url, opcoes = {}) => {
+        chamadas.push({ url, opcoes });
+        if (opcoes.method === 'POST') {
+            if (falhar) throw new Error('Falha ao salvar resgate');
+            return { sucesso: true };
+        }
+        if (url === '/api/admin/animais') return { animais: [{ id: 42, nome: 'Mel' }] };
+        return { resgates: [{ animal_id: 42, data_resgate: '2026-01-01', local_resgate: 'Centro', motivo: '<img src=x>' }] };
+    });
+    env.executar('js/resgates.js');
+    await aguardar();
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, false);
+    assert.equal(env.document.querySelector('#lista-resgates h3').textContent, 'Mel');
+    assert.equal(env.document.querySelector('#lista-resgates img'), null);
+    const busca = env.document.querySelector('#busca-resgate');
+    busca.value = 'inexistente';
+    busca.dispatchEvent(new env.window.Event('input'));
+    assert.equal(env.document.querySelector('#lista-resgates article'), null);
+    const form = env.document.querySelector('#form-resgate');
+    form.elements.animal_id.value = '42';
+    form.elements.data_resgate.value = '2026-01-01';
+    form.elements.local_resgate.value = ' Centro ';
+    form.elements.motivo.value = 'Abandono';
+    form.dispatchEvent(new env.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    const post = chamadas.find(c => c.opcoes.method === 'POST');
+    assert.equal(post.url, '/api/animais/42/resgates');
+    assert.equal(post.opcoes.autenticado, true);
+    assert.equal(JSON.parse(post.opcoes.body).local_resgate, 'Centro');
+    assert.equal(JSON.parse(post.opcoes.body).animal_id, undefined);
+    falhar = true;
+    form.elements.animal_id.value = '42';
+    form.elements.local_resgate.value = 'Bairro Norte';
+    form.dispatchEvent(new env.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(form.elements.local_resgate.value, 'Bairro Norte');
+    assert.equal(env.document.querySelector('#mensagem-admin').textContent, 'Falha ao salvar resgate');
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, false);
+});
+
+test('falha de consulta na página de resgates bloqueia registro e oferece atualização', async () => {
+    const env = ambiente('pages/resgates.html', async () => { throw new Error('Sem conexão'); });
+    env.executar('js/resgates.js');
+    await aguardar();
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, true);
+    assert.match(env.document.querySelector('#lista-resgates').textContent, /Atualizar dados/);
+});

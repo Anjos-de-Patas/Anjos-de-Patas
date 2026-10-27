@@ -32,6 +32,15 @@ async function registrarNaTabela(req, res, tabela) {
 }
 
 export const registrarResgate = (req, res) => registrarNaTabela(req, res, 'resgates');
+export async function listarResgates(req, res) {
+  try {
+    const { data, error } = await req.supabase.from('resgates').select('*').order('data_resgate', { ascending: false });
+    if (error) throw error;
+    return res.json({ sucesso: true, resgates: data || [] });
+  } catch {
+    return res.status(500).json({ sucesso: false, erro: 'Não foi possível consultar os resgates.' });
+  }
+}
 export const registrarSaude = (req, res) => registrarNaTabela(req, res, 'registros_saude');
 export const registrarVacina = (req, res) => registrarNaTabela(req, res, 'vacinas');
 export const registrarTratamento = (req, res) => registrarNaTabela(req, res, 'tratamentos');
