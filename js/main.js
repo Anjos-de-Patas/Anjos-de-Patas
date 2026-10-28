@@ -7,6 +7,13 @@ const mensagemSemResultados = document.getElementById("sem-resultados");
 
 let filtroEspecie = "todos";
 let filtroSexo = "todos";
+const animaisPorPagina = 6;
+let paginaAtual = 1;
+let totalPaginas = 1;
+const paginacaoCatalogo = document.querySelector('#paginacao-catalogo');
+const resumoPaginacao = document.querySelector('#resumo-paginacao');
+const paginaAnterior = document.querySelector('#pagina-anterior');
+const paginaProxima = document.querySelector('#pagina-proxima');
 
 const nomesEspecies = {
     cao: "Cachorros",
@@ -44,9 +51,7 @@ function atualizarResumoFiltros() {
 
 
 function aplicarFiltros() {
-    let quantidadeVisivel = 0;
-
-    cardsAnimais.forEach((card) => {
+    const correspondentes = [...cardsAnimais].filter((card) => {
         const especie = card.dataset.especie;
         const sexo = card.dataset.sexo;
 
@@ -58,20 +63,33 @@ function aplicarFiltros() {
             filtroSexo === "todos" ||
             sexo === filtroSexo;
 
-        const deveMostrar =
-            correspondeEspecie && correspondeSexo;
-
-        card.hidden = !deveMostrar;
-
-        if (deveMostrar) {
-            quantidadeVisivel++;
-        }
+        return correspondeEspecie && correspondeSexo;
     });
-
-    mensagemSemResultados.hidden = quantidadeVisivel > 0;
-
+    totalPaginas = Math.max(1, Math.ceil(correspondentes.length / animaisPorPagina));
+    paginaAtual = Math.min(paginaAtual, totalPaginas);
+    const inicio = (paginaAtual - 1) * animaisPorPagina;
+    const visiveis = new Set(correspondentes.slice(inicio, inicio + animaisPorPagina));
+    cardsAnimais.forEach(card => { card.hidden = !visiveis.has(card); });
+    mensagemSemResultados.hidden = correspondentes.length > 0;
+    paginacaoCatalogo.hidden = correspondentes.length === 0;
+    paginaAnterior.disabled = paginaAtual === 1;
+    paginaProxima.disabled = paginaAtual === totalPaginas;
+    paginaAnterior.hidden = paginaProxima.hidden = totalPaginas === 1;
+    resumoPaginacao.textContent = correspondentes.length
+        ? `${inicio + 1}–${Math.min(inicio + animaisPorPagina, correspondentes.length)} de ${correspondentes.length} animais · Página ${paginaAtual} de ${totalPaginas}`
+        : '';
     atualizarResumoFiltros();
 }
+
+function mudarPagina(direcao) {
+    const proxima = paginaAtual + direcao;
+    if (proxima < 1 || proxima > totalPaginas) return;
+    paginaAtual = proxima;
+    aplicarFiltros();
+    document.querySelector('#adote').scrollIntoView({ block: 'start' });
+}
+paginaAnterior.addEventListener('click', () => mudarPagina(-1));
+paginaProxima.addEventListener('click', () => mudarPagina(1));
 
 
 botoesFiltro.forEach((botao) => {
@@ -97,12 +115,14 @@ botoesFiltro.forEach((botao) => {
             filtroSexo = valor;
         }
 
+        paginaAtual = 1;
         aplicarFiltros();
     });
 });
 
 
 botaoLimparFiltros.addEventListener("click", () => {
+    paginaAtual = 1;
     filtroEspecie = "todos";
     filtroSexo = "todos";
 
@@ -186,6 +206,12 @@ function criarCardPublico(animal, indice) {
         li.textContent = rotulosCatalogo[[animal.faixa_etaria, animal.sexo, animal.porte][i]] || 'Não informado';
     });
     const detalhes = card.querySelector('.detalhes-expandidos');
+    const perfil = document.createElement('a');
+    perfil.className = 'link-editorial';
+    perfil.href = `pages/animal.html?id=${encodeURIComponent(animal.id)}`;
+    perfil.textContent = 'Ver perfil completo';
+    card.querySelector('.card-conteudo').append(perfil);
+    card.querySelector('.botao-interesse').href = `pages/animal.html?id=${encodeURIComponent(animal.id)}#interesse`;
     detalhes.id = `detalhes-animal-${indice}`;
     detalhes.hidden = true;
     const botao = card.querySelector('.botao-detalhes');
@@ -211,6 +237,8 @@ function criarCardPublico(animal, indice) {
 }
 
 async function carregarCatalogo() {
+    paginaAtual = 1;
+    paginacaoCatalogo.hidden = true;
     listaPublica.replaceChildren();
     cardsAnimais = [];
     mensagemCatalogo.hidden = false;
@@ -220,7 +248,8 @@ async function carregarCatalogo() {
     listaPublica.setAttribute('aria-busy', 'true');
     try {
         const dados = await window.AnjosAPI.solicitar('/api/animais');
-        const animais = (dados.animais || []).filter((animal) => animal.situacao === 'disponivel');
+        const disponiveis = (dados.animais || []).filter((animal) => animal.situacao === 'disponivel');
+        const animais = disponiveis;
         listaPublica.replaceChildren(...animais.map(criarCardPublico));
         cardsAnimais = listaPublica.querySelectorAll('.card-animal');
         mensagemCatalogo.hidden = animais.length > 0;
@@ -291,326 +320,6 @@ window.addEventListener(
 );
 
 atualizarMenuAtivo();
-
-
-// Assistente
-
-const API_AGENTE =
-    `${window.AnjosAPI.base}/api/agente`;
-
-const botaoChatFlutuante =
-    document.getElementById("botao-chat-flutuante");
-
-const botoesAbrirChat =
-    document.querySelectorAll("[data-abrir-chat]");
-
-const janelaChat =
-    document.getElementById("janela-chat");
-
-const botaoFecharChat =
-    document.getElementById("fechar-chat");
-
-const formularioChat =
-    document.getElementById("formulario-chat");
-
-const campoMensagem =
-    document.getElementById("mensagem-chat");
-
-const areaMensagens =
-    document.getElementById("mensagens-chat");
-
-const sugestoesChat =
-    document.querySelectorAll(".sugestao-chat");
-
-const botaoEnviarChat =
-    formularioChat.querySelector('button[type="submit"]');
-
-let ultimoElementoFocado = null;
-let chatEmAnimacao = false;
-let mensagemEmEnvio = false;
-let conversaId = null;
-
-
-// Pequeno movimento para chamar atenção sem abrir o chat
-
-const usuarioPrefereMenosMovimento =
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-if (!usuarioPrefereMenosMovimento) {
-    setTimeout(() => {
-        if (janelaChat.hidden) {
-            botaoChatFlutuante.classList.add("chamar-atencao");
-
-            setTimeout(() => {
-                botaoChatFlutuante.classList.remove("chamar-atencao");
-            }, 1200);
-        }
-    }, 2200);
-}
-
-
-function abrirChat(origem) {
-    if (chatEmAnimacao || !janelaChat.hidden) {
-        return;
-    }
-
-    ultimoElementoFocado =
-        origem || document.activeElement;
-
-    chatEmAnimacao = true;
-
-    janelaChat.hidden = false;
-
-    janelaChat.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
-    botaoChatFlutuante.setAttribute(
-        "aria-expanded",
-        "true"
-    );
-
-    botoesAbrirChat.forEach((botao) => {
-        botao.setAttribute(
-            "aria-expanded",
-            "true"
-        );
-    });
-
-    requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-            janelaChat.classList.add("chat-visivel");
-        });
-    });
-
-    setTimeout(() => {
-        chatEmAnimacao = false;
-        campoMensagem.focus();
-    }, 230);
-}
-
-
-function fecharChat() {
-    if (chatEmAnimacao || janelaChat.hidden) {
-        return;
-    }
-
-    chatEmAnimacao = true;
-
-    janelaChat.classList.remove("chat-visivel");
-    janelaChat.classList.add("chat-fechando");
-
-    botaoChatFlutuante.setAttribute(
-        "aria-expanded",
-        "false"
-    );
-
-    botoesAbrirChat.forEach((botao) => {
-        botao.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-    });
-
-    setTimeout(() => {
-        janelaChat.hidden = true;
-
-        janelaChat.classList.remove("chat-fechando");
-
-        janelaChat.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        chatEmAnimacao = false;
-
-        if (
-            ultimoElementoFocado &&
-            typeof ultimoElementoFocado.focus === "function"
-        ) {
-            ultimoElementoFocado.focus();
-        }
-    }, 220);
-}
-
-
-botaoChatFlutuante.addEventListener("click", () => {
-    if (janelaChat.hidden) {
-        abrirChat(botaoChatFlutuante);
-    } else {
-        fecharChat();
-    }
-});
-
-
-botoesAbrirChat.forEach((botao) => {
-    botao.addEventListener("click", () => {
-        abrirChat(botao);
-    });
-});
-
-
-botaoFecharChat.addEventListener(
-    "click",
-    fecharChat
-);
-
-
-document.addEventListener("keydown", (evento) => {
-    if (
-        evento.key === "Escape" &&
-        !janelaChat.hidden
-    ) {
-        fecharChat();
-    }
-});
-
-
-function adicionarMensagem(texto, tipo) {
-    const mensagem = document.createElement("div");
-
-    mensagem.classList.add(
-        "mensagem",
-        tipo
-    );
-
-    const paragrafo = document.createElement("p");
-    paragrafo.textContent = texto;
-
-    mensagem.appendChild(paragrafo);
-    areaMensagens.appendChild(mensagem);
-
-    areaMensagens.scrollTop =
-        areaMensagens.scrollHeight;
-
-    return mensagem;
-}
-
-
-function definirEstadoEnvio(enviando) {
-    mensagemEmEnvio = enviando;
-
-    campoMensagem.disabled = enviando;
-
-    if (botaoEnviarChat) {
-        botaoEnviarChat.disabled = enviando;
-    }
-
-    sugestoesChat.forEach((botao) => {
-        botao.disabled = enviando;
-    });
-}
-
-
-async function consultarAgente(mensagem) {
-    const corpo = {
-        mensagem
-    };
-
-    if (conversaId) {
-        corpo.conversa_id = conversaId;
-    }
-
-    const resposta = await fetch(
-        API_AGENTE,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(corpo)
-        }
-    );
-
-    let dados;
-
-    try {
-        dados = await resposta.json();
-    } catch {
-        throw new Error(
-            "O servidor retornou uma resposta inválida."
-        );
-    }
-
-    if (!resposta.ok || !dados.sucesso) {
-        throw new Error(
-            dados.erro ||
-            "Não foi possível consultar o assistente."
-        );
-    }
-
-    return dados;
-}
-
-
-async function enviarMensagem(texto) {
-    const mensagem = texto.trim();
-
-    if (!mensagem || mensagemEmEnvio) {
-        return;
-    }
-
-    adicionarMensagem(
-        mensagem,
-        "mensagem-usuario"
-    );
-
-    campoMensagem.value = "";
-
-    definirEstadoEnvio(true);
-
-    const mensagemCarregando =
-        adicionarMensagem(
-            "Estou procurando uma opção para você...",
-            "mensagem-assistente"
-        );
-
-    try {
-        const resposta =
-            await consultarAgente(mensagem);
-
-        mensagemCarregando.remove();
-
-        if (resposta.conversa_id) {
-            conversaId = resposta.conversa_id;
-        }
-
-        adicionarMensagem(
-            resposta.mensagem,
-            "mensagem-assistente"
-        );
-    } catch (erro) {
-        console.error(
-            "Erro ao consultar o assistente:",
-            erro
-        );
-
-        mensagemCarregando.remove();
-
-        adicionarMensagem(
-            "Não consegui acessar o assistente agora. Tente novamente em alguns instantes.",
-            "mensagem-assistente"
-        );
-    } finally {
-        definirEstadoEnvio(false);
-        campoMensagem.focus();
-    }
-}
-
-
-formularioChat.addEventListener("submit", (evento) => {
-    evento.preventDefault();
-
-    enviarMensagem(campoMensagem.value);
-});
-
-
-sugestoesChat.forEach((botao) => {
-    botao.addEventListener("click", () => {
-        enviarMensagem(botao.dataset.mensagem);
-    });
-});
 
 
 aplicarFiltros();

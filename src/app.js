@@ -1,3 +1,12 @@
+import { cadastrarContaAdotante, entrarContaAdotante, verificarContaAdotante, obterContaAdotante } from './controllers/contaAdotanteController.js';
+import { cadastroContaAdotanteSchema } from './schemas/validationSchemas.js';
+import { listarInteressados, historicoInteressado, atualizarAcompanhamento } from './controllers/interessadosController.js';
+import { acompanhamentoSchema } from './schemas/interessadosSchemas.js';
+import { obterAnimalPublico, manifestarInteresse, obterResultadosPublicos } from './controllers/publicoController.js';
+import { interesseSchema } from './schemas/validationSchemas.js';
+import rateLimit from 'express-rate-limit';
+import { recuperarSenha, redefinirSenha } from './controllers/recuperacaoController.js';
+import { recuperarSchema, redefinirSchema } from './schemas/recuperacaoSchemas.js';
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -38,6 +47,7 @@ import {
 
 import {
     registrarResgate,
+    listarResgates,
     registrarSaude,
     registrarVacina,
     registrarTratamento,
@@ -161,6 +171,27 @@ app.post(
 
 // --- ROTAS PÚBLICAS ---
 
+const tratarRecuperacao = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+app.post('/api/recuperar-senha', limiteLogin, validarRequest(recuperarSchema), tratarRecuperacao(recuperarSenha));
+app.post('/api/redefinir-senha', limiteLogin, validarRequest(redefinirSchema), tratarRecuperacao(redefinirSenha));
+
+const tratarPublico = (handler) => (req, res, next) => Promise.resolve(handler(req, res)).catch(next);
+const tratarConta = (req, res, next) => verificarContaAdotante(req, res, next).catch(next);
+app.post('/api/conta-adotante/cadastro', limiteLogin, validarRequest(cadastroContaAdotanteSchema), tratarPublico(cadastrarContaAdotante));
+app.post('/api/conta-adotante/entrar', limiteLogin, validarRequest(loginSchema), tratarPublico(entrarContaAdotante));
+app.get('/api/conta-adotante', tratarConta, tratarPublico(obterContaAdotante));
+
+app.get('/api/admin/interessados', ...protegerONG, tratarPublico(listarInteressados));
+app.get('/api/admin/interessados/:id/historico', ...protegerONG, tratarPublico(historicoInteressado));
+app.post('/api/admin/interessados/:id/acompanhamento', ...protegerONG, validarRequest(acompanhamentoSchema), tratarPublico(atualizarAcompanhamento));
+
+app.get('/api/animais/:id', tratarPublico(obterAnimalPublico));
+app.get('/api/resultados', tratarPublico(obterResultadosPublicos));
+app.post('/api/interesses', rateLimit({
+    windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: 'draft-8', legacyHeaders: false,
+    message: { sucesso: false, erro: 'Limite de envios atingido. Tente novamente mais tarde.' }
+}), validarRequest(interesseSchema), tratarPublico(manifestarInteresse));
+
 app.get(
     "/api/animais",
     listarAnimais
@@ -181,6 +212,7 @@ app.post(
 
 app.post(
     "/api/adotantes",
+    ...protegerONG,
     validarRequest(adotanteSchema),
     cadastrarAdotante
 );
@@ -232,6 +264,8 @@ app.get(
     ...protegerONG,
     obterHistoricoAnimal
 );
+
+app.get('/api/resgates', ...protegerONG, listarResgates);
 
 app.post(
     "/api/animais/:id/resgates",

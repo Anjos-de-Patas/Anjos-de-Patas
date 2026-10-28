@@ -1,0 +1,12 @@
+.indicadores-publicos article { padding: 28px; border: 1px solid var(--borda); }
+.indicador-numero { display: block; font-size: 2.8rem; line-height: 1.2; font-weight: 600; margin-bottom: 20px; color: var(--marrom); }
+.metodologia { background: var(--bege); padding: 20px; margin-top: 24px; }
+.metodologia summary { cursor: pointer; font-weight: 600; }
+.metodologia p { margin: 16px 0 0; }
+.documento-publico { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--borda); }
+.documento-publico h3 { font-size: 1rem; font-weight: 600; }
+.documento-publico p { margin: 6px 0 0; font-size: .9rem; }
+.situacao-documento { flex-shrink: 0; font-size: .75rem; background: var(--bege); padding: 6px 12px; color: var(--texto-claro); }
+.metodologia summary:focus-visible { outline: 3px solid var(--marrom); outline-offset: 4px; }
+@media(max-width:800px) { .indicadores-publicos { grid-template-columns: 1fr; } }
+@media(max-width:500px) { .documento-publico { align-items: flex-start; flex-direction: column; gap: 12px; } }

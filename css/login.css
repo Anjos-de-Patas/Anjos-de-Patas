@@ -252,3 +252,5 @@ a {
         transition: none !important;
     }
 }
+/* Mant?m somente a etapa atual da recupera??o vis?vel. */
+.formulario-login[hidden] { display: none; }

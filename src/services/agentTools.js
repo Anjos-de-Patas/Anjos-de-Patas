@@ -50,10 +50,13 @@ export const agentToolDefinitions = [
             properties: {
                 animal_id: {
                     type: 'STRING',
-                    description: 'Identificador do animal.'
+                    description: 'ID numérico retornado por buscar_animais. Nunca use o nome neste campo.'
+                },
+                nome: {
+                    type: 'STRING',
+                    description: 'Nome do animal quando o ID não for conhecido.'
                 }
             },
-            required: ['animal_id']
         }
     },
     {
@@ -98,7 +101,7 @@ async function buscarAnimais(argumentos, cliente) {
     let consulta = cliente
         .from('animais')
         .select(
-            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao'
+            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao, imagem_url'
         )
         .eq('situacao', 'disponivel')
         .limit(20);
@@ -106,7 +109,7 @@ async function buscarAnimais(argumentos, cliente) {
     if (filtros.nome) {
         consulta = consulta.ilike(
             'nome',
-            `%${filtros.nome}%`
+            `%${filtros.nome.replace(/[\\%_]/g, '\\$&')}%`
         );
     }
 
@@ -182,29 +185,45 @@ async function obterDetalhesAnimal(
         };
     }
 
-    const { data, error } = await cliente
+    let consulta = cliente
         .from('animais')
         .select(
-            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao'
+            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao, imagem_url'
         )
-        .eq('id', validacao.data.animal_id)
         .eq('situacao', 'disponivel')
-        .maybeSingle();
+        .limit(2);
+
+    if (validacao.data.animal_id !== undefined) {
+        consulta = consulta.eq('id', validacao.data.animal_id);
+    } else {
+        const nome = validacao.data.nome.replace(/[\\%_]/g, '\\$&');
+        consulta = consulta.ilike('nome', nome);
+    }
+
+    const { data, error } = await consulta;
 
     if (error) {
         throw error;
     }
 
-    if (!data) {
+    if (!data?.length) {
         return {
             sucesso: false,
             erro: 'Animal disponível não encontrado.'
         };
     }
 
+    if (data.length > 1) {
+        return {
+            sucesso: false,
+            erro: 'Mais de um animal tem esse nome. Peça ao usuário para identificar qual deseja consultar.',
+            animais: data
+        };
+    }
+
     return {
         sucesso: true,
-        animal: data
+        animal: data[0]
     };
 }
 
@@ -231,7 +250,9 @@ export async function executarFerramenta(
                 'A pessoa interessada deve preencher seus dados de contato.',
                 'A ONG realiza uma triagem antes de concluir a adoção.',
                 'A confirmação final depende de um voluntário da ONG.'
-            ]
+            ],
+            proximo_passo: 'Abra o perfil do animal na seção Adote e selecione Manifestar interesse. O formulário não reserva o animal nem garante aprovação.',
+            formulario_enviado: false
         };
     }
 
@@ -241,7 +262,7 @@ export async function executarFerramenta(
             requer_atendimento_humano: true,
             encaminhamento_realizado: false,
             mensagem:
-                'Este atendimento precisa ser continuado por um voluntário da ONG. Nenhum contato ou encaminhamento foi realizado automaticamente.'
+                'Nenhum contato ou encaminhamento foi realizado automaticamente. Os canais oficiais ainda precisam ser cadastrados pela equipe; consulte a seção de contato do site para verificar atualizações.'
         };
     }
 

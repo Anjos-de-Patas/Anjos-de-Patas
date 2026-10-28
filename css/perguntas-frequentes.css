@@ -1,0 +1,11 @@
+.introducao-faq { max-width: 740px; color: var(--texto-claro); }
+.faq-indice { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 28px; font-size: .9rem; }
+.faq-indice a { text-decoration: underline; text-underline-offset: 5px; }
+.faq-grupo details { border-bottom: 1px solid var(--borda); }
+.faq-grupo summary { padding: 22px 8px; font-size: 1rem; font-weight: 600; cursor: pointer; color: var(--texto); }
+.faq-grupo details[open] summary { color: var(--marrom); }
+.faq-grupo details > div { padding: 0 28px 24px; max-width: 850px; }
+.faq-grupo details .link-editorial { margin-top: 0; }
+summary:focus-visible { outline: 3px solid var(--marrom); outline-offset: 3px; }
+#dados-pessoais { scroll-margin-top: calc(var(--altura-cabecalho, 100px) + 24px); }
+@media (max-width: 700px) { .faq-grupo details > div { padding-left: 8px; padding-right: 8px; } }

@@ -2,9 +2,7 @@ import {
     createClient
 } from "@supabase/supabase-js";
 
-import {
-    supabase
-} from "../config/database.js";
+export const clientesAutenticacao = { criarCliente: createClient };
 
 export const verificarToken =
     async (req, res, next) => {
@@ -31,7 +29,7 @@ export const verificarToken =
             );
 
         const supabaseScoped =
-            createClient(
+            clientesAutenticacao.criarCliente(
                 process.env.SUPABASE_URL,
                 process.env.SUPABASE_KEY,
                 {
@@ -70,7 +68,7 @@ export const verificarToken =
         const {
             data: perfil,
             error: erroPerfil
-        } = await supabase
+        } = await supabaseScoped
             .from("perfis")
             .select(
                 "id, nome, perfil, ativo"

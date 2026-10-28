@@ -7,13 +7,16 @@ import { parseHTML } from 'linkedom';
 
 function ambiente(pagina, solicitar) {
     const { document, window } = parseHTML(fs.readFileSync(pagina, 'utf8'));
-    for (const select of document.querySelectorAll('select')) {
+    function configurarSelect(select) {
         Object.defineProperty(select, 'value', {
             configurable: true,
             get() { return this.querySelector('option[selected]')?.value ?? this.querySelector('option')?.value ?? ''; },
             set(valor) { for (const option of this.querySelectorAll('option')) option.selected = option.value === String(valor); }
         });
     }
+    for (const select of document.querySelectorAll('select')) configurarSelect(select);
+    const criar=document.createElement.bind(document);
+    document.createElement=(tag,...args)=>{const e=criar(tag,...args);if(tag==='select')configurarSelect(e);if(tag==='form')e.reportValidity=()=>true;return e;};
     const sessao = new Map([['anjos_token', 'token-de-teste']]);
     const context = vm.createContext({
         window: {
@@ -22,7 +25,7 @@ function ambiente(pagina, solicitar) {
             matchMedia: () => ({ matches: true }),
             addEventListener() {}, scrollY: 0
         },
-        document, console, Headers,
+        document, console, Headers, URLSearchParams,
         URL: { createObjectURL: () => 'blob:foto-teste', revokeObjectURL() {} },
         sessionStorage: { getItem: (chave) => sessao.get(chave), removeItem: (chave) => sessao.delete(chave) },
         requestAnimationFrame: (callback) => callback(),
@@ -50,6 +53,54 @@ function ambiente(pagina, solicitar) {
     };
 }
 const aguardar = () => new Promise((resolve) => setImmediate(resolve));
+
+test('cadastro bloqueia senhas divergentes e login guarda somente o token do adotante', async () => {
+    let envios = 0;
+    const cadastro = ambiente('pages/cadastro-adotante.html', async () => { envios++; return { mensagem: 'Confira seu e-mail' }; });
+    cadastro.executar('js/conta-adotante.js');
+    cadastro.document.querySelector('#nome-conta').value = 'Pessoa Teste';
+    cadastro.document.querySelector('#email-conta').value = 'pessoa@example.com';
+    cadastro.document.querySelector('#senha-conta').value = 'senha-teste';
+    cadastro.document.querySelector('#confirmar-senha-conta').value = 'outra-senha';
+    cadastro.document.querySelector('#consentimento-conta').checked = true;
+    cadastro.document.querySelector('form').dispatchEvent(new cadastro.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(envios, 0);
+    cadastro.document.querySelector('#confirmar-senha-conta').value = 'senha-teste';
+    cadastro.document.querySelector('form').dispatchEvent(new cadastro.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(envios, 1);
+    assert.match(cadastro.document.querySelector('#estado-conta').textContent, /Confira/);
+    const login = ambiente('pages/entrar-adotante.html', async () => ({ token: 'token-adotante-teste' }));
+    const gravacoes = [];
+    let destino;
+    login.context.sessionStorage.setItem = (...args) => gravacoes.push(args);
+    login.context.window.location.replace = valor => { destino = valor; };
+    login.executar('js/conta-adotante.js');
+    login.document.querySelector('#email-conta').value = 'pessoa@example.com';
+    login.document.querySelector('#senha-conta').value = 'senha-teste';
+    login.document.querySelector('form').dispatchEvent(new login.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.deepEqual(gravacoes, [['anjos_adotante_token', 'token-adotante-teste']]);
+    assert.equal(destino, 'area-adotante.html');
+});
+
+test('catálogo pagina todos os animais disponíveis e reinicia ao filtrar', async () => {
+    const animais = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, nome: `Animal ${i + 1}`, especie: i < 7 ? 'cao' : 'gato', sexo: 'macho', porte: 'medio', situacao: 'disponivel' }));
+    const env = ambiente('index.html', async () => ({ sucesso: true, animais }));
+    env.executar('js/main.js');
+    await aguardar();
+    const cards = () => [...env.document.querySelectorAll('.lista-animais .card-animal')].filter(card => !card.hidden);
+    assert.equal(env.document.querySelectorAll('.lista-animais .card-animal').length, 8);
+    assert.equal(cards().length, 6);
+    env.document.querySelector('#pagina-proxima').click();
+    assert.equal(cards().length, 2);
+    assert.equal(cards()[1].querySelector('h3').textContent, 'Animal 8');
+    env.document.querySelector('[data-tipo="especie"][data-valor="gato"]').click();
+    assert.equal(cards().length, 1);
+    assert.equal(cards()[0].querySelector('h3').textContent, 'Animal 8');
+    assert.equal(env.document.querySelector('#pagina-anterior').disabled, true);
+});
 
 test('foto local é enviada antes de salvar e falha de upload mantém formulário aberto', async () => {
     const chamadas = [];
@@ -231,7 +282,8 @@ test('páginas têm IDs únicos, campos rotulados e links locais existentes', ()
             const url = el.getAttribute('href') ?? el.getAttribute('src');
             if (/^(https?:|mailto:|tel:|data:)/.test(url)) continue;
             assert.notEqual(url, '#', `Link sem destino em ${pagina}`);
-            const [arquivo, fragmento] = url.split('#');
+            const [caminho, fragmento] = url.split('#');
+            const arquivo = caminho.split('?')[0];
             const destino = arquivo ? path.resolve(path.dirname(pagina), arquivo) : path.resolve(pagina);
             assert.ok(fs.existsSync(destino), `Destino inexistente ${url} em ${pagina}`);
             if (fragmento) {
@@ -240,4 +292,103 @@ test('páginas têm IDs únicos, campos rotulados e links locais existentes', ()
             }
         }
     }
+});
+
+test('recuperação confirma senha antes de enviar e não grava código ou senha na sessão',async()=>{
+    let envios=0,ultimo;
+    const env=ambiente('pages/recuperar-senha.html',async(url,opcoes)=>{envios++;ultimo={url,opcoes};return {mensagem:'Operação concluída'};});
+    env.executar('js/recuperar-senha.js');
+    env.document.querySelector('#email-recuperar').value='pessoa@example.com';
+    env.document.querySelector('#form-recuperar').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(env.document.querySelector('#form-recuperar').hidden,true);assert.equal(env.document.querySelector('#form-redefinir').hidden,false);
+    env.document.querySelector('#codigo-redefinir').value='123456';env.document.querySelector('#senha-redefinir').value='senha-nova';env.document.querySelector('#confirmar-redefinir').value='diferente';
+    env.document.querySelector('#form-redefinir').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();assert.equal(envios,1);
+    env.document.querySelector('#confirmar-redefinir').value='senha-nova';env.document.querySelector('#form-redefinir').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(envios,2);assert.equal(ultimo.url,'/api/redefinir-senha');assert.equal(env.document.querySelector('#form-redefinir').hidden,true);
+    assert.equal(env.context.sessionStorage.getItem('anjos_token'),undefined);
+});
+
+test('interessados salvam contato autenticado com versão e preservam nota em falha', async () => {
+    let falhar=true,envio;
+    const pessoa={id:7,nome:'Pessoa de teste',email:'pessoa@example.com',telefone:'99912345678',etapa:'triagem',versao:3,criado_em:'2026-10-09'};
+    const env=ambiente('pages/interessados.html',async(url,opcoes={})=>{
+        if(opcoes.method==='POST'){envio={url,opcoes};if(falhar)throw new Error('Falha ao salvar');return {sucesso:true};}
+        if(url.includes('/historico'))return {eventos:[{tipo:'nota',nota:'<img src=x>',criado_em:'2026-10-09'}]};
+        return {interessados:[pessoa],total:1};
+    });
+    env.executar('js/telefone.js');env.executar('js/interessados.js');await aguardar();
+    for(const id of ['tipo-7','etapa-7'])Object.defineProperty(env.document.getElementById(id),'value',{writable:true,configurable:true,value:''});
+    env.document.querySelector('#nota-7').value='Ligação realizada';env.document.querySelector('#tipo-7').value='contato';
+    env.document.querySelector('#etapa-7').value='entrevista';
+    env.document.querySelector('details form').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.equal(envio.opcoes.autenticado,true);assert.equal(envio.url,'/api/admin/interessados/7/acompanhamento');
+    assert.deepEqual(JSON.parse(envio.opcoes.body),{etapa:'entrevista',tipo:'contato',nota:'Ligação realizada',versao:3});
+    assert.equal(env.document.querySelector('#nota-7').value,'Ligação realizada');
+    assert.match(env.document.querySelector('#mensagem-admin').textContent,/Falha/);
+    const historico=[...env.document.querySelectorAll('button')].find(b=>b.textContent==='Consultar histórico');historico.click();await aguardar();
+    assert.equal(env.document.querySelector('details img'),null);assert.match(env.document.querySelector('.historico-etapas').textContent,/<img src=x>/);
+    falhar=false;env.document.querySelector('details form').dispatchEvent(new env.window.Event('submit',{cancelable:true}));await aguardar();
+    assert.match(env.document.querySelector('#mensagem-admin').textContent,/salvo/);
+});
+
+test('adotante vê etapa atual e histórico real, sem marcar entrevistas ou conclusão fictícias',async()=>{
+    const env=ambiente('pages/area-adotante.html',async()=>({conta:{nome:'Pessoa de teste',email:'pessoa@example.com'},interesse:{animal_nome:'Mel',etapa:'triagem',eventos:[{etapa:'recebido',criado_em:'2026-10-09'}]}}));
+    env.context.sessionStorage.getItem=chave=>chave==='anjos_adotante_token'?'token-adotante':undefined;
+    env.executar('js/conta-adotante.js');await aguardar();
+    assert.equal(env.document.querySelectorAll('#etapas-conta li').length,5);
+    assert.match(env.document.querySelector('[aria-current=step]').textContent,/Em triagem/);
+    assert.match(env.document.querySelector('#etapas-conta li:last-child').textContent,/Sem registro/);
+    assert.equal(env.document.querySelectorAll('#historico-conta li').length,1);
+    assert.equal(env.document.querySelector('#dados-conta').hidden,false);
+});
+
+test('página de resgates registra no animal selecionado, pesquisa e preserva o formulário em caso de falha', async () => {
+    const chamadas = [];
+    let falhar = false;
+    const env = ambiente('pages/resgates.html', async (url, opcoes = {}) => {
+        chamadas.push({ url, opcoes });
+        if (opcoes.method === 'POST') {
+            if (falhar) throw new Error('Falha ao salvar resgate');
+            return { sucesso: true };
+        }
+        if (url === '/api/admin/animais') return { animais: [{ id: 42, nome: 'Mel' }] };
+        return { resgates: [{ animal_id: 42, data_resgate: '2026-01-01', local_resgate: 'Centro', motivo: '<img src=x>' }] };
+    });
+    env.executar('js/resgates.js');
+    await aguardar();
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, false);
+    assert.equal(env.document.querySelector('#lista-resgates h3').textContent, 'Mel');
+    assert.equal(env.document.querySelector('#lista-resgates img'), null);
+    const busca = env.document.querySelector('#busca-resgate');
+    busca.value = 'inexistente';
+    busca.dispatchEvent(new env.window.Event('input'));
+    assert.equal(env.document.querySelector('#lista-resgates article'), null);
+    const form = env.document.querySelector('#form-resgate');
+    form.elements.animal_id.value = '42';
+    form.elements.data_resgate.value = '2026-01-01';
+    form.elements.local_resgate.value = ' Centro ';
+    form.elements.motivo.value = 'Abandono';
+    form.dispatchEvent(new env.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    const post = chamadas.find(c => c.opcoes.method === 'POST');
+    assert.equal(post.url, '/api/animais/42/resgates');
+    assert.equal(post.opcoes.autenticado, true);
+    assert.equal(JSON.parse(post.opcoes.body).local_resgate, 'Centro');
+    assert.equal(JSON.parse(post.opcoes.body).animal_id, undefined);
+    falhar = true;
+    form.elements.animal_id.value = '42';
+    form.elements.local_resgate.value = 'Bairro Norte';
+    form.dispatchEvent(new env.window.Event('submit', { cancelable: true }));
+    await aguardar();
+    assert.equal(form.elements.local_resgate.value, 'Bairro Norte');
+    assert.equal(env.document.querySelector('#mensagem-admin').textContent, 'Falha ao salvar resgate');
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, false);
+});
+
+test('falha de consulta na página de resgates bloqueia registro e oferece atualização', async () => {
+    const env = ambiente('pages/resgates.html', async () => { throw new Error('Sem conexão'); });
+    env.executar('js/resgates.js');
+    await aguardar();
+    assert.equal(env.document.querySelector('#salvar-resgate').disabled, true);
+    assert.match(env.document.querySelector('#lista-resgates').textContent, /Atualizar dados/);
 });

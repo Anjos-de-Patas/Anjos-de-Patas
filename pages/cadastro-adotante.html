@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Crie seu acesso para acompanhar a situação do seu interesse em adoção com a Anjos de Patas.">
+  <title>Crie sua conta | Anjos de Patas</title>
+  <link rel="stylesheet" href="../css/login.css">
+  <link rel="stylesheet" href="../css/internal.css">
+  <link rel="stylesheet" href="../css/brand.css">
+  <link rel="stylesheet" href="../css/adotante-acesso.css">
+<link rel="stylesheet" href="../css/design-system.css">    <link rel="icon" type="image/png" href="../assets/images/logo_anjos_de_patas.png?v=20261028">
+</head>
+<body>
+  <main class="pagina-login">
+    <section class="login-apresentacao" aria-labelledby="titulo-acolher">
+      <img src="../assets/images/adotante-acesso.jpg" alt="Cachorro golden retriever ao ar livre" decoding="async">
+      <span class="pagina-rotulo">Anjos de Patas · Balsas, MA</span>
+      <h2 id="titulo-acolher">Um novo começo para vocês.</h2>
+      <p>Crie seu acesso para acompanhar a situação do seu interesse em adoção com a Anjos de Patas.</p>
+    </section>
+    <section class="login" aria-labelledby="titulo-conta">
+      <a href="../index.html" class="identidade" aria-label="Anjos de Patas — Voltar para a página inicial">
+        <img height="60" width="120" src="../assets/images/logo_anjos_de_patas.png" alt="" class="logo">
+        <span>Anjos de Patas</span>
+      </a>
+      <div class="cartao-login">
+        <header class="cabecalho-login"><span class="rotulo">Área do adotante</span><h1 id="titulo-conta">Crie sua conta</h1></header>
+        <form id="form-conta" class="formulario-login" data-modo="cadastro"><div class="campo"><label for="nome-conta">Nome completo</label><input id="nome-conta" name="nome" autocomplete="name" minlength="3" maxlength="120" required></div><div class="campo"><label for="email-conta">E-mail</label><input id="email-conta" name="email" type="email" autocomplete="email" maxlength="254" required></div><div class="campo"><label for="senha-conta">Senha</label><input id="senha-conta" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required aria-describedby="ajuda-senha-conta"><small id="ajuda-senha-conta">Use pelo menos 8 caracteres.</small><button id="mostrar-senha-conta" class="conta-mostrar-senha" type="button" aria-pressed="false" aria-controls="senha-conta">Mostrar senha</button></div><div class="campo"><label for="confirmar-senha-conta">Confirme sua senha</label><input id="confirmar-senha-conta" name="confirmar_password" type="password" autocomplete="new-password" minlength="8" maxlength="128" required></div><div class="consentimento-publico"><input id="consentimento-conta" name="consentimento" type="checkbox" required><label for="consentimento-conta">Concordo com o uso dos dados de acesso para criar minha conta. O nome e o e-mail identificam sua conta para acompanhar o pedido. <a href="transparencia.html#dados-pessoais">Uso de dados pessoais.</a></label></div><button class="botao-login" type="submit">Criar conta</button></form>
+        <p id="estado-conta" class="mensagem-conta" role="status" aria-live="polite" hidden></p>
+        <p class="conta-alternativa">Já tem uma conta? <a href="entrar-adotante.html">Entrar</a></p><p class="nota-publica">Criar uma conta não envia automaticamente uma manifestação de interesse nem garante a adoção.</p>
+        <a href="../index.html" class="voltar">← Voltar para o site</a>
+      </div>
+    </section>
+  </main>
+  <script src="../js/api.js"></script>
+  <script src="../js/conta-adotante.js"></script>
+</body>
+</html>
