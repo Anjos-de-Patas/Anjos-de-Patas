@@ -282,7 +282,8 @@ test('páginas têm IDs únicos, campos rotulados e links locais existentes', ()
             const url = el.getAttribute('href') ?? el.getAttribute('src');
             if (/^(https?:|mailto:|tel:|data:)/.test(url)) continue;
             assert.notEqual(url, '#', `Link sem destino em ${pagina}`);
-            const [arquivo, fragmento] = url.split('#');
+            const [caminho, fragmento] = url.split('#');
+            const arquivo = caminho.split('?')[0];
             const destino = arquivo ? path.resolve(path.dirname(pagina), arquivo) : path.resolve(pagina);
             assert.ok(fs.existsSync(destino), `Destino inexistente ${url} em ${pagina}`);
             if (fragmento) {

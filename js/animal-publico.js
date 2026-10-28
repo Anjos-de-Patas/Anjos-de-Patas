@@ -16,7 +16,7 @@ async function carregarAnimal() {
     estadoAnimal.textContent = 'Carregando perfil do animal...';
     recarregar.hidden = true;
     if (!animalId || !(/^(\d{1,20}|[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12})$/i.test(animalId))) {
-        estadoAnimal.textContent = 'Selecione um animal no catálogo para consultar seu perfil.';
+        estadoAnimal.textContent = 'Escolha um animal na seção Adote para consultar seu perfil.';
         return;
     }
     try {
