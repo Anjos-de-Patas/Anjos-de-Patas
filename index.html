@@ -11,7 +11,8 @@
 
     <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/home.css"><link rel="preload" as="image" href="assets/images/companheiros-hero.jpg">
-<link rel="stylesheet" href="css/brand.css"><link rel="stylesheet" href="css/design-system.css"><link rel="stylesheet" href="css/home-editorial.css"></head>
+<link rel="stylesheet" href="css/brand.css"><link rel="stylesheet" href="css/design-system.css"><link rel="stylesheet" href="css/home-editorial.css"><link rel="stylesheet" href="css/assistente.css">
+</head>
 
 <body>
     <a class="pular-conteudo" href="#conteudo-principal">Pular para o conteúdo</a>
@@ -74,7 +75,7 @@
                             <span class="numero-etapa"><img src="assets/icons/cachorro-etapa.svg" width="40" height="40" alt="" aria-hidden="true"><span>1</span></span>
 
                             <div>
-                                <strong>Consulte o catálogo</strong>
+                                <strong>Consulte os animais disponíveis</strong>
                                 <p>Conheça os animais disponíveis para adoção.</p>
                             </div>
 
@@ -258,7 +259,7 @@
 
                 </article></template>
             <div id="lista-catalogo" class="lista-animais" aria-busy="true"></div>
-            <nav id="paginacao-catalogo" class="paginacao-catalogo" aria-label="Paginação do catálogo de adoção" hidden>
+            <nav id="paginacao-catalogo" class="paginacao-catalogo" aria-label="Paginação dos animais à espera de um lar" hidden>
                 <p id="resumo-paginacao" role="status" aria-live="polite" aria-atomic="true"></p>
                 <div class="paginacao-acoes">
                     <button id="pagina-anterior" type="button" aria-controls="lista-catalogo">← Anterior</button>
@@ -511,100 +512,50 @@
 
         <button type="button" id="botao-chat-flutuante" class="botao-chat-flutuante" aria-label="Abrir assistente para encontrar um animal" aria-describedby="dica-assistente" aria-expanded="false" aria-controls="janela-chat">
 
-            <svg class="icone-balao-flutuante" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-            </svg>
+            <img class="chat-mascotes-3d" src="assets/icons/anjos-ia-animais.svg" width="78" height="62" alt="" aria-hidden="true">
 
             <span class="texto-botao-chat">
-                Assistente
+                Anjos IA
             </span>
 
         </button>
 
     </div>
 
-    <section id="janela-chat" class="janela-chat" role="dialog" aria-labelledby="titulo-chat" aria-hidden="true" hidden>
-
-        <div class="cabecalho-chat">
-
+    <section id="janela-chat" class="janela-chat" role="dialog" aria-labelledby="titulo-chat" aria-describedby="aviso-chat" hidden>
+        <header class="cabecalho-chat">
             <div class="identificacao-chat">
-
-                <svg class="icone-balao-cabecalho" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
-                </svg>
-
-                <div>
-
-                    <h2 id="titulo-chat">
-                        Assistente Anjos de Patas
-                    </h2>
-
-                    <p>
-                        Ajuda para encontrar seu novo amigo
-                    </p>
-
-                </div>
-
+                <img class="chat-marca" src="assets/icons/companheiros-marca.svg" width="58" height="32" alt="" aria-hidden="true">
+                <div><span class="chat-sobretitulo">Anjos de Patas</span><h2 id="titulo-chat">Assistente de adoção</h2></div>
             </div>
-
-            <button type="button" id="fechar-chat" class="fechar-chat" aria-label="Fechar assistente">
-                ×
-            </button>
-
+            <button type="button" id="fechar-chat" class="fechar-chat" aria-label="Fechar assistente">×</button>
+        </header>
+        <nav class="chat-atalhos" aria-label="Atalhos do assistente">
+            <a href="#adote" id="chat-ver-catalogo">Ver catálogo</a>
+            <a href="pages/perguntas-frequentes.html">Dúvidas sobre adoção</a>
+            <button type="button" id="nova-conversa-chat" title="Começar uma conversa sem as preferências anteriores">Nova conversa</button>
+        </nav>
+        <div id="mensagens-chat" class="mensagens-chat" role="log" aria-label="Conversa com o assistente" aria-live="polite" aria-relevant="additions">
+            <div class="chat-boas-vindas">
+                <span class="chat-etiqueta">Vamos encontrar um companheiro?</span>
+                <p class="chat-titulo-boas-vindas">Um novo encontro<br>começa por aqui.</p>
+                <p>Conte como é sua rotina ou o animal que procura. Eu ajudo você a conhecer as opções e entender a adoção.</p>
+            </div>
         </div>
-
-        <div id="mensagens-chat" class="mensagens-chat" aria-live="polite">
-
-            <div class="mensagem mensagem-assistente">
-
-                <div>
-
-                    <p>
-                        Olá! Sou o assistente da Anjos de Patas.
-                    </p>
-
-                    <p>
-                        Conte um pouco sobre o animal que você procura.
-                        Você pode falar sobre espécie, porte, idade,
-                        sexo ou temperamento.
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div class="sugestoes-chat">
-
-                <button type="button" class="sugestao-chat" data-mensagem="Procuro um cachorro">
-                    Procuro um cachorro
-                </button>
-
-                <button type="button" class="sugestao-chat" data-mensagem="Procuro um gato">
-                    Procuro um gato
-                </button>
-
-            </div>
-
-        </div>
-
+        <p id="estado-chat" class="sr-only" role="status" aria-live="polite"></p>
         <form id="formulario-chat" class="formulario-chat">
-
-            <label for="mensagem-chat" class="sr-only">
-                Digite sua mensagem
-            </label>
-
-            <input type="text" id="mensagem-chat" placeholder="Digite sua mensagem..." maxlength="300" autocomplete="off">
-
-            <button type="submit" class="enviar-chat">
-                Enviar
-            </button>
-
+            <label for="mensagem-chat" class="sr-only">Sua mensagem para o assistente</label>
+            <textarea id="mensagem-chat" rows="2" placeholder="Ex.: procuro uma gata tranquila…" maxlength="1000" aria-describedby="ajuda-chat" required></textarea>
+            <button type="submit" class="enviar-chat" aria-label="Enviar mensagem"><span>Enviar</span><span aria-hidden="true">↗</span></button>
         </form>
-
+        <p id="ajuda-chat" class="chat-ajuda">Enter envia · Shift + Enter pula linha</p>
+        <p id="aviso-chat" class="chat-aviso">O chat ajuda a consultar animais e entender a adoção. O interesse é registrado no formulário.</p>
     </section>
+
 
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
+<script src="js/assistente.js"></script>
 
 <script defer src="js/site.js"></script></body>
 

@@ -101,7 +101,7 @@ async function buscarAnimais(argumentos, cliente) {
     let consulta = cliente
         .from('animais')
         .select(
-            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao'
+            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao, imagem_url'
         )
         .eq('situacao', 'disponivel')
         .limit(20);
@@ -109,7 +109,7 @@ async function buscarAnimais(argumentos, cliente) {
     if (filtros.nome) {
         consulta = consulta.ilike(
             'nome',
-            `%${filtros.nome}%`
+            `%${filtros.nome.replace(/[\\%_]/g, '\\$&')}%`
         );
     }
 
@@ -188,7 +188,7 @@ async function obterDetalhesAnimal(
     let consulta = cliente
         .from('animais')
         .select(
-            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao'
+            'id, nome, especie, sexo, porte, faixa_etaria, temperamento, convivencia_criancas, convivencia_outros_animais, situacao, imagem_url'
         )
         .eq('situacao', 'disponivel')
         .limit(2);
@@ -250,7 +250,9 @@ export async function executarFerramenta(
                 'A pessoa interessada deve preencher seus dados de contato.',
                 'A ONG realiza uma triagem antes de concluir a adoção.',
                 'A confirmação final depende de um voluntário da ONG.'
-            ]
+            ],
+            proximo_passo: 'Abra o perfil do animal na seção Adote e selecione Manifestar interesse. O formulário não reserva o animal nem garante aprovação.',
+            formulario_enviado: false
         };
     }
 
@@ -260,7 +262,7 @@ export async function executarFerramenta(
             requer_atendimento_humano: true,
             encaminhamento_realizado: false,
             mensagem:
-                'Este atendimento precisa ser continuado por um voluntário da ONG. Nenhum contato ou encaminhamento foi realizado automaticamente.'
+                'Nenhum contato ou encaminhamento foi realizado automaticamente. Os canais oficiais ainda precisam ser cadastrados pela equipe; consulte a seção de contato do site para verificar atualizações.'
         };
     }
 
