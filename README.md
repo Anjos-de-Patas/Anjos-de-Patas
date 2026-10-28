@@ -2,6 +2,18 @@
 
 Projeto acadêmico desenvolvido na disciplina de **Programação para Web** do curso de **Análise e Desenvolvimento de Sistemas - UNIBALSAS**, em parceria com a Sociedade Protetora dos Animais Anjos de Patas, de Balsas - MA.
 
+## Entrega do MVP parcial - TED 3
+
+- [Relatório atualizado em PDF](output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas-atualizado.pdf)
+- [Orientações e links da entrega](docs/LEIA-ME-ENTREGA-MVP-TED3.md)
+- [Conteúdo editável do relatório](docs/Relatorio-MVP-TED3-atualizado.md)
+- [Evidências da homologação real](docs/evidencias/homologacao-real-20261027/README.md)
+- [Pacote de entrega em ZIP](output/evidencias/Pacote-Entrega-MVP-TED3-20261027.zip)
+
+Resultados registrados em 27/10/2026: 69 testes automatizados aprovados e 20 cenários de homologação com Supabase Auth, PostgreSQL e Storage reais. As sete capturas usam dados fictícios. Registros, imagem e contas temporárias foram removidos após o teste. O código homologado é o commit `be388a6`.
+
+Permanecem pendentes a conta administrativa definitiva, entrega real de e-mails, homologação do Gemini e hospedagem pública. Não há URL pública de aplicação verificada. A documentação explicita esses limites.
+
 ## Objetivo
 
 Desenvolver uma aplicação web para apoiar a organização das informações dos animais atendidos pela ONG, facilitar a consulta de animais disponíveis para adoção e oferecer recursos de apoio ao processo de adoção.
@@ -17,11 +29,11 @@ Desenvolver uma aplicação web para apoiar a organização das informações do
 
 ## Situação atual do projeto
 
-O front-end e o back-end estão atualmente integrados na branch `main`.
+A versão parcial atual está na branch `fix/consulta-animal-por-nome`, em revisão no PR #1. A integração dessas atualizações à `main` será realizada posteriormente.
 
 A aplicação possui uma área pública voltada à consulta de animais e ao apoio ao processo de adoção, além de uma área administrativa protegida por autenticação para usuários autorizados da ONG.
 
-O projeto continua em desenvolvimento. Os módulos administrativos de gerenciamento de animais, resgates, cuidados de saúde, adotantes e adoções estão sendo integrados progressivamente à interface.
+O projeto continua em desenvolvimento. Os módulos administrativos de animais, resgates, cuidados de saúde, interessados e adoções possuem integração com a API e o banco, com homologação real do fluxo principal.
 
 ## Funcionalidades implementadas
 

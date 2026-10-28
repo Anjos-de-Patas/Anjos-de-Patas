@@ -1,0 +1,366 @@
+{
+  "data": "2026-10-27",
+  "executado_em": "2026-10-27T23:08:02.497Z",
+  "run": "a7f9e467-04cf-4b32-9dcf-93b98308d035",
+  "commit": "be388a61949a3bddf616d7e698686b819a7fb0db",
+  "ambiente": "Interface e API Express locais; Auth, PostgreSQL e Storage reais no Supabase remoto; dados fictícios",
+  "contas": "Três contas temporárias confirmadas administrativamente; sem envio de e-mail",
+  "cenarios": [
+    {
+      "cenario": "Visitante não acessa administração",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Login real da equipe e perfil autorizado",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Conta sem perfil não entra como equipe",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Contas de adotante autenticadas no Supabase",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Cadastro real de animal em tratamento",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Animal em tratamento não aparece no perfil público",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Resgate, saúde, vacina e tratamento persistidos",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Upload e leitura real de imagem no Storage",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Catálogo e perfil público consultam animal disponível",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Interesse público gravado sem expor contato na resposta",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Adoção rejeitada antes de aprovar o interessado",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Aprovação da equipe atualiza etapa e auditoria",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Adoção transacional real e bloqueio de duplicidade",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Histórico preservado após adoção",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Adotante acompanha conclusão; outra conta não vê pedido",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Animal adotado deixa o catálogo público",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Persistência após encerrar e reabrir o servidor HTTP",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Indicadores públicos reais retornam apenas totais",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Capturas da interface com dados persistidos no Supabase",
+      "resultado": "aprovado"
+    },
+    {
+      "cenario": "Perfil inativo perde acesso administrativo",
+      "resultado": "aprovado"
+    }
+  ],
+  "requisicoes": [
+    {
+      "metodo": "GET",
+      "rota": "/api/admin/animais",
+      "status": 401
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/login",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/login",
+      "status": 403
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/conta-adotante/entrar",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/conta-adotante/entrar",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais",
+      "status": 201
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais/2",
+      "status": 404
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais/2/resgates",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais/2/saude",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais/2/vacinas",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais/2/tratamentos",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/animais/imagem",
+      "status": 201
+    },
+    {
+      "metodo": "PUT",
+      "rota": "/api/animais/2",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais/2",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/interesses",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/adocoes",
+      "status": 400
+    },
+    {
+      "metodo": "PUT",
+      "rota": "/api/adotantes/2/status",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/admin/interessados/2/historico",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/adocoes",
+      "status": 201
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/adocoes",
+      "status": 409
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais/2/historico",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/conta-adotante",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/conta-adotante",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais/2",
+      "status": 404
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/animais/2/historico",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/conta-adotante",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/resultados",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/admin/animais",
+      "status": 403
+    }
+  ],
+  "capturas": [
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/painel-1440.png",
+      "tela": "painel",
+      "largura": 1440,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/animais-1440.png",
+      "tela": "animais",
+      "largura": 1440,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/interessados-1440.png",
+      "tela": "interessados",
+      "largura": 1440,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/adotante-1440.png",
+      "tela": "adotante",
+      "largura": 1440,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/adotante-360.png",
+      "tela": "adotante",
+      "largura": 360,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/transparencia-1440.png",
+      "tela": "transparencia",
+      "largura": 1440,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    },
+    {
+      "arquivo": "docs/evidencias/homologacao-real-20261027/transparencia-360.png",
+      "tela": "transparencia",
+      "largura": 360,
+      "fonte": "interface real, API Express local e Supabase remoto; dados fictícios"
+    }
+  ],
+  "erro": null,
+  "limpeza": [
+    {
+      "alvo": "imagem temporária",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "adocoes",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "resgates",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "registros_saude",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "vacinas",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "tratamentos",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "animal fictício",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "eventos fictícios",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "adotante fictício",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "conta temporária c2ec9c00-0b1f-4124-9cb0-a18714f8706a",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "conta temporária f8dfc0e4-6c4e-4763-922c-294ecd8920e8",
+      "resultado": "removido"
+    },
+    {
+      "alvo": "conta temporária ec5e4720-341b-4fd8-9db5-38da2362fb1d",
+      "resultado": "removido"
+    }
+  ],
+  "contagens_antes": {
+    "animais": 0,
+    "adotantes": 0,
+    "adocoes": 0,
+    "resgates": 0,
+    "registros_saude": 0,
+    "vacinas": 0,
+    "tratamentos": 0,
+    "acompanhamento_eventos": 0,
+    "perfis": 0
+  },
+  "contagens_depois": {
+    "animais": 0,
+    "adotantes": 0,
+    "adocoes": 0,
+    "resgates": 0,
+    "registros_saude": 0,
+    "vacinas": 0,
+    "tratamentos": 0,
+    "acompanhamento_eventos": 0,
+    "perfis": 0
+  },
+  "contagens_restauradas": true,
+  "limites": [
+    "Confirmação por e-mail e recuperação com entrega real não testadas",
+    "Gemini não executado nesta homologação",
+    "Reabertura do servidor HTTP no mesmo processo Node; sem teste de reinicialização do sistema operacional",
+    "Sem teste de carga, pentest ou auditoria completa de acessibilidade"
+  ]
+}
