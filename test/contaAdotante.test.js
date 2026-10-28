@@ -6,7 +6,40 @@ import { cadastroContaAdotanteSchema } from '../src/schemas/validationSchemas.js
 import { verificarContaAdotante, obterContaAdotante } from '../src/controllers/contaAdotanteController.js';
 import { contaAdotanteAuth, cadastrarContaAdotante, entrarContaAdotante } from '../src/controllers/contaAdotanteController.js';
 import app from '../src/app.js';
+const consultarPerfilEquipeOriginal = contaAdotanteAuth.consultarPerfilEquipe;
+test.beforeEach(() => { contaAdotanteAuth.consultarPerfilEquipe = async () => ({ data: null, error: null }); });
+test.afterEach(() => { contaAdotanteAuth.consultarPerfilEquipe = consultarPerfilEquipeOriginal; });
 const resposta = () => ({ codigo: 200, status(n) {this.codigo=n;return this;},json(dados){this.dados=dados;return this;} });
+
+test('conta da equipe não recebe token de adotante e encerra somente o novo login', async () => {
+    const original = contaAdotanteAuth.criarCliente;
+    let escopo;
+    try {
+        contaAdotanteAuth.criarCliente = () => ({ auth: {
+            signInWithPassword: async () => ({ data: { user: { id: 'equipe', email_confirmed_at: '2026-01-01' }, session: { access_token: 'nao-publicar' } }, error: null }),
+            signOut: async ({ scope }) => { escopo = scope; }
+        } });
+        contaAdotanteAuth.consultarPerfilEquipe = async id => { assert.equal(id, 'equipe'); return { data: { id }, error: null }; };
+        const res = resposta(); await entrarContaAdotante({ body: {} }, res);
+        assert.equal(res.codigo, 403); assert.equal(res.dados.token, undefined);
+        assert.match(res.dados.erro, /administrativa/); assert.equal(escopo, 'local');
+    } finally { contaAdotanteAuth.criarCliente = original; }
+});
+
+test('token existente da equipe é bloqueado e falha na verificação não libera acesso', async () => {
+    const original = supabaseAdmin.auth.getUser;
+    try {
+        supabaseAdmin.auth.getUser = async () => ({ data: { user: { id: 'equipe', email: 'equipe@example.com', email_confirmed_at: '2026-01-01' } }, error: null });
+        let avancou = false;
+        contaAdotanteAuth.consultarPerfilEquipe = async () => ({ data: { id: 'equipe' }, error: null });
+        const negado = resposta(); await verificarContaAdotante({ headers: { authorization: 'Bearer existente' } }, negado, () => { avancou = true; });
+        assert.equal(negado.codigo, 403); assert.equal(avancou, false);
+        contaAdotanteAuth.consultarPerfilEquipe = async () => ({ data: null, error: new Error('Banco indisponivel') });
+        const indisponivel = resposta(); await verificarContaAdotante({ headers: { authorization: 'Bearer existente' } }, indisponivel, () => { avancou = true; });
+        assert.equal(indisponivel.codigo, 503); assert.equal(avancou, false);
+        assert.doesNotMatch(JSON.stringify(indisponivel.dados), /Banco indisponivel/);
+    } finally { supabaseAdmin.auth.getUser = original; }
+});
 
 test('cadastro envia somente nome ao Auth e login exige confirmação do e-mail', async () => {
     const original = contaAdotanteAuth.criarCliente;

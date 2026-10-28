@@ -6,6 +6,18 @@ import { verificarToken, clientesAutenticacao } from '../src/middlewares/authMid
 
 const resposta = () => ({ codigo: 200, status(n) { this.codigo = n; return this; }, json(dados) { this.dados = dados; return this; } });
 
+test('adotante não ganha acesso administrativo por metadados editáveis', async () => {
+    const original = autenticacaoEquipe.criarCliente;
+    try {
+        autenticacaoEquipe.criarCliente = () => ({
+            auth: { signInWithPassword: async () => ({ data: { user: { id: 'adotante', user_metadata: { perfil: 'admin' } }, session: { access_token: 'nao-publicar' } }, error: null }) },
+            from: () => ({ select() { return this; }, eq() { return this; }, single: async () => ({ data: null, error: null }) })
+        });
+        const res = resposta(); await login({ body: { email: 'adotante@example.com', password: 'teste' } }, res);
+        assert.equal(res.codigo, 403); assert.equal(res.dados.token, undefined);
+    } finally { autenticacaoEquipe.criarCliente = original; }
+});
+
 test('cada login usa um cliente isolado e consulta o perfil da própria sessão', async () => {
     const original = autenticacaoEquipe.criarCliente;
     const clientes = [];

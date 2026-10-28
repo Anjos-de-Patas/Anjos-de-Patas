@@ -6,7 +6,24 @@ export function criarClienteConta() {
         auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
     });
 }
-export const contaAdotanteAuth = { criarCliente: criarClienteConta };
+export const contaAdotanteAuth = {
+    criarCliente: criarClienteConta,
+    consultarPerfilEquipe: id => supabaseAdmin.from('perfis').select('id').eq('id', id).maybeSingle()
+};
+async function permitirAreaAdotante(id, res) {
+    try {
+        const { data, error } = await contaAdotanteAuth.consultarPerfilEquipe(id);
+        if (error) throw error;
+        if (data) {
+            res.status(403).json({ sucesso: false, erro: 'Esta conta pertence à equipe. Use a área administrativa para entrar.' });
+            return false;
+        }
+        return true;
+    } catch {
+        res.status(503).json({ sucesso: false, erro: 'Não foi possível verificar o acesso. Tente novamente.' });
+        return false;
+    }
+}
 export async function cadastrarContaAdotante(req, res) {
     const { nome, email, password } = req.body;
     const { error } = await contaAdotanteAuth.criarCliente().auth.signUp({ email, password, options: { data: { nome } } });
@@ -15,9 +32,14 @@ export async function cadastrarContaAdotante(req, res) {
     res.status(201).json({ sucesso: true, mensagem: 'Solicitação recebida. Verifique seu e-mail para confirmar a conta, se solicitado, e depois entre com sua senha. Se já possui conta, utilize a opção Entrar.' });
 }
 export async function entrarContaAdotante(req, res) {
-    const { data, error } = await contaAdotanteAuth.criarCliente().auth.signInWithPassword(req.body);
+    const cliente = contaAdotanteAuth.criarCliente();
+    const { data, error } = await cliente.auth.signInWithPassword(req.body);
     if (error || !data.user || !data.session) return res.status(401).json({ sucesso: false, erro: 'Não foi possível entrar. Confira e-mail, senha e a confirmação do e-mail.' });
     if (!data.user.email_confirmed_at) return res.status(403).json({ sucesso: false, erro: 'Confirme seu e-mail antes de acessar a conta.' });
+    if (!await permitirAreaAdotante(data.user.id, res)) {
+        try { await cliente.auth.signOut?.({ scope: 'local' }); } catch { /* O acesso já foi negado; não devolver a sessão. */ }
+        return;
+    }
     res.json({ sucesso: true, token: data.session.access_token });
 }
 export async function verificarContaAdotante(req, res, next) {
@@ -25,6 +47,7 @@ export async function verificarContaAdotante(req, res, next) {
     if (!token) return res.status(401).json({ sucesso: false, erro: 'Entre na sua conta para continuar.' });
     const { data, error } = await supabaseAdmin.auth.getUser(token);
     if (error || !data.user?.email_confirmed_at || !data.user.email) return res.status(401).json({ sucesso: false, erro: 'Sessão inválida ou expirada. Entre novamente.' });
+    if (!await permitirAreaAdotante(data.user.id, res)) return;
     // O e-mail vem da sessão validada no servidor, nunca de parâmetros enviados pelo navegador.
     req.contaAdotante = data.user;
     next();
