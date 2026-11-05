@@ -103,7 +103,7 @@
             estado.textContent='Resposta recebida.';
         }catch(falha){
             if(atual!==versao)return;carregando.remove();parcial?.remove();
-            const textoErro=falha.status===429?'Você fez várias consultas em sequência. Aguarde alguns minutos ou continue pela seção Adote.':falha.name==='AbortError'?'A consulta demorou mais que o esperado. Tente novamente ou continue pela seção Adote.':'Não consegui conectar ao atendimento agora. Tente novamente ou continue pela seção Adote.';
+            const textoErro=falha.status===429?'Muitas mensagens em pouco tempo. Aguarde alguns minutos e tente novamente, ou continue pela seção Adote.':falha.name==='AbortError'?'A consulta demorou mais que o esperado. Tente novamente ou continue pela seção Adote.':'Não consegui conectar ao atendimento agora. Tente novamente ou continue pela seção Adote.';
             const erro=mensagem(textoErro,'mensagem-assistente chat-erro');
             const repetirBotao=elemento('button','Tentar novamente','chat-repetir');repetirBotao.type='button';repetirBotao.dataset.repetir=texto;erro.append(repetirBotao);
             const catalogo=elemento('a','Ver animais disponíveis');catalogo.href='#adote';catalogo.addEventListener('click',()=>aberto(false));erro.append(catalogo);

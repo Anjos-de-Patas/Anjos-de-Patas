@@ -72,7 +72,8 @@ import {
 
 import {
     limiteLogin,
-    limiteBuscaInteligente
+    limiteBuscaInteligente,
+    limiteAssistente
 } from "./middlewares/securityMiddleware.js";
 
 // Schemas
@@ -211,7 +212,7 @@ app.post(
 
 app.post(
     "/api/agente",
-    limiteBuscaInteligente,
+    limiteAssistente,
     conversarComAgente
 );
 

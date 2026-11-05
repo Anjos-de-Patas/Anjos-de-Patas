@@ -38,6 +38,9 @@ export function respostaSemPreferencia(texto) {
 }
 
 const LIMITE_CHAMADAS_FERRAMENTA = 3;
+export const PAUSAS_NOVA_TENTATIVA = [1000, 2500];
+// 429: excesso de chamadas; 500, 503 e 504: instabilidade momentânea do serviço.
+export const falhaTemporaria = erro => [429, 500, 503, 504].includes(Number(erro?.status ?? erro?.code));
 const LIMITE_MENSAGENS_HISTORICO = 20;
 
 const conversas = new Map();
@@ -142,17 +145,30 @@ export async function executarAgente(
         return {mensagem:texto,ferramentas_usadas:ferramentasUsadas,animais:animaisPublicos(),modo:'ia'};
     }
 
-    async function enviar(message) {
+    let textoEmitido = false;
+    async function enviarUmaVez(message) {
         if (!opcoesResposta.onDelta) return chat.sendMessage({ message });
         const fluxo = await chat.sendMessageStream({ message });
         let text = '';
         const chamadas = [];
         for await (const parte of fluxo) {
             if (opcoesResposta.signal?.aborted) throw new Error('Consulta cancelada');
-            if (parte.text) { text += parte.text; opcoesResposta.onDelta(parte.text); }
+            if (parte.text) { text += parte.text; textoEmitido = true; opcoesResposta.onDelta(parte.text); }
             if (parte.functionCalls) chamadas.push(...parte.functionCalls);
         }
         return { text, functionCalls: chamadas };
+    }
+    // Mensagens enviadas em sequência podem esbarrar no limite por minuto do Gemini.
+    // Antes de qualquer texto chegar à pessoa, tenta de novo com pausas curtas.
+    async function enviar(message) {
+        for (let tentativa = 0; ; tentativa += 1) {
+            try {
+                return await enviarUmaVez(message);
+            } catch (erro) {
+                if (!falhaTemporaria(erro) || textoEmitido || tentativa >= PAUSAS_NOVA_TENTATIVA.length || opcoesResposta.signal?.aborted) throw erro;
+                await new Promise(resolve => setTimeout(resolve, PAUSAS_NOVA_TENTATIVA[tentativa]));
+            }
+        }
     }
     let resposta = await enviar(mensagem);
 

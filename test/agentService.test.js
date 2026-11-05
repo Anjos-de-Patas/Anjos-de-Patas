@@ -2,7 +2,8 @@ import './setup.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { executarAgente, agenteIA, respostaSemPreferencia } from '../src/services/agentService.js';
+import { executarAgente, agenteIA, respostaSemPreferencia, PAUSAS_NOVA_TENTATIVA } from '../src/services/agentService.js';
+import { conversarComAgente } from '../src/controllers/agentController.js';
 import { executarFerramenta } from '../src/services/agentTools.js';
 import { INSTRUCAO_SISTEMA } from '../src/services/agentInstructions.js';
 
@@ -190,5 +191,46 @@ test('pedido com qualquer porte e idade apresenta animais sem novas perguntas', 
   assert.doesNotMatch(r2.mensagem, /filhote ou um animal adulto|preferência de porte/);
   const r3 = await executarAgente('Quero ver cachorros', randomUUID(), cliente, op);
   assert.deepEqual(r3.animais.map(a => a.nome), ['Thor']);
+ } finally { agenteIA.criarChat = original; }
+});
+
+
+test('mensagens em sequencia: tenta de novo quando o Gemini recusa por limite', async () => {
+ const original = agenteIA.criarChat, pausas = [...PAUSAS_NOVA_TENTATIVA];
+ PAUSAS_NOVA_TENTATIVA.fill(0);
+ let chamadas = 0;
+ try {
+  agenteIA.criarChat = () => ({ async sendMessage() { chamadas++; if (chamadas < 3) throw Object.assign(new Error('RESOURCE_EXHAUSTED'), { status: 429 }); return { text: 'Posso ajudar a encontrar um animal.' }; } });
+  const r = await executarAgente('Oi', randomUUID());
+  assert.equal(chamadas, 3);
+  assert.match(r.mensagem, /Posso ajudar/);
+ } finally { agenteIA.criarChat = original; PAUSAS_NOVA_TENTATIVA.splice(0, Infinity, ...pausas); }
+});
+
+
+test('Gemini indisponivel apos novas tentativas: responde pelo modo guiado sem erro', async () => {
+ const original = agenteIA.criarChat, pausas = [...PAUSAS_NOVA_TENTATIVA];
+ PAUSAS_NOVA_TENTATIVA.fill(0);
+ try {
+  agenteIA.criarChat = () => ({ async sendMessageStream() { throw Object.assign(new Error('RESOURCE_EXHAUSTED'), { status: 429 }); } });
+  let corpo = '';
+  const res = { headers: {}, set() {}, flushHeaders() {}, on() {}, write(t) { corpo += t; }, end() { this.writableEnded = true; } };
+  const req = { body: { mensagem: 'Quais documentos preciso informar?' }, get: () => 'text/event-stream' };
+  await conversarComAgente(req, res, erro => { throw erro; });
+  const fim = JSON.parse(corpo.match(/event: done\ndata: (.*)\n/)[1]);
+  assert.equal(fim.sucesso, true);
+  assert.equal(fim.modo, 'guiado');
+  assert.doesNotMatch(corpo, /event: error/);
+ } finally { agenteIA.criarChat = original; PAUSAS_NOVA_TENTATIVA.splice(0, Infinity, ...pausas); }
+});
+
+
+test('erro que nao e temporario nao gera novas tentativas', async () => {
+ const original = agenteIA.criarChat;
+ let chamadas = 0;
+ try {
+  agenteIA.criarChat = () => ({ async sendMessage() { chamadas++; throw Object.assign(new Error('chave invalida'), { status: 400 }); } });
+  await assert.rejects(executarAgente('Oi', randomUUID()));
+  assert.equal(chamadas, 1);
  } finally { agenteIA.criarChat = original; }
 });
