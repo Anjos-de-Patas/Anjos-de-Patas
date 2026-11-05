@@ -24,6 +24,19 @@ export const agenteIA = {
     }
 };
 
+const PERGUNTA_IDADE = 'Você prefere um filhote ou um animal adulto?';
+const PERGUNTA_PORTE = 'Você tem preferência de porte?';
+const PERGUNTA_ROTINA = 'Tem crianças ou outros animais em casa?';
+
+const normalizarTexto = texto => texto.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+
+// Respostas que indicam ausência de preferência ("não", "nenhuma preferência", "tanto faz"...).
+export function respostaSemPreferencia(texto) {
+    const t = normalizarTexto(texto).replace(/[.,;:!?…]+/g, ' ').replace(/\s+/g, ' ').trim();
+    return /\b(sem preferencia|nenhuma preferencia|nao tenho preferencia|tanto faz|qualquer|indiferente|nao importa|nao faz diferenca|tanto um quanto outro|os dois|ambos)\b/.test(t)
+        || /^(nao|n|nope|nenhum|nenhuma|nao tenho|tenho nao|nao tenho nao|nao sei|sei la|tanto faz)( obrigad[oa])?$/.test(t);
+}
+
 const LIMITE_CHAMADAS_FERRAMENTA = 3;
 const LIMITE_MENSAGENS_HISTORICO = 20;
 
@@ -169,27 +182,28 @@ export async function executarAgente(
         const buscaSoEspecie = chamadas.find(chamada => chamada.name === 'buscar_animais' && chamada.args?.especie && Object.keys(chamada.args).every(chave => chave === 'especie'));
         const buscaPerfil = chamadas.find(chamada => chamada.name === 'buscar_animais' && !chamada.args?.nome);
         if (opcoesResposta.onDelta && buscaPerfil && !jaViuOpcoes) {
-            const normalizar = texto => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
             const etapas = [...historico, { role: 'user', parts: [{ text: mensagem }] }];
             const semPreferencia = campo => etapas.some((item, indice) => item.role === 'user' &&
-                /\b(sem preferencia|tanto faz|qualquer|indiferente)\b/.test(normalizar(item.parts?.[0]?.text || '')) &&
-                (campo === 'porte' ? /porte/ : /filhote|adulto|idoso|idade/).test(normalizar(etapas[indice - 1]?.parts?.[0]?.text || '')));
-            const pediuVer = /\b(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|pode mostrar)\b/.test(pedidoNormalizado);
-            const faltaIdade = !buscaPerfil.args?.faixa_etaria && !semPreferencia('idade');
-            const faltaPorte = !buscaPerfil.args?.porte && !semPreferencia('porte');
+                respostaSemPreferencia(item.parts?.[0]?.text || '') &&
+                (campo === 'porte' ? /porte/ : /filhote|adulto|idoso|idade/).test(normalizarTexto(etapas[indice - 1]?.parts?.[0]?.text || '')));
+            // Nunca repete a pergunta que acabou de fazer: a resposta recebida, mesmo que
+            // não reconhecida, conta como "sem preferência" e a conversa segue.
+            const ultimaDoAssistente = historico.at(-1)?.role === 'model' ? normalizarTexto(historico.at(-1).parts?.[0]?.text || '') : '';
+            const acabouDePerguntar = pergunta => ultimaDoAssistente.startsWith(normalizarTexto(pergunta));
+            const pediuVer = /(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|pode mostrar)/.test(pedidoNormalizado);
+            const faltaIdade = !buscaPerfil.args?.faixa_etaria && !semPreferencia('idade') && !acabouDePerguntar(PERGUNTA_IDADE);
+            const faltaPorte = !buscaPerfil.args?.porte && !semPreferencia('porte') && !acabouDePerguntar(PERGUNTA_PORTE);
             if (!pediuVer && (faltaIdade || faltaPorte)) {
-                const texto = faltaIdade
-                    ? 'Você prefere um filhote ou um animal adulto?'
-                    : 'Você tem preferência de porte?';
+                const texto = faltaIdade ? PERGUNTA_IDADE : PERGUNTA_PORTE;
                 opcoesResposta.onDelta(texto);
                 return concluir(texto);
             }
-            const rotinaInformada = etapas.some((item, indice) => item.role === 'user' && (
-                /crianc|outros? animais|outros? pets|tenho (um|uma|dois|duas) (gato|cao|cachorro)|moro sozinh|pular|prefiro nao/.test(normalizar(item.parts?.[0]?.text || '')) ||
-                /crianc|outros animais/.test(normalizar(etapas[indice - 1]?.parts?.[0]?.text || ''))
+            const rotinaInformada = acabouDePerguntar(PERGUNTA_ROTINA) || etapas.some((item, indice) => item.role === 'user' && (
+                /crianc|outros? animais|outros? pets|tenho (um|uma|dois|duas) (gato|cao|cachorro)|moro sozinh|pular|prefiro nao/.test(normalizarTexto(item.parts?.[0]?.text || '')) ||
+                /crianc|outros animais/.test(normalizarTexto(etapas[indice - 1]?.parts?.[0]?.text || ''))
             ));
             if (!pediuVer && !rotinaInformada) {
-                const texto = 'Tem crianças ou outros animais em casa?';
+                const texto = PERGUNTA_ROTINA;
                 opcoesResposta.onDelta(texto);
                 return concluir(texto);
             }

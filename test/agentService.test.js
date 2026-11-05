@@ -2,7 +2,7 @@ import './setup.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { executarAgente, agenteIA } from '../src/services/agentService.js';
+import { executarAgente, agenteIA, respostaSemPreferencia } from '../src/services/agentService.js';
 import { executarFerramenta } from '../src/services/agentTools.js';
 import { INSTRUCAO_SISTEMA } from '../src/services/agentInstructions.js';
 
@@ -125,4 +125,50 @@ test('animal em foco persiste entre mensagens, isola sessoes e e limpo em nova b
   await executarAgente('Quero conversar',id,cliente);
   assert.doesNotMatch(configs[4].config.systemInstruction,/Animal em foco nesta conversa/);
  }finally{agenteIA.criarChat=original;}
+});
+
+
+test('respostas negativas contam como sem preferencia', () => {
+ for (const t of ['Não', 'não.', 'Nenhuma preferência', 'Tenho não', 'não tenho', 'tanto faz', 'Os dois', 'qualquer um', 'Não importa!'])
+  assert.equal(respostaSemPreferencia(t), true, t);
+ for (const t of ['Pequeno', 'Quero um filhote', 'grande de preferência', 'Não gosto de gatos grandes'])
+  assert.equal(respostaSemPreferencia(t), false, t);
+});
+
+
+test('assistente nao repete a pergunta de porte quando a pessoa responde nao', async () => {
+ const original = agenteIA.criarChat;
+ const animais = [{ id: 7, nome: 'Bento', especie: 'cao', porte: 'pequeno', faixa_etaria: 'filhote', situacao: 'disponivel' }];
+ const q = { select() { return this; }, eq() { return this; }, ilike() { return this; }, order() { return this; }, limit() { return this; }, then(resolve) { return Promise.resolve({ data: animais, error: null }).then(resolve); } };
+ const cliente = { from() { return q; } };
+ try {
+  agenteIA.criarChat = () => { let envio = 0; return { async sendMessageStream() { envio++; return (async function* () {
+   if (envio === 1) yield { functionCalls: [{ name: 'buscar_animais', args: { especie: 'cao' } }] }; else yield { text: 'Conheça o Bento.' };
+  })(); } }; };
+  const id = randomUUID(), partes = [], op = { onDelta: t => partes.push(t) };
+  const r0 = await executarAgente('Procuro um cachorro', id, cliente, op);
+  assert.match(r0.mensagem, /filhote/);
+  const r1 = await executarAgente('Nenhuma preferência', id, cliente, op);
+  assert.match(r1.mensagem, /porte/);
+  const r2 = await executarAgente('Não', id, cliente, op);
+  assert.doesNotMatch(r2.mensagem, /porte/);
+  assert.match(r2.mensagem, /crianças/);
+  const r3 = await executarAgente('Tenho não', id, cliente, op);
+  assert.doesNotMatch(r3.mensagem, /porte|crianças/);
+  assert.deepEqual(r3.animais.map(a => a.nome), ['Bento']);
+ } finally { agenteIA.criarChat = original; }
+});
+
+
+test('resposta nao reconhecida nao prende a conversa na mesma pergunta', async () => {
+ const original = agenteIA.criarChat;
+ try {
+  agenteIA.criarChat = () => ({ async sendMessageStream() { return (async function* () { yield { functionCalls: [{ name: 'buscar_animais', args: { especie: 'gato', faixa_etaria: 'adulto' } }] }; })(); } });
+  const id = randomUUID(), op = { onDelta() {} };
+  const cliente = { from() { throw new Error('ainda nao'); } };
+  const r1 = await executarAgente('Quero um gato adulto', id, cliente, op);
+  assert.match(r1.mensagem, /porte/);
+  const r2 = await executarAgente('hmm deixa eu pensar', id, cliente, op);
+  assert.doesNotMatch(r2.mensagem, /porte/);
+ } finally { agenteIA.criarChat = original; }
 });
