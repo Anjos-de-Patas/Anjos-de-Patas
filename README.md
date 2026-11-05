@@ -8,11 +8,14 @@ Projeto acadêmico desenvolvido na disciplina de **Programação para Web** do c
 - [Orientações e links da entrega](docs/LEIA-ME-ENTREGA-MVP-TED3.md)
 - [Conteúdo editável do relatório](docs/Relatorio-MVP-TED3-atualizado.md)
 - [Evidências da homologação real](docs/evidencias/homologacao-real-20261027/README.md)
-- [Pacote de entrega em ZIP](output/evidencias/Pacote-Entrega-MVP-TED3-20261027.zip)
+- [Verificação da aplicação publicada](docs/evidencias/verificacao-publicada-20261105/README.md)
+- [Pacote de entrega em ZIP (revisão de 27/10)](output/evidencias/Pacote-Entrega-MVP-TED3-20261027.zip)
 
-Resultados registrados em 27/10/2026: 69 testes automatizados aprovados e 20 cenários de homologação com Supabase Auth, PostgreSQL e Storage reais. As sete capturas usam dados fictícios. Registros, imagem e contas temporárias foram removidos após o teste. O código homologado é o commit `be388a6`.
+**Aplicação publicada:** https://anjos-de-patas.onrender.com. O servidor gratuito pode levar até cerca de 1 minuto para responder no primeiro acesso.
 
-Permanecem pendentes a conta administrativa definitiva, entrega real de e-mails, homologação do Gemini e hospedagem pública. Não há URL pública de aplicação verificada. A documentação explicita esses limites.
+Resultados: 99 testes automatizados aprovados na `main` (05/11/2026), 20 cenários de homologação com Supabase Auth, PostgreSQL e Storage reais (27/10/2026) e verificação de acessos e páginas no ambiente publicado (28/10 e 05/11/2026). Todas as evidências usam dados fictícios.
+
+Permanecem pendentes a conta administrativa definitiva, a entrega real de e-mails e a homologação registrada do Gemini. A documentação explicita esses limites.
 
 ## Objetivo
 
@@ -29,7 +32,7 @@ Desenvolver uma aplicação web para apoiar a organização das informações do
 
 ## Situação atual do projeto
 
-A versão parcial atual está na branch `fix/consulta-animal-por-nome`, em revisão no PR #1. A integração dessas atualizações à `main` será realizada posteriormente.
+A versão parcial atual está na branch `main`. As alterações da etapa foram revisadas no PR #1 e integradas em 28/10/2026. A aplicação está publicada no Render, e uma rotina do GitHub Actions ([manter-ativo.yml](.github/workflows/manter-ativo.yml)) consulta o catálogo a cada 2 dias para o Supabase do plano gratuito não pausar o projeto.
 
 A aplicação possui uma área pública voltada à consulta de animais e ao apoio ao processo de adoção, além de uma área administrativa protegida por autenticação para usuários autorizados da ONG.
 
@@ -220,7 +223,7 @@ npm install
 
 ## Configuração das variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto.
+Copie o arquivo `.env.example` para `.env` na raiz do projeto e preencha os valores.
 
 Exemplo:
 
@@ -238,6 +241,25 @@ As credenciais reais não devem ser adicionadas ao repositório.
 O arquivo `.env` está ignorado pelo Git por meio do `.gitignore`.
 
 A `SUPABASE_SERVICE_ROLE_KEY` é utilizada exclusivamente no ambiente de back-end para operações administrativas autorizadas e não deve ser exposta no código do front-end.
+
+## Criação do banco de dados
+
+Os scripts de criação e configuração do banco estão em `docs/database/` e `docs/migrations/`. A ordem de execução no SQL Editor do Supabase, a criação da primeira conta da equipe e o modelo de dados estão descritos em [docs/database/README.md](docs/database/README.md).
+
+Para conferir os scripts sem acessar o Supabase, em um PostgreSQL descartável:
+
+```bash
+npm install --no-save --package-lock=false @electric-sql/pglite@0.5.8
+npm run test:sql
+```
+
+## Testes automatizados
+
+```bash
+npm test
+```
+
+Se o ambiente bloquear a criação de subprocessos, use `node --test --test-isolation=none test/*.test.js`.
 
 ## Executando o back-end
 
@@ -304,7 +326,7 @@ As funcionalidades disponíveis dependem do perfil de acesso do usuário.
 
 ## API
 
-A documentação complementar das rotas está disponível em `API.md`.
+A documentação dos endpoints está no contrato OpenAPI 3.0 [docs/openapi.json](docs/openapi.json), com as 34 operações da API, parâmetros, corpos, autenticação e respostas. O arquivo pode ser aberto no [Swagger Editor](https://editor.swagger.io/) ou importado no Postman e no Insomnia. Exemplos e regras complementares estão em [docs/API-v3.md](docs/API-v3.md) e `API.md`.
 
 Entre os endpoints existentes estão:
 
