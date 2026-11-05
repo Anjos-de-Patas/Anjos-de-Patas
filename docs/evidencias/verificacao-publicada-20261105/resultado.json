@@ -1,0 +1,30 @@
+{
+  "data_verificacao": "2026-11-05",
+  "url": "https://anjos-de-patas.onrender.com",
+  "codigo": {
+    "branch": "main",
+    "commit_aplicacao": "3c9adf21bbaca64b837522c982a6c931e2c4c3f0",
+    "observacao": "O conteúdo de 3c9adf2 (main) é idêntico ao do commit 7960c8f publicado no Render; o commit b95345d acrescenta apenas a rotina de manutenção do Supabase."
+  },
+  "testes_automatizados": { "total": 99, "aprovados": 99, "falhas": 0, "arquivo": "testes-automatizados-99.txt" },
+  "verificacoes_http": {
+    "pagina_inicial": 200,
+    "pages_animais": 200,
+    "pages_transparencia": 200,
+    "pages_login_equipe": 200,
+    "pages_entrar_adotante": 200,
+    "health": 200,
+    "api_animais": { "status": 200, "quantidade": 9 },
+    "api_animal_por_id": 200,
+    "api_resultados_transparencia": 200,
+    "api_admin_sem_token": 401,
+    "arquivo_env": 404,
+    "package_json": 404
+  },
+  "incidente": {
+    "descricao": "Projeto Supabase do plano gratuito pausado por inatividade; a API publicada respondia 500 (fetch failed) e o domínio do projeto não resolvia (ENOTFOUND).",
+    "solucao": "Projeto restaurado no painel do Supabase e criada a rotina .github/workflows/manter-ativo.yml, que consulta /api/animais a cada 2 dias.",
+    "resultado_apos_restauracao": "api_animais 200 com 9 registros"
+  },
+  "dados": "Os animais exibidos no catálogo publicado são fictícios e identificados como dados de teste."
+}

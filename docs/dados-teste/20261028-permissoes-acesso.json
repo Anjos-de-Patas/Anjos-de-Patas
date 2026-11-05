@@ -1,0 +1,17 @@
+{
+  "data": "2026-10-28",
+  "url": "https://anjos-de-patas.onrender.com",
+  "commit": "7960c8fdffeac05bb0953d767a5f33e5c0955c7a",
+  "testes_automatizados_aprovados": 99,
+  "verificacao_real": {
+    "adotante_login": 200,
+    "adotante_area": 200,
+    "adotante_login_admin": 403,
+    "adotante_painel_admin": 403,
+    "admin_login": 200,
+    "admin_painel": 200,
+    "admin_login_adotante": 403,
+    "token_admin_na_area_adotante": 403
+  },
+  "conta_temporaria_removida": true
+}

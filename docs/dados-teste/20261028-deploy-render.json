@@ -1,0 +1,23 @@
+{
+  "data_verificacao": "2026-10-28",
+  "url": "https://anjos-de-patas.onrender.com",
+  "workspace": "Rogério's workspace",
+  "branch": "fix/consulta-animal-por-nome",
+  "commit_publicado": "0149a1e8ed1c9701d76aaec8658b3c595a142238",
+  "servico": "srv-dbh1f949v7es73bjmn90",
+  "deploy": "dep-dbh1f9c9v7es73bjmoeg",
+  "status": "live",
+  "verificacoes": {
+    "health": 200,
+    "animais": {
+      "status": 200,
+      "quantidade": 9
+    },
+    "icone_animais": 200,
+    "env_nao_publicado": 404,
+    "chat_IA": 200,
+    "miniaturas": true,
+    "desktop_e_celular": true
+  },
+  "main_alterada": false
+}
