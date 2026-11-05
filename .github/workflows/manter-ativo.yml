@@ -1,0 +1,28 @@
+# Evita que o Supabase (plano gratuito) pause o projeto por inatividade.
+# A consulta em /api/animais acorda o Render e faz uma leitura real no banco.
+name: Manter aplicação ativa
+
+on:
+  schedule:
+    - cron: '0 12 */2 * *' # a cada 2 dias, 09h no horário de Brasília
+  workflow_dispatch: # permite rodar manualmente pela aba Actions
+
+jobs:
+  consultar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar animais (Render + Supabase)
+        run: |
+          URL="https://anjos-de-patas.onrender.com/api/animais"
+          for tentativa in 1 2 3 4 5; do
+            STATUS=$(curl -s -o resposta.json -w "%{http_code}" --max-time 90 "$URL" || echo 000)
+            echo "Tentativa $tentativa: HTTP $STATUS"
+            if [ "$STATUS" = "200" ]; then
+              echo "Aplicação e banco ativos."
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "Falha ao consultar o banco. Resposta:"
+          head -c 500 resposta.json || true
+          exit 1
