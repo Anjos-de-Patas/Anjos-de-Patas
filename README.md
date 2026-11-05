@@ -11,7 +11,7 @@ Projeto acadêmico desenvolvido na disciplina de **Programação para Web** do c
 - [Verificação da aplicação publicada](docs/evidencias/verificacao-publicada-20261105/README.md)
 - [Pacote de entrega em ZIP (revisão de 27/10)](output/evidencias/Pacote-Entrega-MVP-TED3-20261027.zip)
 
-**Aplicação publicada:** https://anjos-de-patas.onrender.com. O servidor gratuito pode levar até cerca de 1 minuto para responder no primeiro acesso.
+**Aplicação publicada:** https://anjos-de-patas.netlify.app (Netlify, desde 05/11/2026). O endereço anterior no Render foi desativado como ambiente oficial.
 
 Resultados: 99 testes automatizados aprovados na `main` (05/11/2026), 20 cenários de homologação com Supabase Auth, PostgreSQL e Storage reais (27/10/2026) e verificação de acessos e páginas no ambiente publicado (28/10 e 05/11/2026). Todas as evidências usam dados fictícios.
 
@@ -32,7 +32,7 @@ Desenvolver uma aplicação web para apoiar a organização das informações do
 
 ## Situação atual do projeto
 
-A versão parcial atual está na branch `main`. As alterações da etapa foram revisadas no PR #1 e integradas em 28/10/2026. A aplicação está publicada no Render, e uma rotina do GitHub Actions ([manter-ativo.yml](.github/workflows/manter-ativo.yml)) consulta o catálogo a cada 2 dias para o Supabase do plano gratuito não pausar o projeto.
+A versão parcial atual está na branch `main`. As alterações da etapa foram revisadas no PR #1 e integradas em 28/10/2026. A aplicação está publicada na Netlify, e uma rotina do GitHub Actions ([manter-ativo.yml](.github/workflows/manter-ativo.yml)) consulta o catálogo a cada 2 dias para o Supabase do plano gratuito não pausar o projeto.
 
 A aplicação possui uma área pública voltada à consulta de animais e ao apoio ao processo de adoção, além de uma área administrativa protegida por autenticação para usuários autorizados da ONG.
 
@@ -451,9 +451,17 @@ A Versão 2.0 deverá preservar as informações da TED 1 e acrescentar, entre o
 
 ## Publicação
 
-No momento, não há um endereço público definitivo da aplicação registrado no repositório.
+A aplicação está publicada em https://anjos-de-patas.netlify.app. As páginas são servidas pela CDN da Netlify, e a API Express roda como função da Netlify ([netlify/functions/api.mjs](netlify/functions/api.mjs)); o [netlify.toml](netlify.toml) direciona `/api/*` e `/health` para essa função e aplica os mesmos cabeçalhos de segurança do Helmet.
 
-Quando um ambiente de demonstração for disponibilizado, o endereço deverá ser incluído nesta seção e na documentação acadêmica correspondente.
+Para publicar uma nova versão, com a Netlify CLI autenticada e a pasta vinculada ao site:
+
+```bash
+npx netlify-cli deploy --prod --build
+```
+
+As variáveis `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `GEMINI_API_KEY` e `FRONTEND_URL` ficam configuradas no painel da Netlify, nunca no repositório.
+
+Até 05/11/2026 a aplicação ficava no Render. A mudança foi feita porque o plano gratuito do Render suspende o servidor após 15 minutos sem acesso, o que fazia o primeiro acesso levar cerca de 1 minuto, e porque a publicação dependia de uma conta à qual a equipe não tinha mais acesso.
 
 ## Repositório
 

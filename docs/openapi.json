@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://anjos-de-patas.onrender.com",
+      "url": "https://anjos-de-patas.netlify.app",
       "description": "Aplicação publicada"
     },
     {

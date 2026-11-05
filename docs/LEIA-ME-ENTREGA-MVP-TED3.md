@@ -11,7 +11,7 @@ O conteúdo editável fica em `docs/Relatorio-MVP-TED3-atualizado.md`. O gerador
 ## Links para a entrega
 
 - Repositório oficial: https://github.com/Anjos-de-Patas/Anjos-de-Patas
-- Aplicação publicada: https://anjos-de-patas.onrender.com (o servidor gratuito pode levar até cerca de 1 minuto para responder no primeiro acesso)
+- Aplicação publicada: https://anjos-de-patas.netlify.app (Netlify; até 05/11/2026 a aplicação ficava em https://anjos-de-patas.onrender.com)
 
 O código da etapa está na branch `main`. As alterações foram revisadas no PR #1 (https://github.com/Anjos-de-Patas/Anjos-de-Patas/pull/1) e integradas em 28/10/2026. A homologação real de 27/10 foi executada no commit `be388a6`, anterior à integração.
 

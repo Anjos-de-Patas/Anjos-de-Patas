@@ -25,7 +25,7 @@ O navegador envia requisições HTTP com dados em JSON por meio do módulo js/ap
 | Serviços | src/services: assistente de adoção, ferramentas de busca, imagens e consultas de animais |
 | Persistência | PostgreSQL: tabelas, chaves estrangeiras, restrições, índices, RLS, funções e gatilhos |
 | Serviços externos | Supabase Auth e Storage; Google Gemini para o assistente e a busca inteligente |
-| Hospedagem | Render, com publicação em https://anjos-de-patas.onrender.com |
+| Hospedagem | Netlify, com publicação em https://anjos-de-patas.netlify.app: páginas na rede de distribuição de conteúdo e API como função |
 
 As operações da equipe usam um cliente do banco associado ao token de cada requisição, de modo que as políticas de segurança em nível de linha (RLS) são aplicadas ao usuário correto. Alguns fluxos, como a manifestação pública de interesse e o acompanhamento, usam no servidor a chave administrativa do Supabase, sempre depois das validações e verificações de autorização. Essa chave nunca é enviada ao navegador.
 
@@ -43,7 +43,7 @@ A TED 1 propôs uma aplicação web com front-end, back-end e banco de dados. Fo
 | Cliente do banco isolado por requisição | Evita o compartilhamento de sessão entre usuários e garante a aplicação correta das políticas de acesso |
 | Validação de datas no servidor | Rejeita datas inexistentes e períodos invertidos antes da gravação |
 | Retirada do blog do escopo | O blog não fazia parte dos requisitos da TED 1; foi removido para concentrar o esforço no fluxo de adoção |
-| Hospedagem no Render | Disponibiliza a aplicação em endereço público para demonstração e testes |
+| Hospedagem na Netlify | Até 05/11/2026 a aplicação ficava no Render, cujo plano gratuito suspende o servidor sem acesso e fazia o primeiro acesso levar cerca de um minuto; na Netlify as páginas carregam de imediato e a mesma API Express roda como função |
 
 As alterações não eliminam nenhum requisito da TED 1. O assistente com Gemini apoia a consulta aos animais, mas não aprova adoções; essa decisão continua com a equipe da ONG.
 
@@ -152,7 +152,7 @@ Permanecem como limitações: a renovação automática do token não foi implem
 
 Use Node.js 22 ou superior e execute npm ci na raiz do projeto. Em um projeto Supabase vazio, execute os seis scripts do banco na ordem descrita em docs/database/README.md e crie a primeira conta da equipe. Copie o arquivo .env.example para .env e preencha SUPABASE_URL, SUPABASE_KEY, SUPABASE_SERVICE_ROLE_KEY e GEMINI_API_KEY. O arquivo .env não deve ser publicado.
 
-Execute npm start e acesse http://localhost:3000. Os testes são executados com npm test, e os scripts do banco podem ser verificados com npm run test:sql, após instalar a dependência indicada no README. A aplicação também está publicada em https://anjos-de-patas.onrender.com; por utilizar plano gratuito, o primeiro acesso após um período sem uso pode levar cerca de um minuto.
+Execute npm start e acesse http://localhost:3000. Os testes são executados com npm test, e os scripts do banco podem ser verificados com npm run test:sql, após instalar a dependência indicada no README. A aplicação também está publicada em https://anjos-de-patas.netlify.app.
 
 ## 11 Histórico de versões atualizado
 
@@ -164,6 +164,6 @@ Execute npm start e acesse http://localhost:3000. Os testes são executados com 
 
 ## 12 Artefatos e referências da entrega
 
-Repositório: https://github.com/Anjos-de-Patas/Anjos-de-Patas. Código-fonte: src (API), js, pages, css e assets (interface). Instalação: README.md e .env.example. Banco de dados: docs/database e docs/migrations. Endpoints: docs/openapi.json, docs/API-v3.md e API.md. Testes: test, scripts/validar-banco.mjs e docs/evidencias. Documento: docs/TED3-complemento.md, docs/gerar_documento_v3.py e output/pdf/Documento-Tecnico-Anjos-de-Patas-v3.pdf. Aplicação publicada: https://anjos-de-patas.onrender.com.
+Repositório: https://github.com/Anjos-de-Patas/Anjos-de-Patas. Código-fonte: src (API), js, pages, css e assets (interface). Instalação: README.md e .env.example. Banco de dados: docs/database e docs/migrations. Endpoints: docs/openapi.json, docs/API-v3.md e API.md. Testes: test, scripts/validar-banco.mjs e docs/evidencias. Documento: docs/TED3-complemento.md, docs/gerar_documento_v3.py e output/pdf/Documento-Tecnico-Anjos-de-Patas-v3.pdf. Aplicação publicada: https://anjos-de-patas.netlify.app.
 
 Referências técnicas consultadas: documentação do Express (https://expressjs.com/), do Node.js (https://nodejs.org/en/about), da segurança em nível de linha do Supabase (https://supabase.com/docs/guides/database/postgres/row-level-security), das funções de banco do Supabase (https://supabase.com/docs/guides/database/functions), da API Gemini (https://ai.google.dev/gemini-api/docs) e da especificação OpenAPI (https://spec.openapis.org/oas/v3.0.3). Acesso em: 5 nov. 2026.

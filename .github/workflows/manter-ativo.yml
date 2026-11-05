@@ -1,5 +1,5 @@
 # Evita que o Supabase (plano gratuito) pause o projeto por inatividade.
-# A consulta em /api/animais acorda o Render e faz uma leitura real no banco.
+# A consulta em /api/animais executa a API na Netlify e faz uma leitura real no banco.
 name: Manter aplicação ativa
 
 on:
@@ -11,9 +11,9 @@ jobs:
   consultar:
     runs-on: ubuntu-latest
     steps:
-      - name: Consultar animais (Render + Supabase)
+      - name: Consultar animais (Netlify + Supabase)
         run: |
-          URL="https://anjos-de-patas.onrender.com/api/animais"
+          URL="https://anjos-de-patas.netlify.app/api/animais"
           for tentativa in 1 2 3 4 5; do
             STATUS=$(curl -s -o resposta.json -w "%{http_code}" --max-time 90 "$URL" || echo 000)
             echo "Tentativa $tentativa: HTTP $STATUS"

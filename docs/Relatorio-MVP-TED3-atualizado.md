@@ -40,7 +40,7 @@ Os dados são armazenados em PostgreSQL por meio do Supabase, com políticas de 
 
 ### 3.4 Hospedagem e manutenção do ambiente
 
-A aplicação foi publicada no serviço Render, em plano gratuito, no endereço https://anjos-de-patas.onrender.com (Render, [s.d.]). Para evitar que o banco de dados seja pausado por inatividade, foi criada uma rotina no GitHub Actions que consulta o catálogo publicado a cada dois dias (GitHub, [s.d.]). O código-fonte é versionado no GitHub, e as alterações desta etapa foram revisadas em pull request antes de serem integradas à branch principal.
+A aplicação foi publicada inicialmente no serviço Render, em plano gratuito (Render, [s.d.]). Nesse plano, o servidor é suspenso após 15 minutos sem acesso, e o primeiro acesso seguinte levava cerca de um minuto, tempo excessivo para quem visita o site da ONG. Por isso, em 5 de novembro de 2026 a aplicação foi transferida para a Netlify, onde as páginas são entregues por uma rede de distribuição de conteúdo e a API passou a funcionar como função sob demanda (Netlify, [s.d.]). O endereço atual é https://anjos-de-patas.netlify.app. Para evitar que o banco de dados seja pausado por inatividade, foi criada uma rotina no GitHub Actions que consulta o catálogo publicado a cada dois dias (GitHub, [s.d.]). O código-fonte é versionado no GitHub, e as alterações desta etapa foram revisadas em pull request antes de serem integradas à branch principal.
 
 O quadro a seguir resume as tecnologias utilizadas e a finalidade de cada uma, atualizando a relação apresentada na versão 2.0.
 
@@ -55,7 +55,7 @@ O quadro a seguir resume as tecnologias utilizadas e a finalidade de cada uma, a
 | Supabase Auth | Autenticação e sessões das contas da equipe e dos adotantes |
 | Supabase Storage | Armazenamento das fotografias dos animais |
 | Google Gemini | Inteligência artificial utilizada pelo assistente de adoção |
-| Render | Hospedagem pública da aplicação |
+| Netlify | Hospedagem pública da aplicação: páginas em rede de distribuição de conteúdo e API como função sob demanda (até 05/11/2026, Render) |
 | GitHub e GitHub Actions | Versionamento, revisão do código e rotina de manutenção do ambiente |
 | Node.js Test Runner | Execução dos testes automatizados |
 | Visual Studio Code | Desenvolvimento e manutenção do código-fonte |
@@ -177,7 +177,7 @@ Durante o desenvolvimento desta etapa, algumas dificuldades exigiram ajustes no 
 | Conta de adotante e conta da equipe acessando áreas indevidas | Separação das rotas e verificação do tipo de conta em cada área |
 | Instalação da estrutura em um banco de dados novo | Organização dos scripts de criação e das migrações em ordem de execução |
 | Pausa do banco de dados no plano gratuito por inatividade | Restauração do projeto e criação de rotina no GitHub Actions que consulta o catálogo a cada dois dias |
-| Servidor gratuito suspenso após período sem acesso | Orientação ao avaliador sobre o tempo de reativação no primeiro acesso |
+| Servidor gratuito suspenso após período sem acesso | Transferência da hospedagem do Render para a Netlify, sem espera no primeiro acesso |
 | Ausência de cadastros e fotografias reais da ONG | Uso de dados fictícios identificados como tais e imagens ilustrativas |
 
 A pausa do banco de dados merece destaque. Em 5 de novembro de 2026, a aplicação publicada passou a apresentar erro ao listar os animais, e a investigação mostrou que o Supabase havia pausado o projeto por falta de uso, comportamento previsto no plano gratuito (Supabase, [s.d.]b). A equipe avaliou a substituição do banco de dados, mas a aplicação também depende do Supabase para autenticação, recuperação de senha e armazenamento de imagens, e a troca exigiria refazer essas partes e repetir a homologação. Optou-se, portanto, por restaurar o projeto e manter o banco em uso por meio da rotina automatizada descrita na seção 3.4.
@@ -203,7 +203,7 @@ As atividades restantes foram organizadas de acordo com o cronograma apresentado
 
 Repositório Git: https://github.com/Anjos-de-Patas/Anjos-de-Patas
 
-Aplicação publicada: https://anjos-de-patas.onrender.com
+Aplicação publicada: https://anjos-de-patas.netlify.app
 
 Por utilizar um servidor gratuito, a aplicação pode levar até cerca de um minuto para responder no primeiro acesso após um período de inatividade. A área pública e o cadastro de adotante podem ser utilizados livremente. As operações da área administrativa exigem uma conta da equipe e podem ser demonstradas pelos integrantes.
 
@@ -235,6 +235,8 @@ EXPRESS. Express: Node.js web application framework. [S. l.], [s.d.]. Disponíve
 GITHUB. Events that trigger workflows. [S. l.], [s.d.]. Disponível em: https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows . Acesso em: 5 nov. 2026.
 
 GOOGLE. Gemini API. [S. l.], [s.d.]. Disponível em: https://ai.google.dev/gemini-api/docs . Acesso em: 5 nov. 2026.
+
+NETLIFY. Functions overview. [S. l.], [s.d.]. Disponível em: https://docs.netlify.com/functions/overview/ . Acesso em: 5 nov. 2026.
 
 OPENJS FOUNDATION. About Node.js. [S. l.], [s.d.]. Disponível em: https://nodejs.org/en/about . Acesso em: 5 nov. 2026.
 

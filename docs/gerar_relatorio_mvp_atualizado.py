@@ -217,6 +217,6 @@ leitor = PdfReader(OUT)
 assert all(abs(float(pg.mediabox.width) - W) < 1 and abs(float(pg.mediabox.height) - H) < 1 for pg in leitor.pages)
 texto = '\n'.join(pg.extract_text() or '' for pg in leitor.pages)
 for termo in ['1 INTRODUÇÃO', '2 IDENTIFICAÇÃO DA EQUIPE', '3 ARQUITETURA', '4 FUNCIONALIDADES', '5 EVIDÊNCIAS',
-              '6 RESULTADOS', '7 DIFICULDADES', '8 PLANEJAMENTO', 'REFERÊNCIAS', '99 testes', 'anjos-de-patas.onrender.com']:
+              '6 RESULTADOS', '7 DIFICULDADES', '8 PLANEJAMENTO', 'REFERÊNCIAS', '99 testes', 'anjos-de-patas.netlify.app']:
     assert termo in texto, termo
 print(f'PDF gerado: {OUT}; {len(leitor.pages)} páginas A4; {contador["quadro"]} quadros; {contador["figura"]} figuras.')

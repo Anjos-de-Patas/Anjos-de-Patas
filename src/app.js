@@ -92,7 +92,7 @@ import {
 const app = express();
 
 app.disable("x-powered-by");
-if (process.env.RENDER === 'true') app.set('trust proxy', 1);
+if (process.env.RENDER === 'true' || process.env.NETLIFY === 'true') app.set('trust proxy', 1);
 
 const protegerONG = [
     verificarToken,
@@ -110,8 +110,9 @@ const origensPermitidas = (
     .split(",")
     .map((origem) => origem.trim());
 
-if (process.env.RENDER_EXTERNAL_URL) {
-    origensPermitidas.push(new URL(process.env.RENDER_EXTERNAL_URL).origin);
+// Endereços informados pelas próprias hospedagens (Render e Netlify).
+for (const endereco of [process.env.RENDER_EXTERNAL_URL, process.env.URL, process.env.DEPLOY_PRIME_URL]) {
+    if (endereco?.startsWith('http')) origensPermitidas.push(new URL(endereco).origin);
 }
 
 app.use(helmet({ contentSecurityPolicy: { directives: { imgSrc: ["'self'", 'data:', 'blob:', 'https:', 'http:'] } } }));
@@ -142,7 +143,11 @@ app.use(
 );
 
 // Publica somente os arquivos da interface. A raiz contém .env e código interno.
-const raizProjeto = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// Na função da Netlify o código vira CommonJS e import.meta.url fica vazio;
+// lá as páginas vêm da CDN, então basta a pasta atual.
+const raizProjeto = import.meta.url
+    ? path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+    : process.cwd();
 app.get(['/', '/index.html'], (req, res) => res.sendFile(path.join(raizProjeto, 'index.html')));
 for (const pasta of ['pages', 'css', 'js', 'assets']) {
     app.use(`/${pasta}`, express.static(path.join(raizProjeto, pasta), { dotfiles: 'deny' }));
