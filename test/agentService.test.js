@@ -172,3 +172,23 @@ test('resposta nao reconhecida nao prende a conversa na mesma pergunta', async (
   assert.doesNotMatch(r2.mensagem, /porte/);
  } finally { agenteIA.criarChat = original; }
 });
+
+
+test('pedido com qualquer porte e idade apresenta animais sem novas perguntas', async () => {
+ const original = agenteIA.criarChat;
+ const animais = [{ id: 9, nome: 'Thor', especie: 'cao', sexo: 'macho', porte: 'grande', faixa_etaria: 'adulto', situacao: 'disponivel' }];
+ const q = { select() { return this; }, eq() { return this; }, ilike() { return this; }, order() { return this; }, limit() { return this; }, then(resolve) { return Promise.resolve({ data: animais, error: null }).then(resolve); } };
+ const cliente = { from() { return q; } };
+ try {
+  agenteIA.criarChat = () => { let envio = 0; return { async sendMessageStream() { envio++; return (async function* () {
+   if (envio === 1) yield { functionCalls: [{ name: 'buscar_animais', args: { especie: 'cao', sexo: 'macho' } }] }; else yield { text: 'Conheça o Thor.' };
+  })(); } }; };
+  const op = { onDelta() {} };
+  const r = await executarAgente('quero um cachorro macho de qualquer porte e qualquer idade me apresente agora sem fazer nenhuma outra pergunta', randomUUID(), cliente, op);
+  assert.deepEqual(r.animais.map(a => a.nome), ['Thor']);
+  const r2 = await executarAgente('quero um cachorro, idade tanto faz e qualquer tamanho', randomUUID(), cliente, op);
+  assert.doesNotMatch(r2.mensagem, /filhote ou um animal adulto|preferência de porte/);
+  const r3 = await executarAgente('Quero ver cachorros', randomUUID(), cliente, op);
+  assert.deepEqual(r3.animais.map(a => a.nome), ['Thor']);
+ } finally { agenteIA.criarChat = original; }
+});

@@ -183,14 +183,19 @@ export async function executarAgente(
         const buscaPerfil = chamadas.find(chamada => chamada.name === 'buscar_animais' && !chamada.args?.nome);
         if (opcoesResposta.onDelta && buscaPerfil && !jaViuOpcoes) {
             const etapas = [...historico, { role: 'user', parts: [{ text: mensagem }] }];
-            const semPreferencia = campo => etapas.some((item, indice) => item.role === 'user' &&
+            // "Qualquer porte", "idade tanto faz": a pessoa já respondeu no próprio pedido.
+            const termos = { porte: '(porte|tamanho)', idade: '(idade|faixa etaria)' };
+            const declarouSemPreferencia = campo => etapas.some(item => item.role === 'user' && new RegExp(
+                `(qualquer|tanto faz|sem preferencia de|nao importa o|nao importa a) ?${termos[campo]}|${termos[campo]} (tanto faz|qualquer|nao importa|indiferente)`
+            ).test(normalizarTexto(item.parts?.[0]?.text || '')));
+            const semPreferencia = campo => declarouSemPreferencia(campo) || etapas.some((item, indice) => item.role === 'user' &&
                 respostaSemPreferencia(item.parts?.[0]?.text || '') &&
                 (campo === 'porte' ? /porte/ : /filhote|adulto|idoso|idade/).test(normalizarTexto(etapas[indice - 1]?.parts?.[0]?.text || '')));
             // Nunca repete a pergunta que acabou de fazer: a resposta recebida, mesmo que
             // não reconhecida, conta como "sem preferência" e a conversa segue.
             const ultimaDoAssistente = historico.at(-1)?.role === 'model' ? normalizarTexto(historico.at(-1).parts?.[0]?.text || '') : '';
             const acabouDePerguntar = pergunta => ultimaDoAssistente.startsWith(normalizarTexto(pergunta));
-            const pediuVer = /(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|pode mostrar)/.test(pedidoNormalizado);
+            const pediuVer = /\b(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|pode mostrar|apresent\w*|sem (fazer )?(mais |nenhuma |outras? )*perguntas?|direto)\b/.test(pedidoNormalizado);
             const faltaIdade = !buscaPerfil.args?.faixa_etaria && !semPreferencia('idade') && !acabouDePerguntar(PERGUNTA_IDADE);
             const faltaPorte = !buscaPerfil.args?.porte && !semPreferencia('porte') && !acabouDePerguntar(PERGUNTA_PORTE);
             if (!pediuVer && (faltaIdade || faltaPorte)) {
