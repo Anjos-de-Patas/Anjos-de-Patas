@@ -17,7 +17,7 @@ test('busca simples usa uma única geração e retorna miniatura sem reduzir a v
 test('questões comparativas continuam no modelo e não mandam URLs de imagem ao Gemini',async()=>{
  const original=agenteIA.criarChat;let geracoes=0,retorno;
  try{
-  agenteIA.criarChat=()=>({async sendMessage(op){geracoes++;if(geracoes===1)return {functionCalls:[{name:'buscar_animais',args:{especie:'gato'}}]};retorno=op.message;return{text:'Vamos comparar as características cadastradas.'};}});
+  agenteIA.criarChat=()=>({async sendMessage(op){geracoes++;if(geracoes===1)return {functionCalls:[{name:'buscar_animais',args:{especie:'gato',pediu_para_ver:true}}]};retorno=op.message;return{text:'Vamos comparar as características cadastradas.'};}});
   const q={select(){return this;},eq(){return this;},limit(){return this;},then(resolve){return Promise.resolve({data:[{id:1,nome:'Mel',situacao:'disponivel',imagem_url:'https://example.com/imagem.png'}],error:null}).then(resolve);}};
   await executarAgente('Compare os gatos para minha rotina',randomUUID(),{from(){return q;}});assert.equal(geracoes,2);assert.equal(JSON.stringify(retorno).includes('example.com'),false);
  }finally{agenteIA.criarChat=original;}

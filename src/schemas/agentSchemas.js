@@ -2,7 +2,8 @@ import { z } from 'zod';
 
 export const agenteMensagemSchema = z.object({
   mensagem: z.string().trim().min(2, 'A mensagem deve ter pelo menos 2 caracteres.').max(1000, 'A mensagem deve ter no maximo 1000 caracteres.'),
-  conversa_id: z.string().trim().max(100).optional()
+  conversa_id: z.string().trim().max(100).optional(),
+  estado: z.string().max(120000).optional()
 });
 
 export const buscarAnimaisArgsSchema = z.object({

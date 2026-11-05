@@ -11,7 +11,7 @@
     const enviar=form.querySelector('[type="submit"]');
     const estado=document.querySelector('#estado-chat');
     const inicio=[...area.children].map(el=>el.cloneNode(true));
-    let origem=null,conversaId=null,emEnvio=false,controlador=null,versao=0;
+    let origem=null,conversaId=null,estadoConversa=null,emEnvio=false,controlador=null,versao=0;
     const rotulos={cao:'Cão',gato:'Gato',pequeno:'Porte pequeno',medio:'Porte médio',grande:'Porte grande',filhote:'Filhote',adulto:'Adulto',idoso:'Idoso'};
     const elemento=(tag,texto,classe)=>{const el=document.createElement(tag);if(texto!==undefined)el.textContent=texto;if(classe)el.className=classe;return el;};
     const rolar=()=>{area.scrollTop=area.scrollHeight;};
@@ -53,7 +53,7 @@
         if(ids.size){parent.append(lista);rolar();}
     }
     async function consultar(texto,sinal,aoReceber){
-        const response=await fetch(`${window.AnjosAPI.base}/api/agente`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'text/event-stream'},signal:sinal,body:JSON.stringify({mensagem:texto,...(conversaId?{conversa_id:conversaId}:{})})});
+        const response=await fetch(`${window.AnjosAPI.base}/api/agente`,{method:'POST',headers:{'Content-Type':'application/json','Accept':'text/event-stream'},signal:sinal,body:JSON.stringify({mensagem:texto,...(conversaId?{conversa_id:conversaId}:{}),...(conversaId&&estadoConversa?{estado:estadoConversa}:{})})});
         let dados;
         if(response.ok&&response.headers?.get('content-type')?.includes('text/event-stream')){
             const leitor=response.body.getReader(),decoder=new TextDecoder();let buffer='';
@@ -95,7 +95,7 @@
                 parcial ||= mensagem('', 'mensagem-assistente');
                 textoParcial+=trecho;parcial.querySelector('p').textContent=textoParcial;rolar();
             });if(atual!==versao)return;
-            carregando.remove();if(typeof resposta.conversa_id==='string')conversaId=resposta.conversa_id;
+            carregando.remove();if(typeof resposta.conversa_id==='string')conversaId=resposta.conversa_id;if(typeof resposta.estado==='string')estadoConversa=resposta.estado;
             document.querySelector('#aviso-chat').textContent=resposta.modo==='guiado'
                 ?'Consulta guiada aos animais disponíveis, sem IA. O interesse é registrado no formulário e avaliado pela equipe.'
                 :'Respostas com apoio de IA. O interesse é registrado no formulário; a adoção é avaliada pela equipe.';
@@ -116,7 +116,7 @@
         const repetir=evento.target.closest('[data-repetir]');if(repetir){enviarMensagem(repetir.dataset.repetir,true);return;}
     });
     nova.addEventListener('click',()=>{
-        versao++;controlador?.abort();controlador=null;conversaId=null;
+        versao++;controlador?.abort();controlador=null;conversaId=null;estadoConversa=null;
         area.replaceChildren(...inicio.map(el=>el.cloneNode(true)));campo.value='';ocupado(false);
         document.querySelector('#aviso-chat').textContent='O chat ajuda a consultar animais e entender a adoção. O interesse é registrado no formulário.';
         estado.textContent='Nova conversa iniciada.';campo.focus();rolar();

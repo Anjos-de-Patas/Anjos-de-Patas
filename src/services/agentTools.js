@@ -37,6 +37,19 @@ export const agentToolDefinitions = [
                 },
                 convivencia_outros_animais: {
                     type: 'BOOLEAN'
+                },
+                preferencias_sem_restricao: {
+                    type: 'ARRAY',
+                    items: { type: 'STRING', enum: ['idade', 'porte'] },
+                    description: 'Sinal da conversa, não é filtro. Pontos em que a pessoa disse não ter preferência, em qualquer mensagem: "tanto faz", "qualquer porte", "os dois", "ambos", "não" em resposta à pergunta.'
+                },
+                rotina_informada: {
+                    type: 'BOOLEAN',
+                    description: 'Sinal da conversa, não é filtro. true se a pessoa já disse se há ou não crianças ou outros animais em casa, ou pediu para pular essa pergunta.'
+                },
+                pediu_para_ver: {
+                    type: 'BOOLEAN',
+                    description: 'Sinal da conversa, não é filtro. true se a pessoa pediu para ver, mostrar, comparar ou apresentar animais agora, ou disse que não quer mais perguntas.'
                 }
             }
         }

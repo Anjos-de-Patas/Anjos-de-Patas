@@ -1,8 +1,9 @@
 import { randomUUID } from 'node:crypto';
 
 import { agenteMensagemSchema } from '../schemas/agentSchemas.js';
-import { executarAgente, falhaTemporaria } from '../services/agentService.js';
-import { executarConsultaGuiada } from '../services/guidedAssistant.js';
+import { executarAgente, falhaTemporaria, exportarEstadoConversa, restaurarEstadoConversa } from '../services/agentService.js';
+import { executarConsultaGuiada, exportarSessaoGuiada, restaurarSessaoGuiada } from '../services/guidedAssistant.js';
+import { abrirEstado, selarEstado } from '../services/agentState.js';
 
 export async function conversarComAgente(req, res, next) {
     const validacao = agenteMensagemSchema.safeParse(req.body);
@@ -31,6 +32,19 @@ export async function conversarComAgente(req, res, next) {
         res.on('close', () => cancelamento.abort());
     }
     const conversaId = validacao.data.conversa_id || randomUUID();
+    // O estado assinado que voltou do navegador tem prioridade sobre a memória desta
+    // cópia da função, que pode ter sido reiniciada entre uma mensagem e outra.
+    const estadoRecebido = abrirEstado(validacao.data.estado, conversaId);
+    if (estadoRecebido) {
+        restaurarEstadoConversa(conversaId, estadoRecebido.ia);
+        restaurarSessaoGuiada(conversaId, estadoRecebido.guiado);
+    }
+    const resposta = resultado => ({
+        sucesso: true,
+        conversa_id: conversaId,
+        ...resultado,
+        estado: selarEstado(conversaId, { ia: exportarEstadoConversa(conversaId), guiado: exportarSessaoGuiada(conversaId) })
+    });
     try {
 
         const resultado = await executarAgente(
@@ -41,23 +55,19 @@ export async function conversarComAgente(req, res, next) {
         );
 
         if (streaming) {
-            emitir('done', { sucesso: true, conversa_id: conversaId, ...resultado });
+            emitir('done', resposta(resultado));
             return res.end();
         }
-        return res.status(200).json({
-            sucesso: true,
-            conversa_id: conversaId,
-            ...resultado
-        });
+        return res.status(200).json(resposta(resultado));
     } catch (error) {
         if (falhaTemporaria(error) && !textoEnviado && !cancelamento.signal.aborted) {
             try {
                 const guiado = await executarConsultaGuiada(validacao.data.mensagem, conversaId);
                 if (streaming) {
-                    emitir('done', { sucesso: true, conversa_id: conversaId, ...guiado });
+                    emitir('done', resposta(guiado));
                     return res.end();
                 }
-                return res.status(200).json({ sucesso: true, conversa_id: conversaId, ...guiado });
+                return res.status(200).json(resposta(guiado));
             } catch { /* segue para a resposta de erro abaixo */ }
         }
         if (streaming) {

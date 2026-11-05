@@ -30,13 +30,14 @@ const PERGUNTA_ROTINA = 'Tem crianças ou outros animais em casa?';
 
 const normalizarTexto = texto => texto.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
 
-// Respostas que indicam ausência de preferência ("não", "nenhuma preferência", "tanto faz"...).
-export function respostaSemPreferencia(texto) {
-    const t = normalizarTexto(texto).replace(/[.,;:!?…]+/g, ' ').replace(/\s+/g, ' ').trim();
-    return /\b(sem preferencia|nenhuma preferencia|nao tenho preferencia|tanto faz|qualquer|indiferente|nao importa|nao faz diferenca|tanto um quanto outro|os dois|ambos)\b/.test(t)
-        || /^(nao|n|nope|nenhum|nenhuma|nao tenho|tenho nao|nao tenho nao|nao sei|sei la|tanto faz)( obrigad[oa])?$/.test(t);
-}
-
+// Sinais que acompanham buscar_animais (ver agentTools.js) e assuntos das perguntas
+// do roteiro, usados para nunca perguntar o mesmo assunto duas vezes.
+const CAMPOS_SINAIS = ['preferencias_sem_restricao', 'rotina_informada', 'pediu_para_ver'];
+const ASSUNTOS_PERGUNTA = {
+    idade: /(filhote|adulto|idade|idoso|velhinho).*\?/,
+    porte: /(porte|tamanho).*\?/,
+    rotina: /(crianca|outros animais|outros pets).*\?/
+};
 const LIMITE_CHAMADAS_FERRAMENTA = 3;
 export const PAUSAS_NOVA_TENTATIVA = [1000, 2500];
 // 429: excesso de chamadas; 500, 503 e 504: instabilidade momentânea do serviço.
@@ -45,6 +46,25 @@ const LIMITE_MENSAGENS_HISTORICO = 20;
 
 const conversas = new Map();
 const animaisEmFoco = new Map();
+
+// Estado da conversa que o controller sela e devolve ao navegador (agentState.js).
+export function exportarEstadoConversa(conversaId) {
+    return { historico: conversas.get(conversaId) || [], foco: animaisEmFoco.get(conversaId) || null };
+}
+
+export function restaurarEstadoConversa(conversaId, estado) {
+    if (!estado || !Array.isArray(estado.historico)) return;
+    const historico = estado.historico
+        .filter(item => (item?.role === 'user' || item?.role === 'model') && typeof item.parts?.[0]?.text === 'string')
+        .slice(-LIMITE_MENSAGENS_HISTORICO)
+        .map(item => ({ role: item.role, parts: [{ text: item.parts[0].text }] }));
+    if (!conversas.has(conversaId) && conversas.size >= 500) conversas.delete(conversas.keys().next().value);
+    conversas.set(conversaId, historico);
+    const foco = estado.foco;
+    if (foco && typeof foco === 'object' && typeof foco.nome === 'string') {
+        animaisEmFoco.set(conversaId, { id: foco.id, nome: foco.nome, especie: foco.especie });
+    } else animaisEmFoco.delete(conversaId);
+}
 
 function obterHistorico(conversaId) {
     if (!conversas.has(conversaId)) {
@@ -191,47 +211,39 @@ export async function executarAgente(
 
         if (tentativa === LIMITE_CHAMADAS_FERRAMENTA || chamadas.length > LIMITE_CHAMADAS_FERRAMENTA - ferramentasUsadas.length) break;
 
-        // A escolha da espécie inicia a conversa; não é uma recomendação pronta.
-        const pedidoNormalizado = mensagem.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-        const pediuLista = /\b(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|tanto faz|sem preferencia|qualquer)\b/.test(pedidoNormalizado);
+        // Sinais da conversa que o modelo informa junto com a busca. Não são filtros:
+        // saem dos argumentos antes da consulta ao banco.
+        const sinais = {};
+        for (const chamada of chamadas) {
+            if (chamada.name !== 'buscar_animais' || !chamada.args) continue;
+            for (const campo of CAMPOS_SINAIS) {
+                if (campo in chamada.args) { sinais[campo] = chamada.args[campo]; delete chamada.args[campo]; }
+            }
+        }
+        const semRestricao = new Set(Array.isArray(sinais.preferencias_sem_restricao) ? sinais.preferencias_sem_restricao : []);
+        const pediuVer = sinais.pediu_para_ver === true;
         const jaViuOpcoes = historico.some(item => item.parts?.some(parte => parte.text?.includes('Dados consultados para os cartões')));
         const buscaSoEspecie = chamadas.find(chamada => chamada.name === 'buscar_animais' && chamada.args?.especie && Object.keys(chamada.args).every(chave => chave === 'especie'));
         const buscaPerfil = chamadas.find(chamada => chamada.name === 'buscar_animais' && !chamada.args?.nome);
-        if (opcoesResposta.onDelta && buscaPerfil && !jaViuOpcoes) {
-            const etapas = [...historico, { role: 'user', parts: [{ text: mensagem }] }];
-            // "Qualquer porte", "idade tanto faz": a pessoa já respondeu no próprio pedido.
-            const termos = { porte: '(porte|tamanho)', idade: '(idade|faixa etaria)' };
-            const declarouSemPreferencia = campo => etapas.some(item => item.role === 'user' && new RegExp(
-                `(qualquer|tanto faz|sem preferencia de|nao importa o|nao importa a) ?${termos[campo]}|${termos[campo]} (tanto faz|qualquer|nao importa|indiferente)`
-            ).test(normalizarTexto(item.parts?.[0]?.text || '')));
-            const semPreferencia = campo => declarouSemPreferencia(campo) || etapas.some((item, indice) => item.role === 'user' &&
-                respostaSemPreferencia(item.parts?.[0]?.text || '') &&
-                (campo === 'porte' ? /porte/ : /filhote|adulto|idoso|idade/).test(normalizarTexto(etapas[indice - 1]?.parts?.[0]?.text || '')));
-            // Nunca repete a pergunta que acabou de fazer: a resposta recebida, mesmo que
-            // não reconhecida, conta como "sem preferência" e a conversa segue.
-            const ultimaDoAssistente = historico.at(-1)?.role === 'model' ? normalizarTexto(historico.at(-1).parts?.[0]?.text || '') : '';
-            const acabouDePerguntar = pergunta => ultimaDoAssistente.startsWith(normalizarTexto(pergunta));
-            const pediuVer = /\b(ver|veja|mostrar|mostra|mostre|listar|lista|opcoes|disponiveis|catalogo|comparar|compare|pode mostrar|apresent\w*|sem (fazer )?(mais |nenhuma |outras? )*perguntas?|direto)\b/.test(pedidoNormalizado);
-            const faltaIdade = !buscaPerfil.args?.faixa_etaria && !semPreferencia('idade') && !acabouDePerguntar(PERGUNTA_IDADE);
-            const faltaPorte = !buscaPerfil.args?.porte && !semPreferencia('porte') && !acabouDePerguntar(PERGUNTA_PORTE);
-            if (!pediuVer && (faltaIdade || faltaPorte)) {
-                const texto = faltaIdade ? PERGUNTA_IDADE : PERGUNTA_PORTE;
-                opcoesResposta.onDelta(texto);
-                return concluir(texto);
-            }
-            const rotinaInformada = acabouDePerguntar(PERGUNTA_ROTINA) || etapas.some((item, indice) => item.role === 'user' && (
-                /crianc|outros? animais|outros? pets|tenho (um|uma|dois|duas) (gato|cao|cachorro)|moro sozinh|pular|prefiro nao/.test(normalizarTexto(item.parts?.[0]?.text || '')) ||
-                /crianc|outros animais/.test(normalizarTexto(etapas[indice - 1]?.parts?.[0]?.text || ''))
-            ));
-            if (!pediuVer && !rotinaInformada) {
-                const texto = PERGUNTA_ROTINA;
+        if (opcoesResposta.onDelta && buscaPerfil && !jaViuOpcoes && !pediuVer) {
+            // Regra fixa: uma pergunta por vez e nunca o mesmo assunto duas vezes. Se a
+            // resposta não foi entendida, a conversa segue sem aquele filtro.
+            const jaPerguntou = assunto => historico.some(item => item.role === 'model' &&
+                ASSUNTOS_PERGUNTA[assunto].test(normalizarTexto((item.parts?.[0]?.text || '').split('\n')[0])));
+            const args = buscaPerfil.args || {};
+            const faltaIdade = !args.faixa_etaria && !semRestricao.has('idade') && !jaPerguntou('idade');
+            const faltaPorte = !args.porte && !semRestricao.has('porte') && !jaPerguntou('porte');
+            const faltaRotina = sinais.rotina_informada !== true && args.convivencia_criancas === undefined &&
+                args.convivencia_outros_animais === undefined && !jaPerguntou('rotina');
+            const texto = faltaIdade ? PERGUNTA_IDADE : faltaPorte ? PERGUNTA_PORTE : faltaRotina ? PERGUNTA_ROTINA : null;
+            if (texto) {
                 opcoesResposta.onDelta(texto);
                 return concluir(texto);
             }
         }
-        if (!opcoesResposta.onDelta && buscaSoEspecie && !pediuLista && !jaViuOpcoes) {
+        // A escolha da espécie inicia a conversa; não é uma recomendação pronta.
+        if (!opcoesResposta.onDelta && buscaSoEspecie && !pediuVer && !semRestricao.size && !jaViuOpcoes) {
             const texto = 'Você imagina um filhote, um adulto ou um animal mais velhinho?';
-            opcoesResposta.onDelta?.(texto);
             return concluir(texto);
         }
 

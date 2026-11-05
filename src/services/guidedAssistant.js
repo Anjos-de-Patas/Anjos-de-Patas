@@ -9,6 +9,13 @@ function sessao(id){
     const agora=Date.now();for(const [chave,valor]of sessoes)if(agora-valor.hora>EXPIRACAO)sessoes.delete(chave);
     let valor=sessoes.get(id);if(!valor){if(sessoes.size>=MAX_SESSOES)sessoes.delete(sessoes.keys().next().value);valor={filtros:{},opcoes:[],hora:agora};sessoes.set(id,valor);}valor.hora=agora;return valor;
 }
+const FILTROS_GUIADOS=['especie','sexo','porte','faixa_etaria','convivencia_criancas','convivencia_outros_animais'];
+export function exportarSessaoGuiada(id){const v=sessoes.get(id);return v?{filtros:v.filtros,opcoes:v.opcoes}:null;}
+export function restaurarSessaoGuiada(id,dados){
+    if(!dados||typeof dados!=='object')return;const v=sessao(id);
+    v.filtros=Object.fromEntries(FILTROS_GUIADOS.filter(c=>dados.filtros?.[c]!==undefined).map(c=>[c,dados.filtros[c]]));
+    v.opcoes=Array.isArray(dados.opcoes)?dados.opcoes.slice(0,3):[];
+}
 export async function executarConsultaGuiada(mensagem,conversaId,cliente){
     const texto=normalizar(mensagem),s=sessao(conversaId);
     const responder=(mensagem,animais=[])=>({mensagem,animais:publicos(animais),modo:'guiado',ferramentas_usadas:[]});
