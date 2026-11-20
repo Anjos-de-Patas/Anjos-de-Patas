@@ -2,7 +2,7 @@ import './setup.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { executarAgente, agenteIA, PAUSAS_NOVA_TENTATIVA, exportarEstadoConversa } from '../src/services/agentService.js';
+import { executarAgente, agenteIA, PAUSAS_NOVA_TENTATIVA, exportarEstadoConversa, falhaTemporaria, iaIndisponivel } from '../src/services/agentService.js';
 import { conversarComAgente } from '../src/controllers/agentController.js';
 import { selarEstado, abrirEstado } from '../src/services/agentState.js';
 import { executarFerramenta } from '../src/services/agentTools.js';
@@ -280,4 +280,12 @@ test('estado de outra conversa ou vencido nao e aceito', (t) => {
  assert.equal(abrirEstado('lixo', id), null);
  t.mock.timers.enable({ apis: ['Date'], now: Date.now() + 31 * 60 * 1000 });
  assert.equal(abrirEstado(estado, id), null);
+});
+
+test('créditos do Gemini esgotados (402) levam ao modo guiado sem nova tentativa', () => {
+    const semCreditos = { status: 402, message: 'Your prepayment credits are depleted.' };
+    assert.equal(falhaTemporaria(semCreditos), false);
+    assert.equal(iaIndisponivel(semCreditos), true);
+    assert.equal(iaIndisponivel({ status: 503 }), true);
+    assert.equal(iaIndisponivel({ status: 400 }), false);
 });

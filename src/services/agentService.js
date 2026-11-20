@@ -42,6 +42,9 @@ const LIMITE_CHAMADAS_FERRAMENTA = 3;
 export const PAUSAS_NOVA_TENTATIVA = [1000, 2500];
 // 429: excesso de chamadas; 500, 503 e 504: instabilidade momentânea do serviço.
 export const falhaTemporaria = erro => [429, 500, 503, 504].includes(Number(erro?.status ?? erro?.code));
+// Falhas em que a IA não responde agora, mas o modo guiado (sem IA) ainda atende:
+// as temporárias e a falta de créditos/cota da conta do Gemini (402), que não adianta retentar.
+export const iaIndisponivel = erro => falhaTemporaria(erro) || Number(erro?.status ?? erro?.code) === 402;
 const LIMITE_MENSAGENS_HISTORICO = 20;
 
 const conversas = new Map();

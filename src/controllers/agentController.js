@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 
 import { agenteMensagemSchema } from '../schemas/agentSchemas.js';
-import { executarAgente, falhaTemporaria, exportarEstadoConversa, restaurarEstadoConversa } from '../services/agentService.js';
+import { executarAgente, iaIndisponivel, exportarEstadoConversa, restaurarEstadoConversa } from '../services/agentService.js';
 import { executarConsultaGuiada, exportarSessaoGuiada, restaurarSessaoGuiada } from '../services/guidedAssistant.js';
 import { abrirEstado, selarEstado } from '../services/agentState.js';
 
@@ -60,7 +60,8 @@ export async function conversarComAgente(req, res, next) {
         }
         return res.status(200).json(resposta(resultado));
     } catch (error) {
-        if (falhaTemporaria(error) && !textoEnviado && !cancelamento.signal.aborted) {
+        console.error('[agente] falha na IA:', error?.status ?? error?.code ?? '', String(error?.message || error).slice(0, 300));
+        if (iaIndisponivel(error) && !textoEnviado && !cancelamento.signal.aborted) {
             try {
                 const guiado = await executarConsultaGuiada(validacao.data.mensagem, conversaId);
                 if (streaming) {
