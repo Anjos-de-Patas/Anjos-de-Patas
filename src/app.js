@@ -116,7 +116,7 @@ for (const endereco of [process.env.RENDER_EXTERNAL_URL, process.env.URL, proces
     if (endereco?.startsWith('http')) origensPermitidas.push(new URL(endereco).origin);
 }
 
-app.use(helmet({ contentSecurityPolicy: { directives: { imgSrc: ["'self'", 'data:', 'blob:', 'https:', 'http:'] } } }));
+app.use(helmet({ contentSecurityPolicy: { directives: { imgSrc: ["'self'", 'data:', 'blob:', 'https:', 'http:'], frameSrc: ["'self'", 'https://udify.app'] } } }));
 
 app.use(
     cors({
