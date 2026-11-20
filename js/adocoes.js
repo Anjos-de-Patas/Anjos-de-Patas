@@ -13,18 +13,63 @@ function elemento(tag, texto, classe) {
     if (classe) el.className = classe;
     return el;
 }
-function preencherSelect(id, registros, textoInicial) {
+function preencherSelect(id, registros, textoInicial, rotulo = (registro) => `${registro.nome} (ID ${registro.id})`) {
     const select = document.querySelector(id);
     select.replaceChildren();
     const inicial = elemento('option', textoInicial);
     inicial.value = '';
     select.append(inicial);
     for (const registro of registros) {
-        const opcao = elemento('option', `${registro.nome} (ID ${registro.id})`);
+        const opcao = elemento('option', rotulo(registro));
         opcao.value = registro.id;
         select.append(opcao);
     }
 }
+// Marca a opção pelo valor; em uma lista de escolha única as outras são desmarcadas.
+function selecionar(select, valor) {
+    const opcao = [...select.querySelectorAll('option')].find((item) => item.value === String(valor));
+    if (opcao) opcao.selected = true;
+    return Boolean(opcao);
+}
+
+// Data de hoje no fuso de quem usa a tela, no formato do campo date.
+function hoje() {
+    const agora = new Date();
+    agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+    return agora.toISOString().slice(0, 10);
+}
+
+// Aviso abaixo dos campos. Partes em objeto { forte } aparecem em destaque.
+function mostrarDica(tipo, partes) {
+    const dica = document.querySelector('#dica-adocao');
+    dica.dataset.tipo = tipo;
+    const texto = elemento('span', '');
+    texto.append(...partes.map((parte) => (typeof parte === 'string' ? document.createTextNode(parte) : elemento('strong', parte.forte))));
+    dica.replaceChildren(texto);
+    dica.hidden = false;
+}
+
+// Ao escolher o adotante, seleciona o animal em que ele manifestou interesse.
+function preencherPeloAdotante() {
+    const campoAnimal = document.querySelector('#animal_id');
+    const adotante = adotantes.find((item) => String(item.id) === document.querySelector('#adotante_id').value);
+    const interesse = adotante?.interesse;
+    document.querySelector('#dica-adocao').hidden = true;
+    if (!adotante) return;
+    if (!interesse?.animal_id) {
+        mostrarDica('info', [{ forte: adotante.nome }, ' não indicou um animal de interesse. Escolha na lista o animal adotado.']);
+        return;
+    }
+    const disponivel = animais.find((animal) => String(animal.id) === String(interesse.animal_id) && animal.situacao === 'disponivel');
+    if (disponivel) {
+        selecionar(campoAnimal, disponivel.id);
+        mostrarDica('info', [{ forte: disponivel.nome }, ` é o animal de interesse de ${adotante.nome} e já foi selecionado. Se a adoção for de outro animal, basta trocar.`]);
+    } else {
+        selecionar(campoAnimal, '');
+        mostrarDica('alerta', [{ forte: interesse.animal_nome || 'O animal de interesse' }, `, escolhido por ${adotante.nome}, não está mais disponível. Escolha na lista o animal adotado.`]);
+    }
+}
+
 function listarAdotantes() {
     const lista = document.querySelector('#lista-adotantes');
     lista.replaceChildren();
@@ -77,7 +122,13 @@ async function carregarDados() {
         animais = resultados[0].value.animais || [];
         adotantes = resultados[1].value.adotantes || [];
         preencherSelect('#animal_id', animais.filter((animal) => animal.situacao === 'disponivel'), 'Selecione um animal disponível');
-        preencherSelect('#adotante_id', adotantes.filter((adotante) => adotante.status === 'aprovado'), 'Selecione um adotante aprovado');
+        const selecionado = document.querySelector('#adotante_id').value || new URLSearchParams(window.location.search || '').get('adotante') || '';
+        preencherSelect('#adotante_id', adotantes.filter((adotante) => adotante.status === 'aprovado'), 'Selecione um adotante aprovado',
+            (adotante) => adotante.interesse?.animal_nome ? `${adotante.nome} (interesse: ${adotante.interesse.animal_nome})` : adotante.nome);
+        const campoAdotante = document.querySelector('#adotante_id');
+        selecionar(campoAdotante, selecionado);
+        preencherPeloAdotante();
+        if (!document.querySelector('#data_adocao').value) document.querySelector('#data_adocao').value = hoje();
         listarAdotantes();
         const lista = document.querySelector('#lista-adocoes');
         lista.replaceChildren();
@@ -97,6 +148,8 @@ async function carregarDados() {
     } catch (erro) { informar(erro.message); return false; }
 }
 
+document.querySelector('#adotante_id').addEventListener('change', preencherPeloAdotante);
+
 formAdocao.addEventListener('submit', async (evento) => {
     evento.preventDefault();
     if (!dadosCarregados || !formAdocao.reportValidity()) return;
@@ -107,6 +160,7 @@ formAdocao.addEventListener('submit', async (evento) => {
         const dados = Object.fromEntries(new FormData(formAdocao));
         await api.solicitar('/api/adocoes', { autenticado: true, method: 'POST', body: JSON.stringify(dados) });
         formAdocao.reset();
+        window.history?.replaceState(null, '', window.location.pathname);
         const atualizado = await carregarDados();
         informar(atualizado ? 'Adoção registrada. O animal foi marcado como adotado.' : 'Adoção registrada. Clique em Atualizar dados para recarregar a lista.');
     } catch (erro) { informar(erro.message); }

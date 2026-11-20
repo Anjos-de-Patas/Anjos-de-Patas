@@ -392,3 +392,29 @@ test('falha de consulta na página de resgates bloqueia registro e oferece atual
     assert.equal(env.document.querySelector('#salvar-resgate').disabled, true);
     assert.match(env.document.querySelector('#lista-resgates').textContent, /Atualizar dados/);
 });
+
+
+test('adoção aberta pelo interessado preenche o animal de interesse e a data', async () => {
+    const env = ambiente('pages/adocoes.html', async (caminho) => {
+        if (caminho === '/api/admin/animais') return { sucesso: true, animais: [{ id: 1, nome: 'Bob', situacao: 'disponivel' }, { id: 3, nome: 'Toby', situacao: 'disponivel' }, { id: 2, nome: 'Mel', situacao: 'adotado' }] };
+        if (caminho === '/api/adotantes') return { sucesso: true, adotantes: [
+            { id: 7, nome: 'Rogério', status: 'aprovado', interesse: { animal_id: 3, animal_nome: 'Toby' } },
+            { id: 8, nome: 'Ana', status: 'aprovado', interesse: { animal_id: 2, animal_nome: 'Mel' } }
+        ] };
+        return { sucesso: true, adocoes: [] };
+    });
+    env.context.window.location.search = '?adotante=7';
+    env.executar('js/adocoes.js');
+    await aguardar();
+    const doc = env.document;
+    assert.equal(doc.querySelector('#adotante_id').value, '7');
+    assert.equal(doc.querySelector('#animal_id').value, '3');
+    assert.match(doc.querySelector('#dica-adocao').textContent, /Toby é o animal de interesse de Rogério e já foi selecionado/);
+    assert.match(doc.querySelector('#data_adocao').value, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(doc.querySelector('#adotante_id option[value="7"]').textContent, /interesse: Toby/);
+    doc.querySelector('#adotante_id option[value="8"]').selected = true;
+    doc.querySelector('#adotante_id').dispatchEvent(new env.window.Event('change'));
+    assert.equal(doc.querySelector('#animal_id').value, '');
+    assert.equal(doc.querySelector('#dica-adocao').dataset.tipo, 'alerta');
+    assert.match(doc.querySelector('#dica-adocao').textContent, /Mel, escolhido por Ana, não está mais disponível/);
+});

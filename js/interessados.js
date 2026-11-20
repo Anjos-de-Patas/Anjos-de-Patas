@@ -47,6 +47,15 @@
         const nota=document.createElement('textarea'); nota.id=`nota-${pessoa.id}`; nota.maxLength=3000; nota.rows=3;
         campo('Anotação interna (opcional ao mudar etapa)',nota,true);
         form.append(el('p','As anotações ficam restritas à equipe.','nota-admin campo-amplo'));
+        if (pessoa.etapa !== 'concluida') {
+            const aviso = el('p', 'A etapa Adoção concluída é marcada automaticamente quando a adoção é registrada. ', 'nota-admin campo-amplo');
+            if (pessoa.etapa === 'aprovado') {
+                const link = el('a', `Registrar adoção de ${pessoa.nome}`);
+                link.href = `adocoes.html?adotante=${encodeURIComponent(pessoa.id)}`;
+                aviso.append(link);
+            } else aviso.append('Para registrar, mude antes a etapa para Cadastro aprovado.');
+            form.append(aviso);
+        }
         const salvar=el('button','Salvar acompanhamento','botao-admin'); salvar.type='submit';
         const historico=el('button','Consultar histórico','botao-admin secundario'); historico.type='button';
         const acoes=el('div','','barra-acoes'); acoes.append(salvar,historico); form.append(acoes);
