@@ -4,7 +4,7 @@ Revisão: 5 de novembro de 2026.
 
 ## Documento principal
 
-`output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas-atualizado.pdf` - documento técnico versão 3.0, com 20 páginas A4 no papel timbrado do curso de ADS da UNIBALSAS (imagens em `docs/modelos/timbrado-ads/`). Segue a estrutura e o estilo da TED 1 e da TED 2 e contém identificação da equipe, arquitetura e tecnologias, funcionalidades, evidências (13 figuras), resultados dos testes, dificuldades e soluções, planejamento das atividades restantes, links, histórico de versões e referências. Os PDFs anteriores não foram sobrescritos.
+`output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas.pdf` - documento técnico versão 3.0, com 20 páginas A4 no papel timbrado do curso de ADS da UNIBALSAS (imagens em `docs/modelos/timbrado-ads/`). Segue a estrutura e o estilo da TED 1 e da TED 2 e contém identificação da equipe, arquitetura e tecnologias, funcionalidades, evidências (13 figuras), resultados dos testes, dificuldades e soluções, planejamento das atividades restantes, links, histórico de versões e referências. Os PDFs anteriores não foram sobrescritos.
 
 O conteúdo editável fica em `docs/Relatorio-MVP-TED3-atualizado.md`. O gerador é `docs/gerar_relatorio_mvp_atualizado.py`, com dependências ReportLab, pypdf, pypdfium2 e Pillow. A geração utiliza as fontes Arial do Windows e as capturas e o JSON de homologação. A formatação foi organizada a partir da ABNT NBR 14724:2024 e da orientação de normalização da UFES; eventuais regras específicas da disciplina devem ser conferidas pela equipe.
 

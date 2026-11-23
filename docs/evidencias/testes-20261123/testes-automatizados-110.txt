@@ -1,0 +1,685 @@
+
+> backend-ianjos@1.0.0 test
+> node --test test/*.test.js
+
+TAP version 13
+# Subtest: busca simples usa uma única geração e retorna miniatura sem reduzir a verificação do banco
+ok 1 - busca simples usa uma única geração e retorna miniatura sem reduzir a verificação do banco
+  ---
+  duration_ms: 2.308371
+  type: 'test'
+  ...
+# Subtest: questões comparativas continuam no modelo e não mandam URLs de imagem ao Gemini
+ok 2 - questões comparativas continuam no modelo e não mandam URLs de imagem ao Gemini
+  ---
+  duration_ms: 0.516075
+  type: 'test'
+  ...
+# Subtest: ausência de resultado propõe alternativa concreta sem alterar filtros nem prometer disponibilidade
+ok 3 - ausência de resultado propõe alternativa concreta sem alterar filtros nem prometer disponibilidade
+  ---
+  duration_ms: 0.551785
+  type: 'test'
+  ...
+# Subtest: conversa preserva preferências anteriores sem misturar sessões
+ok 4 - conversa preserva preferências anteriores sem misturar sessões
+  ---
+  duration_ms: 1.913297
+  type: 'test'
+  ...
+# Subtest: resposta após a terceira ferramenta é aproveitada sem fallback indevido
+ok 5 - resposta após a terceira ferramenta é aproveitada sem fallback indevido
+  ---
+  duration_ms: 0.475528
+  type: 'test'
+  ...
+# Subtest: excesso de ferramentas não executa consultas sem limite nem afirma encaminhamento
+ok 6 - excesso de ferramentas não executa consultas sem limite nem afirma encaminhamento
+  ---
+  duration_ms: 0.258246
+  type: 'test'
+  ...
+# Subtest: requisitos apontam para o formulário e contato não inventa telefone
+ok 7 - requisitos apontam para o formulário e contato não inventa telefone
+  ---
+  duration_ms: 0.123536
+  type: 'test'
+  ...
+# Subtest: busca por nome trata porcentagem e sublinhado como texto literal
+ok 8 - busca por nome trata porcentagem e sublinhado como texto literal
+  ---
+  duration_ms: 0.838673
+  type: 'test'
+  ...
+# Subtest: ausência de chave de IA retorna indisponibilidade sem chamada externa
+ok 9 - ausência de chave de IA retorna indisponibilidade sem chamada externa
+  ---
+  duration_ms: 0.284071
+  type: 'test'
+  ...
+# Subtest: cartões vêm da consulta e seu contexto mantém a ordem para a próxima mensagem
+ok 10 - cartões vêm da consulta e seu contexto mantém a ordem para a próxima mensagem
+  ---
+  duration_ms: 0.750156
+  type: 'test'
+  ...
+# Subtest: inicio imediato preserva contexto para o fluxo seguinte
+ok 11 - inicio imediato preserva contexto para o fluxo seguinte
+  ---
+  duration_ms: 0.232647
+  type: 'test'
+  ...
+# Subtest: escolher especie nao consulta nem mostra animais antes das preferencias
+ok 12 - escolher especie nao consulta nem mostra animais antes das preferencias
+  ---
+  duration_ms: 0.371053
+  type: 'test'
+  ...
+# Subtest: fluxo pergunta porte antes de consultar filhotes e respeita pedido de ver opcoes
+ok 13 - fluxo pergunta porte antes de consultar filhotes e respeita pedido de ver opcoes
+  ---
+  duration_ms: 0.362524
+  type: 'test'
+  ...
+# Subtest: animal em foco persiste entre mensagens, isola sessoes e e limpo em nova busca
+ok 14 - animal em foco persiste entre mensagens, isola sessoes e e limpo em nova busca
+  ---
+  duration_ms: 1.045805
+  type: 'test'
+  ...
+# Subtest: assistente nao repete a pergunta de porte quando a pessoa responde nao
+ok 15 - assistente nao repete a pergunta de porte quando a pessoa responde nao
+  ---
+  duration_ms: 1.085784
+  type: 'test'
+  ...
+# Subtest: resposta nao reconhecida nao prende a conversa na mesma pergunta
+ok 16 - resposta nao reconhecida nao prende a conversa na mesma pergunta
+  ---
+  duration_ms: 0.322429
+  type: 'test'
+  ...
+# Subtest: pedido com qualquer porte e idade apresenta animais sem novas perguntas
+ok 17 - pedido com qualquer porte e idade apresenta animais sem novas perguntas
+  ---
+  duration_ms: 0.536668
+  type: 'test'
+  ...
+# Subtest: mensagens em sequencia: tenta de novo quando o Gemini recusa por limite
+ok 18 - mensagens em sequencia: tenta de novo quando o Gemini recusa por limite
+  ---
+  duration_ms: 7.776566
+  type: 'test'
+  ...
+# [agente] falha na IA: 429 RESOURCE_EXHAUSTED
+# (node:506) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: Gemini indisponivel apos novas tentativas: responde pelo modo guiado sem erro
+ok 19 - Gemini indisponivel apos novas tentativas: responde pelo modo guiado sem erro
+  ---
+  duration_ms: 3.06332
+  type: 'test'
+  ...
+# Subtest: erro que nao e temporario nao gera novas tentativas
+ok 20 - erro que nao e temporario nao gera novas tentativas
+  ---
+  duration_ms: 0.227179
+  type: 'test'
+  ...
+# Subtest: conversa continua a partir do estado assinado, mesmo em outra copia da funcao
+ok 21 - conversa continua a partir do estado assinado, mesmo em outra copia da funcao
+  ---
+  duration_ms: 0.65477
+  type: 'test'
+  ...
+# Subtest: estado adulterado no navegador e ignorado
+ok 22 - estado adulterado no navegador e ignorado
+  ---
+  duration_ms: 0.346999
+  type: 'test'
+  ...
+# Subtest: estado de outra conversa ou vencido nao e aceito
+ok 23 - estado de outra conversa ou vencido nao e aceito
+  ---
+  duration_ms: 0.610293
+  type: 'test'
+  ...
+# Subtest: créditos do Gemini esgotados (402) levam ao modo guiado sem nova tentativa
+ok 24 - créditos do Gemini esgotados (402) levam ao modo guiado sem nova tentativa
+  ---
+  duration_ms: 0.061912
+  type: 'test'
+  ...
+# Subtest: detalhes por nome não enviam Bob para a coluna id
+ok 25 - detalhes por nome não enviam Bob para a coluna id
+  ---
+  duration_ms: 1.733586
+  type: 'test'
+  ...
+# Subtest: nome usado como id é rejeitado antes da consulta
+ok 26 - nome usado como id é rejeitado antes da consulta
+  ---
+  duration_ms: 0.522022
+  type: 'test'
+  ...
+# Subtest: detalhes aceitam id numérico e não escolhem entre nomes duplicados
+ok 27 - detalhes aceitam id numérico e não escolhem entre nomes duplicados
+  ---
+  duration_ms: 0.411376
+  type: 'test'
+  ...
+# Subtest: chat apresenta somente cartões disponíveis e links construídos com IDs seguros
+ok 28 - chat apresenta somente cartões disponíveis e links construídos com IDs seguros
+  ---
+  duration_ms: 25.800241
+  type: 'test'
+  ...
+# Subtest: cartão usa miniatura leve, evita URL insegura e trata imagem ausente
+ok 29 - cartão usa miniatura leve, evita URL insegura e trata imagem ausente
+  ---
+  duration_ms: 12.903326
+  type: 'test'
+  ...
+# Subtest: falha oferece nova tentativa sem repetir mensagem do usuário
+ok 30 - falha oferece nova tentativa sem repetir mensagem do usuário
+  ---
+  duration_ms: 7.108555
+  type: 'test'
+  ...
+# Subtest: nova conversa descarta resposta atrasada e recomeça sem o identificador anterior
+ok 31 - nova conversa descarta resposta atrasada e recomeça sem o identificador anterior
+  ---
+  duration_ms: 5.569949
+  type: 'test'
+  ...
+# Subtest: Enter envia uma única vez, composição e Shift preservam nova linha e Escape devolve foco
+ok 32 - Enter envia uma única vez, composição e Shift preservam nova linha e Escape devolve foco
+  ---
+  duration_ms: 13.495715
+  type: 'test'
+  ...
+# Subtest: erros consecutivos não acumulam avisos e a consulta guiada é identificada
+ok 33 - erros consecutivos não acumulam avisos e a consulta guiada é identificada
+  ---
+  duration_ms: 4.636362
+  type: 'test'
+  ...
+# Subtest: texto chega antes de terminar o fluxo e cartões aparecem ao concluir
+ok 34 - texto chega antes de terminar o fluxo e cartões aparecem ao concluir
+  ---
+  duration_ms: 12.137113
+  type: 'test'
+  ...
+# Subtest: conversa usa apenas digitacao e preserva perfis dos animais
+ok 35 - conversa usa apenas digitacao e preserva perfis dos animais
+  ---
+  duration_ms: 4.281107
+  type: 'test'
+  ...
+# Subtest: adotante não ganha acesso administrativo por metadados editáveis
+ok 36 - adotante não ganha acesso administrativo por metadados editáveis
+  ---
+  duration_ms: 0.72129
+  type: 'test'
+  ...
+# Subtest: cada login usa um cliente isolado e consulta o perfil da própria sessão
+ok 37 - cada login usa um cliente isolado e consulta o perfil da própria sessão
+  ---
+  duration_ms: 0.233978
+  type: 'test'
+  ...
+# Subtest: middleware consulta perfil pelo cliente autenticado e bloqueia perfil inativo
+ok 38 - middleware consulta perfil pelo cliente autenticado e bloqueia perfil inativo
+  ---
+  duration_ms: 0.34749
+  type: 'test'
+  ...
+# Subtest: adoção usa uma transação e mantém o contrato da interface
+ok 39 - adoção usa uma transação e mantém o contrato da interface
+  ---
+  duration_ms: 1.028411
+  type: 'test'
+  ...
+# Subtest: adoção comunica conflitos e falhas sem expor detalhes internos
+ok 40 - adoção comunica conflitos e falhas sem expor detalhes internos
+  ---
+  duration_ms: 0.21126
+  type: 'test'
+  ...
+# Subtest: datas rejeitam dias inexistentes e períodos invertidos
+ok 41 - datas rejeitam dias inexistentes e períodos invertidos
+  ---
+  duration_ms: 2.14107
+  type: 'test'
+  ...
+# Subtest: cadastro administrativo grava com o cliente autenticado da requisição
+ok 42 - cadastro administrativo grava com o cliente autenticado da requisição
+  ---
+  duration_ms: 0.47229
+  type: 'test'
+  ...
+# Subtest: edição do perfil usa o usuário validado e só atualiza nome e data
+ok 43 - edição do perfil usa o usuário validado e só atualiza nome e data
+  ---
+  duration_ms: 0.272952
+  type: 'test'
+  ...
+# Subtest: conta da equipe não recebe token de adotante e encerra somente o novo login
+ok 44 - conta da equipe não recebe token de adotante e encerra somente o novo login
+  ---
+  duration_ms: 1.099937
+  type: 'test'
+  ...
+# Subtest: token existente da equipe é bloqueado e falha na verificação não libera acesso
+ok 45 - token existente da equipe é bloqueado e falha na verificação não libera acesso
+  ---
+  duration_ms: 0.390598
+  type: 'test'
+  ...
+# Subtest: cadastro envia somente nome ao Auth e login exige confirmação do e-mail
+ok 46 - cadastro envia somente nome ao Auth e login exige confirmação do e-mail
+  ---
+  duration_ms: 0.877074
+  type: 'test'
+  ...
+# Subtest: rota isola duas contas mesmo quando o cliente pede o e-mail de outra pessoa
+ok 47 - rota isola duas contas mesmo quando o cliente pede o e-mail de outra pessoa
+  ---
+  duration_ms: 34.662346
+  type: 'test'
+  ...
+# Subtest: cadastro de adotante exige consentimento e senha e rejeita permissões administrativas
+ok 48 - cadastro de adotante exige consentimento e senha e rejeita permissões administrativas
+  ---
+  duration_ms: 1.496883
+  type: 'test'
+  ...
+# Subtest: área do adotante rejeita ausência de token e e-mail não confirmado
+ok 49 - área do adotante rejeita ausência de token e e-mail não confirmado
+  ---
+  duration_ms: 0.168398
+  type: 'test'
+  ...
+# Subtest: consulta usa e-mail validado da sessão e devolve somente o acompanhamento próprio
+ok 50 - consulta usa e-mail validado da sessão e devolve somente o acompanhamento próprio
+  ---
+  duration_ms: 0.205479
+  type: 'test'
+  ...
+# Subtest: consulta sem manifestação não cria pedido nem inventa situação
+ok 51 - consulta sem manifestação não cria pedido nem inventa situação
+  ---
+  duration_ms: 0.121037
+  type: 'test'
+  ...
+# Subtest: área do adotante consulta somente eventos de etapa e não devolve notas
+ok 52 - área do adotante consulta somente eventos de etapa e não devolve notas
+  ---
+  duration_ms: 0.243648
+  type: 'test'
+  ...
+# Subtest: conclusão mostra o animal efetivamente adotado, sem usar apenas a preferência original
+ok 53 - conclusão mostra o animal efetivamente adotado, sem usar apenas a preferência original
+  ---
+  duration_ms: 0.345704
+  type: 'test'
+  ...
+# Subtest: cadastro bloqueia senhas divergentes e login guarda somente o token do adotante
+ok 54 - cadastro bloqueia senhas divergentes e login guarda somente o token do adotante
+  ---
+  duration_ms: 38.140541
+  type: 'test'
+  ...
+# Subtest: catálogo pagina todos os animais disponíveis e reinicia ao filtrar
+ok 55 - catálogo pagina todos os animais disponíveis e reinicia ao filtrar
+  ---
+  duration_ms: 24.894478
+  type: 'test'
+  ...
+# Subtest: foto local é enviada antes de salvar e falha de upload mantém formulário aberto
+ok 56 - foto local é enviada antes de salvar e falha de upload mantém formulário aberto
+  ---
+  duration_ms: 9.322029
+  type: 'test'
+  ...
+# Subtest: catálogo usa API, omite adotados, filtra e trata nomes como texto
+ok 57 - catálogo usa API, omite adotados, filtra e trata nomes como texto
+  ---
+  duration_ms: 9.329717
+  type: 'test'
+  ...
+# Subtest: falha no catálogo apresenta nova tentativa, sem animais fictícios
+ok 58 - falha no catálogo apresenta nova tentativa, sem animais fictícios
+  ---
+  duration_ms: 11.644174
+  type: 'test'
+  ...
+# Subtest: cadastro envia booleanos e edição usa o ID do animal
+ok 59 - cadastro envia booleanos e edição usa o ID do animal
+  ---
+  duration_ms: 4.702069
+  type: 'test'
+  ...
+# Subtest: cadastro envia imagem e edição permite removê-la
+ok 60 - cadastro envia imagem e edição permite removê-la
+  ---
+  duration_ms: 5.953483
+  type: 'test'
+  ...
+# Subtest: adoção só oferece animais disponíveis e adotantes aprovados
+ok 61 - adoção só oferece animais disponíveis e adotantes aprovados
+  ---
+  duration_ms: 9.162922
+  type: 'test'
+  ...
+# Subtest: histórico envia o registro para o animal selecionado
+ok 62 - histórico envia o registro para o animal selecionado
+  ---
+  duration_ms: 6.422742
+  type: 'test'
+  ...
+# Subtest: cadastro de interessado usa os nomes esperados pela API
+ok 63 - cadastro de interessado usa os nomes esperados pela API
+  ---
+  duration_ms: 3.127518
+  type: 'test'
+  ...
+# Subtest: páginas têm IDs únicos, campos rotulados e links locais existentes
+ok 64 - páginas têm IDs únicos, campos rotulados e links locais existentes
+  ---
+  duration_ms: 106.196155
+  type: 'test'
+  ...
+# Subtest: recuperação confirma senha antes de enviar e não grava código ou senha na sessão
+ok 65 - recuperação confirma senha antes de enviar e não grava código ou senha na sessão
+  ---
+  duration_ms: 13.939042
+  type: 'test'
+  ...
+# Subtest: interessados salvam contato autenticado com versão e preservam nota em falha
+ok 66 - interessados salvam contato autenticado com versão e preservam nota em falha
+  ---
+  duration_ms: 34.063415
+  type: 'test'
+  ...
+# Subtest: adotante vê etapa atual e histórico real, sem marcar entrevistas ou conclusão fictícias
+ok 67 - adotante vê etapa atual e histórico real, sem marcar entrevistas ou conclusão fictícias
+  ---
+  duration_ms: 2.22089
+  type: 'test'
+  ...
+# Subtest: página de resgates registra no animal selecionado, pesquisa e preserva o formulário em caso de falha
+ok 68 - página de resgates registra no animal selecionado, pesquisa e preserva o formulário em caso de falha
+  ---
+  duration_ms: 3.687958
+  type: 'test'
+  ...
+# Subtest: falha de consulta na página de resgates bloqueia registro e oferece atualização
+ok 69 - falha de consulta na página de resgates bloqueia registro e oferece atualização
+  ---
+  duration_ms: 2.30047
+  type: 'test'
+  ...
+# Subtest: adoção aberta pelo interessado preenche o animal de interesse e a data
+ok 70 - adoção aberta pelo interessado preenche o animal de interesse e a data
+  ---
+  duration_ms: 3.784012
+  type: 'test'
+  ...
+# Subtest: sem chave usa consulta guiada, preserva espécie e filtra porte sem inventar animais
+ok 71 - sem chave usa consulta guiada, preserva espécie e filtra porte sem inventar animais
+  ---
+  duration_ms: 3.783363
+  type: 'test'
+  ...
+# Subtest: escolha por posição revalida disponibilidade antes de orientar o interesse
+ok 72 - escolha por posição revalida disponibilidade antes de orientar o interesse
+  ---
+  duration_ms: 0.946232
+  type: 'test'
+  ...
+# Subtest: modo guiado não expõe campos internos, inventa telefone ou confirma adoção
+ok 73 - modo guiado não expõe campos internos, inventa telefone ou confirma adoção
+  ---
+  duration_ms: 0.515972
+  type: 'test'
+  ...
+# Subtest: pedido explícito sem filtros remove critérios anteriores e não inverte negação
+ok 74 - pedido explícito sem filtros remove critérios anteriores e não inverte negação
+  ---
+  duration_ms: 0.304301
+  type: 'test'
+  ...
+# Subtest: referência ambígua é esclarecida e sessões não compartilham preferências
+ok 75 - referência ambígua é esclarecida e sessões não compartilham preferências
+  ---
+  duration_ms: 0.34083
+  type: 'test'
+  ...
+# Subtest: bucket ausente é criado e o upload é repetido; falhas de permissão não criam bucket
+ok 76 - bucket ausente é criado e o upload é repetido; falhas de permissão não criam bucket
+  ---
+  duration_ms: 1.469886
+  type: 'test'
+  ...
+# Subtest: upload valida conteúdo e tamanho antes de acessar Storage e retorna URL pública
+ok 77 - upload valida conteúdo e tamanho antes de acessar Storage e retorna URL pública
+  ---
+  duration_ms: 0.631236
+  type: 'test'
+  ...
+# Subtest: rotas de acompanhamento rejeitam visitantes sem sessão
+ok 78 - rotas de acompanhamento rejeitam visitantes sem sessão
+  ---
+  duration_ms: 40.044811
+  type: 'test'
+  ...
+# Subtest: listagem combina pesquisa e etapa com paginação de vinte registros
+ok 79 - listagem combina pesquisa e etapa com paginação de vinte registros
+  ---
+  duration_ms: 0.853803
+  type: 'test'
+  ...
+# Subtest: validação exige versão e limita notas e etapas sem aceitar autor do navegador
+ok 80 - validação exige versão e limita notas e etapas sem aceitar autor do navegador
+  ---
+  duration_ms: 1.745715
+  type: 'test'
+  ...
+# Subtest: histórico limita eventos e rejeita identificador inválido antes da consulta
+ok 81 - histórico limita eventos e rejeita identificador inválido antes da consulta
+  ---
+  duration_ms: 0.279698
+  type: 'test'
+  ...
+# Subtest: acompanhamento envia autor validado e versão à transação; conflito exige recarga
+ok 82 - acompanhamento envia autor validado e versão à transação; conflito exige recarga
+  ---
+  duration_ms: 0.228512
+  type: 'test'
+  ...
+# [GET] /health Error: segredo do banco
+#     at TestContext.<anonymous> (file:///home/claude/repo/Anjos-de-Patas/test/middleware.test.js:124:13)
+#     at Test.runInAsyncScope (node:async_hooks:214:14)
+#     at Test.run (node:internal/test_runner/test:1047:25)
+#     at Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+#     at Test.postRun (node:internal/test_runner/test:1173:19)
+#     at Test.run (node:internal/test_runner/test:1101:12)
+#     at async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+# Subtest: exigirPermissao permite perfil autorizado
+ok 83 - exigirPermissao permite perfil autorizado
+  ---
+  duration_ms: 0.72003
+  type: 'test'
+  ...
+# Subtest: exigirPermissao bloqueia perfil sem acesso
+ok 84 - exigirPermissao bloqueia perfil sem acesso
+  ---
+  duration_ms: 0.642907
+  type: 'test'
+  ...
+# Subtest: errorHandler oculta detalhes de erros internos
+ok 85 - errorHandler oculta detalhes de erros internos
+  ---
+  duration_ms: 1.550732
+  type: 'test'
+  ...
+# Subtest: rotas integram validação, limite de envios e proteção do cadastro interno
+ok 86 - rotas integram validação, limite de envios e proteção do cadastro interno
+  ---
+  duration_ms: 49.225433
+  type: 'test'
+  ...
+# Subtest: interesse exige autorização e limita entrada
+ok 87 - interesse exige autorização e limita entrada
+  ---
+  duration_ms: 0.558203
+  type: 'test'
+  ...
+# Subtest: interesse revalida disponibilidade, registra triagem e não retorna dados pessoais
+ok 88 - interesse revalida disponibilidade, registra triagem e não retorna dados pessoais
+  ---
+  duration_ms: 0.224649
+  type: 'test'
+  ...
+# Subtest: cadastro duplicado não altera interessado e falha não expõe erro do banco
+ok 89 - cadastro duplicado não altera interessado e falha não expõe erro do banco
+  ---
+  duration_ms: 0.245844
+  type: 'test'
+  ...
+# Subtest: perfil rejeita ID inválido e animal ausente
+ok 90 - perfil rejeita ID inválido e animal ausente
+  ---
+  duration_ms: 0.172035
+  type: 'test'
+  ...
+# Subtest: perfil renderiza texto seguro e formulário envia preferência sem gravar contato no navegador
+ok 91 - perfil renderiza texto seguro e formulário envia preferência sem gravar contato no navegador
+  ---
+  duration_ms: 21.006675
+  type: 'test'
+  ...
+# Subtest: rotas validam dados antes de chamar Auth e permitem recuperar sem login
+ok 92 - rotas validam dados antes de chamar Auth e permitem recuperar sem login
+  ---
+  duration_ms: 39.025129
+  type: 'test'
+  ...
+# Subtest: falha de envio ou de alteração não informa sucesso
+ok 93 - falha de envio ou de alteração não informa sucesso
+  ---
+  duration_ms: 0.842713
+  type: 'test'
+  ...
+# Subtest: recuperação usa resposta genérica para e-mail inexistente
+ok 94 - recuperação usa resposta genérica para e-mail inexistente
+  ---
+  duration_ms: 0.237794
+  type: 'test'
+  ...
+# Subtest: código inválido não altera senha; código válido encerra sessões e não retorna token
+ok 95 - código inválido não altera senha; código válido encerra sessões e não retorna token
+  ---
+  duration_ms: 0.219297
+  type: 'test'
+  ...
+# Subtest: resgates exigem sessão para consulta e registro
+ok 96 - resgates exigem sessão para consulta e registro
+  ---
+  duration_ms: 26.365167
+  type: 'test'
+  ...
+# Subtest: resgate rejeita datas impossíveis ou futuras
+ok 97 - resgate rejeita datas impossíveis ou futuras
+  ---
+  duration_ms: 20.753393
+  type: 'test'
+  ...
+# Subtest: listagem usa o cliente da equipe e oculta erros internos
+ok 98 - listagem usa o cliente da equipe e oculta erros internos
+  ---
+  duration_ms: 1.033309
+  type: 'test'
+  ...
+# Subtest: registro vincula o animal da rota e não grava se ele não existir
+ok 99 - registro vincula o animal da rota e não grava se ele não existir
+  ---
+  duration_ms: 0.415014
+  type: 'test'
+  ...
+# Subtest: indicadores públicos consultam somente contagens, preservam zero e não expõem registros
+ok 100 - indicadores públicos consultam somente contagens, preservam zero e não expõem registros
+  ---
+  duration_ms: 23.622257
+  type: 'test'
+  ...
+# Subtest: falhas ou contagens inválidas não publicam valores parciais nem detalhes internos
+ok 101 - falhas ou contagens inválidas não publicam valores parciais nem detalhes internos
+  ---
+  duration_ms: 0.378183
+  type: 'test'
+  ...
+# Subtest: transparência oculta indicadores em falha e permite nova consulta com valores zero
+ok 102 - transparência oculta indicadores em falha e permite nova consulta com valores zero
+  ---
+  duration_ms: 24.161375
+  type: 'test'
+  ...
+# Subtest: animalSchema aceita um animal valido
+ok 103 - animalSchema aceita um animal valido
+  ---
+  duration_ms: 1.085087
+  type: 'test'
+  ...
+# Subtest: imagem aceita links HTTP, remoção e rejeita protocolos inseguros
+ok 104 - imagem aceita links HTTP, remoção e rejeita protocolos inseguros
+  ---
+  duration_ms: 1.049723
+  type: 'test'
+  ...
+# Subtest: animalSchema rejeita situacao desconhecida
+ok 105 - animalSchema rejeita situacao desconhecida
+  ---
+  duration_ms: 0.361789
+  type: 'test'
+  ...
+# Subtest: animalUpdateSchema permite atualizacao parcial
+ok 106 - animalUpdateSchema permite atualizacao parcial
+  ---
+  duration_ms: 0.082574
+  type: 'test'
+  ...
+# Subtest: buscaSchema limita texto vazio e texto muito grande
+ok 107 - buscaSchema limita texto vazio e texto muito grande
+  ---
+  duration_ms: 0.114279
+  type: 'test'
+  ...
+# Subtest: adocaoSchema exige animal, adotante e data
+ok 108 - adocaoSchema exige animal, adotante e data
+  ---
+  duration_ms: 0.695672
+  type: 'test'
+  ...
+# Subtest: agenteMensagemSchema limita mensagens e aceita conversa opcional
+ok 109 - agenteMensagemSchema limita mensagens e aceita conversa opcional
+  ---
+  duration_ms: 0.115255
+  type: 'test'
+  ...
+# Subtest: buscarAnimaisArgsSchema rejeita parametros desconhecidos
+ok 110 - buscarAnimaisArgsSchema rejeita parametros desconhecidos
+  ---
+  duration_ms: 0.837049
+  type: 'test'
+  ...
+1..110
+# tests 110
+# suites 0
+# pass 110
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3196.190394

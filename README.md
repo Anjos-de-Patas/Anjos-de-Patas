@@ -2,9 +2,21 @@
 
 Projeto acadêmico desenvolvido na disciplina de **Programação para Web** do curso de **Análise e Desenvolvimento de Sistemas - UNIBALSAS**, em parceria com a Sociedade Protetora dos Animais Anjos de Patas, de Balsas - MA.
 
+## Entrega final - TED 4
+
+- [Documento Técnico - Versão 4.0 (final)](output/pdf/Documento-Tecnico-Anjos-de-Patas-v4-final.pdf), gerado por [docs/gerar_documento_v4.py](docs/gerar_documento_v4.py) a partir de [docs/TED4-complemento.md](docs/TED4-complemento.md)
+- [Manual simplificado do usuário (PDF)](output/pdf/Manual-do-Usuario-Anjos-de-Patas.pdf), gerado por [docs/gerar_manual_usuario.py](docs/gerar_manual_usuario.py)
+- [Apresentação em formato pitch (PDF)](presentation/Pitch-Anjos-de-Patas.pdf) e [versão editável (PowerPoint)](presentation/Pitch-Anjos-de-Patas.pptx)
+- [Vídeos de demonstração e tutoriais (Google Drive)](https://drive.google.com/drive/folders/1mC2rNoPcY3_fxdtHfkEHANYk5fgx2jhC?usp=drive_link): tutorial do site para o público e tutorial da área administrativa para a equipe da ONG
+- [Retorno da ONG](docs/evidencias/validacao-ong/retorno-ong-whatsapp.png) e [resultado dos testes automatizados de 23/11/2026](docs/evidencias/testes-20261123/testes-automatizados-110.txt)
+
+**Aplicação em produção:** https://anjos-de-patas.netlify.app · área da equipe: https://anjos-de-patas.netlify.app/pages/login · ANJOS IA (Dify): https://anjos-de-patas.netlify.app/pages/assistente-dify
+
+Resultados: requisitos RF01 a RF16 implementados, 110 testes automatizados aprovados na `main` (23/11/2026), 20 cenários de homologação aprovados (27/10/2026) e retorno inicial positivo da ONG após acessar a aplicação pelo celular. A validação detalhada com a equipe da ONG está descrita como próximo passo no Documento Técnico.
+
 ## Entrega do MVP parcial - TED 3
 
-- [Relatório atualizado em PDF](output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas-atualizado.pdf)
+- [Relatório atualizado em PDF](output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas.pdf)
 - [Orientações e links da entrega](docs/LEIA-ME-ENTREGA-MVP-TED3.md)
 - [Conteúdo editável do relatório](docs/Relatorio-MVP-TED3-atualizado.md)
 - [Evidências da homologação real](docs/evidencias/homologacao-real-20261027/README.md)
@@ -438,16 +450,12 @@ As regras de segurança do banco de dados continuarão sendo revisadas durante a
 
 ## Documentação acadêmica
 
-O projeto possui o Documento Técnico da TED 1, contendo o diagnóstico da demanda, requisitos e planejamento da solução.
+O Documento Técnico do Projeto foi mantido em versões cumulativas, preservando o conteúdo das anteriores:
 
-A Versão 2.0 deverá preservar as informações da TED 1 e acrescentar, entre outros elementos:
-
-- estrutura da aplicação;
-- documentação da interface;
-- decisões arquiteturais tomadas durante a implementação;
-- tecnologias efetivamente utilizadas;
-- evidências visuais da aplicação;
-- histórico atualizado de versões.
+- **Versão 1.0 (TED 1):** diagnóstico da demanda, requisitos e planejamento da solução.
+- **Versão 2.0 (TED 2):** estrutura e documentação da interface, decisões de implementação e evidências visuais.
+- **Versão 3.0 (TED 3):** back-end, persistência, integração, testes e publicação ([PDF](output/pdf/Documento-Tecnico-Anjos-de-Patas-v3.pdf)).
+- **Versão 4.0 - final (TED 4):** evolução do projeto, validação, resultados, melhorias, dificuldades e considerações finais ([PDF](output/pdf/Documento-Tecnico-Anjos-de-Patas-v4-final.pdf)).
 
 ## Publicação
 
@@ -469,6 +477,4 @@ O projeto é mantido na organização **Anjos-de-Patas** no GitHub, no repositó
 
 ## Observação
 
-Este repositório faz parte de um projeto acadêmico em desenvolvimento.
-
-A estrutura, as funcionalidades e a documentação poderão ser atualizadas conforme o avanço das próximas etapas da disciplina.
+Este repositório faz parte de um projeto acadêmico. A versão entregue na TED 4 corresponde à versão final da disciplina; os animais exibidos na aplicação publicada são fictícios até que a ONG cadastre os seus.

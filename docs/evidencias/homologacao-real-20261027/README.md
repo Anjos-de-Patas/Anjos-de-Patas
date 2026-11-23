@@ -24,6 +24,6 @@ As capturas mostram painel, histórico do animal, interessados, acompanhamento d
 - `testes-automatizados-69.txt`: saída da suíte atual com dependências simuladas.
 - Sete arquivos PNG: capturas reais durante o teste.
 - `../../Relatorio-MVP-TED3-atualizado.md`: conteúdo editável do relatório.
-- `../../../output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas-atualizado.pdf`: documento atualizado da entrega.
+- `../../../output/pdf/Relatorio-MVP-TED3-Anjos-de-Patas.pdf`: documento atualizado da entrega.
 
 O script de homologação fica em `scripts/homologar-mvp-real.mjs`, na cópia de trabalho. Sua reexecução escreve dados no projeto configurado e exige acesso administrativo; não é executado por `npm test`.
