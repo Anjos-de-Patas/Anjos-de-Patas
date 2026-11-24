@@ -8,11 +8,11 @@ Projeto acadêmico desenvolvido na disciplina de **Programação para Web** do c
 - [Manual simplificado do usuário (PDF)](output/pdf/Manual-do-Usuario-Anjos-de-Patas.pdf), gerado por [docs/gerar_manual_usuario.py](docs/gerar_manual_usuario.py)
 - [Apresentação em formato pitch (PDF)](presentation/Pitch-Anjos-de-Patas.pdf) e [versão editável (PowerPoint)](presentation/Pitch-Anjos-de-Patas.pptx)
 - [Vídeos de demonstração e tutoriais (Google Drive)](https://drive.google.com/drive/folders/1mC2rNoPcY3_fxdtHfkEHANYk5fgx2jhC?usp=drive_link): tutorial do site para o público e tutorial da área administrativa para a equipe da ONG
-- [Retorno da ONG](docs/evidencias/validacao-ong/retorno-ong-whatsapp.png) e [resultado dos testes automatizados de 23/11/2026](docs/evidencias/testes-20261123/testes-automatizados-110.txt)
+- [Retorno da ONG](docs/evidencias/validacao-ong/retorno-ong-whatsapp.png) e [resultado dos testes automatizados de 24/11/2026](docs/evidencias/testes-20261124/testes-automatizados-115.txt)
 
 **Aplicação em produção:** https://anjos-de-patas.netlify.app · área da equipe: https://anjos-de-patas.netlify.app/pages/login · ANJOS IA (Dify): https://anjos-de-patas.netlify.app/pages/assistente-dify
 
-Resultados: requisitos RF01 a RF16 implementados, 110 testes automatizados aprovados na `main` (23/11/2026), 20 cenários de homologação aprovados (27/10/2026) e retorno inicial positivo da ONG após acessar a aplicação pelo celular. A validação detalhada com a equipe da ONG está descrita como próximo passo no Documento Técnico.
+Resultados: requisitos RF01 a RF16 implementados, 115 testes automatizados aprovados na `main` (24/11/2026), 20 cenários de homologação aprovados (27/10/2026) e retorno inicial positivo da ONG após acessar a aplicação pelo celular. A validação detalhada com a equipe da ONG está descrita como próximo passo no Documento Técnico.
 
 ## Entrega do MVP parcial - TED 3
 
@@ -244,9 +244,12 @@ SUPABASE_URL=...
 SUPABASE_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...
 GEMINI_API_KEY=...
+ESTADO_ASSISTENTE_SEGREDO=...
 FRONTEND_URL=http://127.0.0.1:5500
 PORT=3000
 ```
+
+`ESTADO_ASSISTENTE_SEGREDO` é opcional: assina com HMAC-SHA256 o estado da conversa do assistente devolvido ao navegador. Se não for informado, o servidor deriva a chave das credenciais do Supabase ou do Gemini. Em produção, recomenda-se definir um valor aleatório próprio.
 
 As credenciais reais não devem ser adicionadas ao repositório.
 

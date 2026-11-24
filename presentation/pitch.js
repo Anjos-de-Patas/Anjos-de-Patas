@@ -134,13 +134,13 @@ async function icon(Comp, color = '#52392C', size = 256) {
   // 9 Resultados
   s = pres.addSlide({ masterName: 'CONTEUDO', sectionTitle: 'Resultados' });
   s.addText('Resultados: planejado, entregue e testado', { placeholder: 'title' });
-  [['16/16', 'requisitos funcionais implementados'], ['110', 'testes automatizados aprovados'], ['20/20', 'cenários de homologação aprovados'], ['34', 'operações de API documentadas']].forEach(([n, l], i) => {
+  [['16/16', 'requisitos funcionais implementados'], ['115', 'testes automatizados aprovados'], ['20/20', 'cenários de homologação aprovados'], ['34', 'operações de API documentadas']].forEach(([n, l], i) => {
     const x = 0.5 + i * 2.3; card(s, x, 1.4, 2.05, 2.3);
     txt(s, n, { x: x + 0.1, y: 1.6, w: 1.85, h: 1.0, fontSize: 44, bold: true, color: i === 0 ? HEX.verde : HEX.marrom, align: 'center', valign: 'middle' });
     txt(s, l, { x: x + 0.15, y: 2.7, w: 1.75, h: 0.8, fontSize: 14, color: HEX.sec, align: 'center' });
   });
   txt(s, 'Além do escopo inicial: conta do adotante, gestão de interessados, transparência, perguntas frequentes e o assistente Anjos IA.', { x: 0.5, y: 4.05, w: 9, h: 0.6, fontSize: 15, color: HEX.texto });
-  txt(s, 'Testes de 23/11/2026 · homologação de 27/10/2026 com banco real e dados fictícios', { x: 0.5, y: 4.75, w: 9, h: 0.3, fontSize: 11, italic: true, color: HEX.sec });
+  txt(s, 'Testes de 24/11/2026 · homologação de 27/10/2026 com banco real e dados fictícios', { x: 0.5, y: 4.75, w: 9, h: 0.3, fontSize: 11, italic: true, color: HEX.sec });
   s.addNotes('Números verificáveis no repositório (docs/evidencias).');
 
   // 10 Validação

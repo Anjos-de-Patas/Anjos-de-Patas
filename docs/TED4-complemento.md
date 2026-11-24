@@ -1,6 +1,6 @@
 # Documento Técnico do Projeto - Versão 4.0 (versão final)
 
-Fonte das seções 32 a 40 do Documento Técnico do Projeto, versão 4.0 (TED 4 - entrega da solução completa e apresentação final). O PDF é gerado por docs/gerar_documento_v4.py, que mantém integralmente as seções 1 a 31 da versão 3.0 e numera as seções abaixo a partir de 32. Revisão de 23 de novembro de 2026.
+Fonte das seções 32 a 40 do Documento Técnico do Projeto, versão 4.0 (TED 4 - entrega da solução completa e apresentação final). O PDF é gerado por docs/gerar_documento_v4.py, que mantém integralmente as seções 1 a 31 da versão 3.0 e numera as seções abaixo a partir de 32. Revisão de 24 de novembro de 2026.
 
 ## 1 Finalidade e composição da versão final
 
@@ -17,9 +17,9 @@ O projeto partiu de um problema concreto da Sociedade Protetora dos Animais Anjo
 | TED 1 - agosto e setembro/2026 | Diagnóstico com a ONG, personas, requisitos RF01 a RF16, requisitos não funcionais, arquitetura, tecnologias, cronograma e protótipos no Figma |
 | TED 2 - setembro e outubro/2026 | Página inicial responsiva com filtros, assistente de adoção integrado, autenticação da equipe, dashboard, perfil e upload de fotos dos animais |
 | TED 3 - outubro e novembro/2026 | Modelagem e scripts do banco, regras de negócio, adoção transacional, RLS, área do adotante, gestão de interessados, resgates, transparência, perguntas frequentes, contrato OpenAPI, homologação real e publicação |
-| TED 4 - novembro/2026 | Estabilidade e memória do assistente, modo guiado sem IA, página do ANJOS IA (Dify), preenchimento do animal no registro de adoção, rotina que mantém o banco ativo, validação com a ONG e consolidação da documentação |
+| TED 4 - novembro/2026 | Estabilidade e memória do assistente, modo guiado sem IA, página do ANJOS IA (Dify), preenchimento do animal no registro de adoção, limite de espera pela IA, rotina que mantém o banco ativo, validação com a ONG e consolidação da documentação |
 
-O histórico completo de alterações está registrado nos commits do repositório, entre 23 de setembro e 20 de novembro de 2026.
+O histórico completo de alterações está registrado nos commits do repositório, entre 23 de setembro e 24 de novembro de 2026.
 
 ## 3 Validação da solução
 
@@ -29,7 +29,7 @@ A validação foi conduzida em três frentes: verificações técnicas da aplica
 | --- | --- |
 | Homologação funcional ponta a ponta (27/10/2026) | 20 cenários, do cadastro do animal ao registro da adoção, todos aprovados, com Supabase real e dados fictícios (docs/evidencias/homologacao-real-20261027) |
 | Verificação da versão publicada (05/11/2026) | Páginas públicas, catálogo, transparência e bloqueio da área administrativa sem login conferidos no ambiente publicado (docs/evidencias/verificacao-publicada-20261105) |
-| Testes automatizados (23/11/2026) | 110 testes aprovados e nenhuma falha na branch main (docs/evidencias/testes-20261123) |
+| Testes automatizados (24/11/2026) | 115 testes aprovados e nenhuma falha na branch main (docs/evidencias/testes-20261124) |
 | Adotantes em teste do assistente | Relatos de falha ao enviar mensagens em sequência e após várias perguntas; causas identificadas e corrigidas, conforme a seção 36 (docs/refinamento-assistente.md) |
 | Retorno da ONG | Avaliação inicial positiva da aplicação publicada, feita pelo celular (Figura 20) |
 
@@ -55,7 +55,7 @@ Todos os requisitos funcionais definidos na TED 1 foram implementados e verifica
 
 Além do escopo inicial, a solução passou a oferecer manifestação de interesse pelo perfil do animal, conta do adotante com acompanhamento das etapas do pedido, gestão de interessados pela equipe, página de transparência com indicadores calculados pelo sistema, perguntas frequentes e o assistente Anjos IA, que recomenda animais a partir das preferências e da rotina informadas pela pessoa.
 
-Em números, a entrega final reúne 34 operações de API documentadas no contrato OpenAPI, 110 testes automatizados aprovados, 20 cenários de homologação aprovados e a aplicação publicada em https://anjos-de-patas.netlify.app. Os animais exibidos na versão publicada são fictícios e identificados como dados de teste até que a ONG cadastre os seus.
+Em números, a entrega final reúne 34 operações de API documentadas no contrato OpenAPI, 115 testes automatizados aprovados, 20 cenários de homologação aprovados e a aplicação publicada em https://anjos-de-patas.netlify.app. Os animais exibidos na versão publicada são fictícios e identificados como dados de teste até que a ONG cadastre os seus.
 
 ## 5 Melhorias implementadas ao longo do desenvolvimento
 
@@ -70,6 +70,7 @@ Em números, a entrega final reúne 34 operações de API documentadas no contra
 | Estado da conversa assinado e devolvido ao navegador | Na hospedagem em funções, cada mensagem podia ser atendida por uma instância diferente e o contexto se perdia |
 | Preferências interpretadas pela IA, sem perguntas repetidas | O assistente insistia em perguntas quando a pessoa respondia que não tinha preferência |
 | Modo guiado quando os créditos da IA acabam | Manter o atendimento disponível mesmo sem acesso ao modelo |
+| Limite de espera pela resposta da IA e busca sem filtro de cor ou raça | Com o provedor sobrecarregado, a resposta podia demorar cerca de 40 segundos; pedidos como "um gato preto" eram tratados como nome e não traziam resultados, pois o cadastro não registra cor, pelagem nem raça |
 | Página pública do ANJOS IA (Dify) | Oferecer uma segunda forma de conversa que consulta apenas o catálogo público |
 | Animal de interesse preenchido no registro de adoção | Reduzir passos e erros da equipe ao concluir uma adoção |
 | Rotina agendada que mantém o banco ativo | O banco do plano gratuito era pausado por inatividade e o catálogo ficava vazio |
