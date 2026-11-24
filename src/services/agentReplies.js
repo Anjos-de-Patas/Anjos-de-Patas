@@ -7,6 +7,7 @@ function descricao(filtros){
 export function respostaConsulta(nome,resultado,filtros,mensagem){
     if(!resultado?.sucesso)return null;
     if(nome==='buscar_animais'){
+        if(resultado.aviso)return null;
         const n=Math.min(3,resultado.animais?.length||0);
         if(n)return n===1?'Encontrei uma opção com as características que você me contou. Dá uma olhada na foto e no perfil. Quer conhecer melhor esse companheiro?':`Separei ${quantidades[n]} com as características que você procura. Dá uma olhada nas fotos abaixo. Qual delas você gostaria de conhecer melhor?`;
         const base=`Não encontrei ${descricao(filtros)} no cadastro agora.`;

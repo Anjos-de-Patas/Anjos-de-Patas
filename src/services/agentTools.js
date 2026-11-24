@@ -14,7 +14,7 @@ export const agentToolDefinitions = [
             properties: {
                 nome: {
                     type: 'STRING',
-                    description: 'Parte do nome do animal.'
+                    description: 'Parte do nome próprio de um animal citado pela pessoa, como "Luna". Nunca use para cor, pelagem ou raça: o cadastro não registra essas características.'
                 },
                 especie: {
                     type: 'STRING',
@@ -98,7 +98,26 @@ export const agentToolDefinitions = [
     }
 ];
 
+// O cadastro não tem cor, pelagem nem raça. Se o modelo mandar uma dessas palavras como
+// nome e nada for encontrado, a busca é refeita sem ela, com um aviso para a resposta.
+const CARACTERISTICA_SEM_CADASTRO = /^(pret[oa]|branc[oa]|cinza|rajad[oa]|malhad[oa]|tigrad[oa]|amarel[oa]|laranja|marrom|caramelo|tricolor|frajola|escaminha|siames|persa|vira[ -]?lata|srd|pelo (curto|longo)|peludo|peluda)s?$/;
+export const ehCaracteristicaSemCadastro = texto =>
+    CARACTERISTICA_SEM_CADASTRO.test(String(texto || '').normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().trim());
+
 async function buscarAnimais(argumentos, cliente) {
+    const resultado = await consultarAnimais(argumentos, cliente);
+    if (resultado.sucesso && resultado.total === 0 && ehCaracteristicaSemCadastro(argumentos?.nome)) {
+        const { nome, ...semNome } = argumentos;
+        const ampliado = await consultarAnimais(semNome, cliente);
+        return {
+            ...ampliado,
+            aviso: `O cadastro não registra cor, pelagem ou raça, então não dá para filtrar por "${nome}". Estes são os animais disponíveis com os demais critérios; as fotos dos perfis mostram a aparência de cada um.`
+        };
+    }
+    return resultado;
+}
+
+async function consultarAnimais(argumentos, cliente) {
     const validacao =
         buscarAnimaisArgsSchema.safeParse(argumentos);
 

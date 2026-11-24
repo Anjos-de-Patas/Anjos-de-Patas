@@ -2,7 +2,7 @@ import './setup.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
-import { executarAgente, agenteIA, PAUSAS_NOVA_TENTATIVA, exportarEstadoConversa, falhaTemporaria, iaIndisponivel } from '../src/services/agentService.js';
+import { executarAgente, agenteIA, PAUSAS_NOVA_TENTATIVA, exportarEstadoConversa, falhaTemporaria, iaIndisponivel, ESPERA_GEMINI } from '../src/services/agentService.js';
 import { conversarComAgente } from '../src/controllers/agentController.js';
 import { selarEstado, abrirEstado } from '../src/services/agentState.js';
 import { executarFerramenta } from '../src/services/agentTools.js';
@@ -288,4 +288,46 @@ test('créditos do Gemini esgotados (402) levam ao modo guiado sem nova tentativ
     assert.equal(iaIndisponivel(semCreditos), true);
     assert.equal(iaIndisponivel({ status: 503 }), true);
     assert.equal(iaIndisponivel({ status: 400 }), false);
+});
+
+test('Gemini que não começa a responder no limite é cancelado, tenta de novo uma vez e falha como temporário', async () => {
+    const original = agenteIA.criarChat; const esperaOriginal = ESPERA_GEMINI.ms; let tentativas = 0;
+    const pausasOriginais = [...PAUSAS_NOVA_TENTATIVA]; PAUSAS_NOVA_TENTATIVA.fill(0);
+    try {
+        ESPERA_GEMINI.ms = 20;
+        agenteIA.criarChat = () => ({
+            sendMessageStream({ config }) {
+                tentativas++;
+                assert.ok(config.tools && config.systemInstruction, 'a chamada mantém ferramentas e instruções');
+                return new Promise((_, rejeitar) => config.abortSignal.addEventListener('abort', () => rejeitar(new Error('aborted'))));
+            }
+        });
+        await assert.rejects(
+            executarAgente('oi', randomUUID(), undefined, { onDelta() {} }),
+            erro => erro.code === 'GEMINI_LENTO' && iaIndisponivel(erro)
+        );
+        assert.equal(tentativas, 2);
+    } finally { agenteIA.criarChat = original; ESPERA_GEMINI.ms = esperaOriginal; PAUSAS_NOVA_TENTATIVA.splice(0, Infinity, ...pausasOriginais); }
+});
+
+test('Gemini lento na primeira tentativa e rápido na segunda responde normalmente', async () => {
+    const original = agenteIA.criarChat; const esperaOriginal = ESPERA_GEMINI.ms; let tentativas = 0;
+    try {
+        ESPERA_GEMINI.ms = 20;
+        agenteIA.criarChat = () => ({
+            async sendMessageStream({ config }) {
+                tentativas++;
+                if (tentativas === 1) return new Promise((_, rejeitar) => config.abortSignal.addEventListener('abort', () => rejeitar(new Error('aborted'))));
+                return (async function* () { yield { text: 'Olá! Você prefere um cão ou um gato?' }; })();
+            }
+        });
+        const r = await executarAgente('oi', randomUUID(), undefined, { onDelta() {} });
+        assert.match(r.mensagem, /cão ou um gato/);
+        assert.equal(tentativas, 2);
+    } finally { agenteIA.criarChat = original; ESPERA_GEMINI.ms = esperaOriginal; }
+});
+
+test('resposta cortada no meio pelo Gemini conta como falha temporária', () => {
+    assert.equal(falhaTemporaria(new Error('Incomplete JSON segment at the end')), true);
+    assert.equal(falhaTemporaria(new Error('Campo inválido')), false);
 });

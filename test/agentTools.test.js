@@ -41,3 +41,36 @@ test('detalhes aceitam id numérico e não escolhem entre nomes duplicados', asy
     assert.equal(ambiguo.sucesso, false);
     assert.equal(ambiguo.animais.length, 2);
 });
+
+test('cor no campo nome não vira "nenhum animal": a busca é refeita sem ela, com aviso', async () => {
+    const gatos = [{ id: 1, nome: 'Mel', especie: 'gato', situacao: 'disponivel' }, { id: 2, nome: 'Luna', especie: 'gato', situacao: 'disponivel' }];
+    const consultas = [];
+    const cliente = {
+        from() {
+            const filtros = [];
+            consultas.push(filtros);
+            const consulta = {
+                select() { return this; },
+                limit() { return this; },
+                eq(campo, valor) { filtros.push([campo, valor]); return this; },
+                ilike(campo, valor) { filtros.push([campo, valor]); return this; },
+                then(resolve, reject) {
+                    const porNome = filtros.some(([campo]) => campo === 'nome');
+                    return Promise.resolve({ data: porNome ? [] : gatos, error: null }).then(resolve, reject);
+                }
+            };
+            return consulta;
+        }
+    };
+    const resultado = await executarFerramenta('buscar_animais', { especie: 'gato', nome: 'preto' }, cliente);
+    assert.equal(resultado.total, 2);
+    assert.match(resultado.aviso, /não registra cor/);
+    assert.deepEqual(consultas[1], [['situacao', 'disponivel'], ['especie', 'gato']]);
+});
+
+test('nome real sem resultado continua sem resultado e sem aviso', async () => {
+    const cliente = clienteFalso([]);
+    const resultado = await executarFerramenta('buscar_animais', { nome: 'Rex' }, cliente);
+    assert.equal(resultado.total, 0);
+    assert.equal(resultado.aviso, undefined);
+});

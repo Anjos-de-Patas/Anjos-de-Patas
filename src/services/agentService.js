@@ -41,11 +41,15 @@ const ASSUNTOS_PERGUNTA = {
 const LIMITE_CHAMADAS_FERRAMENTA = 3;
 export const PAUSAS_NOVA_TENTATIVA = [1000, 2500];
 // 429: excesso de chamadas; 500, 503 e 504: instabilidade momentânea do serviço.
-export const falhaTemporaria = erro => [429, 500, 503, 504].includes(Number(erro?.status ?? erro?.code));
+// Resposta em streaming cortada no meio pelo Gemini também é instabilidade momentânea.
+export const falhaTemporaria = erro => [429, 500, 503, 504].includes(Number(erro?.status ?? erro?.code)) ||
+    /Incomplete JSON segment/i.test(String(erro?.message || ''));
 // Falhas em que a IA não responde agora, mas o modo guiado (sem IA) ainda atende:
 // as temporárias e a falta de créditos/cota da conta do Gemini (402), que não adianta retentar.
 export const iaIndisponivel = erro => falhaTemporaria(erro) || Number(erro?.status ?? erro?.code) === 402;
 const LIMITE_MENSAGENS_HISTORICO = 20;
+// Objeto para os testes poderem encurtar a espera.
+export const ESPERA_GEMINI = { ms: 10000 };
 
 const conversas = new Map();
 const animaisEmFoco = new Map();
@@ -124,7 +128,7 @@ export async function executarAgente(
         opcoesResposta.onDelta(texto);
         return { mensagem: texto, ferramentas_usadas: [], animais: [], modo: 'ia' };
     }
-    const chat = agenteIA.criarChat({
+    const configuracaoChat = {
         model: MODELO,
         history: historico,
         config: {
@@ -140,7 +144,8 @@ export async function executarAgente(
                 }
             ]
         }
-    });
+    };
+    const chat = agenteIA.criarChat(configuracaoChat);
 
     const ferramentasUsadas = [];
     const opcoes = new Map();
@@ -169,17 +174,38 @@ export async function executarAgente(
     }
 
     let textoEmitido = false;
+    // Com o Gemini sobrecarregado, a mesma chamada às vezes demora ~40 s para começar.
+    // Se nada chegar dentro do limite, a chamada é cancelada e tratada como falha
+    // temporária: tenta de novo uma vez e, persistindo, o controller usa o modo guiado.
     async function enviarUmaVez(message) {
-        if (!opcoesResposta.onDelta) return chat.sendMessage({ message });
-        const fluxo = await chat.sendMessageStream({ message });
-        let text = '';
-        const chamadas = [];
-        for await (const parte of fluxo) {
-            if (opcoesResposta.signal?.aborted) throw new Error('Consulta cancelada');
-            if (parte.text) { text += parte.text; textoEmitido = true; opcoesResposta.onDelta(parte.text); }
-            if (parte.functionCalls) chamadas.push(...parte.functionCalls);
+        const controle = new AbortController();
+        let esgotou = false;
+        const cancelarPorUsuario = () => controle.abort();
+        opcoesResposta.signal?.addEventListener('abort', cancelarPorUsuario, { once: true });
+        const relogio = setTimeout(() => { esgotou = true; controle.abort(); }, ESPERA_GEMINI.ms);
+        const parametros = { message, config: { ...configuracaoChat.config, abortSignal: controle.signal } };
+        try {
+            if (!opcoesResposta.onDelta) return await chat.sendMessage(parametros);
+            const fluxo = await chat.sendMessageStream(parametros);
+            let text = '';
+            const chamadas = [];
+            for await (const parte of fluxo) {
+                clearTimeout(relogio);
+                if (opcoesResposta.signal?.aborted) throw new Error('Consulta cancelada');
+                if (parte.text) { text += parte.text; textoEmitido = true; opcoesResposta.onDelta(parte.text); }
+                if (parte.functionCalls) chamadas.push(...parte.functionCalls);
+            }
+            return { text, functionCalls: chamadas };
+        } catch (erro) {
+            if (!esgotou) throw erro;
+            const lento = new Error('O Gemini demorou demais para responder.');
+            lento.status = 504;
+            lento.code = 'GEMINI_LENTO';
+            throw lento;
+        } finally {
+            clearTimeout(relogio);
+            opcoesResposta.signal?.removeEventListener('abort', cancelarPorUsuario);
         }
-        return { text, functionCalls: chamadas };
     }
     // Mensagens enviadas em sequência podem esbarrar no limite por minuto do Gemini.
     // Antes de qualquer texto chegar à pessoa, tenta de novo com pausas curtas.
@@ -188,7 +214,8 @@ export async function executarAgente(
             try {
                 return await enviarUmaVez(message);
             } catch (erro) {
-                if (!falhaTemporaria(erro) || textoEmitido || tentativa >= PAUSAS_NOVA_TENTATIVA.length || opcoesResposta.signal?.aborted) throw erro;
+                const limite = erro?.code === 'GEMINI_LENTO' ? 1 : PAUSAS_NOVA_TENTATIVA.length;
+                if (!falhaTemporaria(erro) || textoEmitido || tentativa >= limite || opcoesResposta.signal?.aborted) throw erro;
                 await new Promise(resolve => setTimeout(resolve, PAUSAS_NOVA_TENTATIVA[tentativa]));
             }
         }
